@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel CRM — Protótipo de Segmentação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F7FB;
+  --surface:#FFFFFF;
+  --border:#E3E8EF;
+  --border-strong:#CFD6E0;
+  --primary:#0B7BFB;
+  --primary-hover:#0A6BDB;
+  --primary-soft:#E7F1FE;
+  --primary-disabled:#9CCBFD;
+  --ink:#0F2846;
+  --ink-2:#3C4A5C;
+  --ink-3:#6B7A8D;
+  --ink-4:#9AA6B4;
+  --green:#16A863;
+  --green-soft:#DDF5E9;
+  --pink:#D6336C;
+  --pink-soft:#FDE4EC;
+  --warn-bg:#FEF3D7;
+  --warn-border:#EFC96A;
+  --warn-ink:#7A5A12;
+  --danger:#D14343;
+  --danger-soft:#FDECEC;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(16,36,64,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select{font-family:inherit;font-size:14px}
+
+/* ---------- Chrome do app ---------- */
+.topbar{height:56px;background:#fff;border-bottom:1px solid var(--border)}
+.shell{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:88px;background:#fff;border-right:1px solid var(--border);flex:0 0 88px}
+.main{flex:1;padding:34px 44px 0;display:flex;flex-direction:column}
+.footer{margin-top:auto;padding:26px 0 22px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-4)}
+.footer strong{color:var(--ink-3)}
+.brand{font-weight:800;letter-spacing:.02em;color:var(--ink);font-size:13px}
+
+h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:center;gap:8px}
+.tabs{display:flex;gap:26px;border-bottom:1px solid var(--border);margin-bottom:22px}
+.tab{padding:8px 2px 12px;font-size:14px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.tab:not(.active):hover{color:var(--ink)}
+
+.searchrow{display:flex;gap:12px;margin-bottom:26px}
+.search{flex:1;position:relative}
+.search input{width:100%;height:46px;border:1px solid var(--border-strong);border-radius:999px;padding:0 16px 0 44px;outline:none;background:#fff}
+.search input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.search svg{position:absolute;left:16px;top:14px;color:var(--ink-4)}
+
+.btn{height:46px;padding:0 20px;border-radius:8px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:.12s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-primary:disabled{background:var(--primary-disabled);cursor:not-allowed}
+.btn-soft{background:var(--primary-soft);color:var(--primary)}
+.btn-soft:hover{background:#D6E7FD}
+.btn-ghost{color:var(--ink-2)}
+.btn-ghost:hover{color:var(--ink)}
+.btn-sm{height:38px;padding:0 14px;font-size:13px;border-radius:8px}
+
+/* ---------- Empty state ---------- */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;color:var(--ink-3)}
+.empty h2{font-size:19px;font-weight:700;color:var(--ink);margin:22px 0 10px;line-height:1.35}
+.empty p{max-width:440px;margin:0;font-size:14px;line-height:1.55}
+
+/* ---------- Wizard ---------- */
+.wizhead{display:flex;align-items:flex-start;gap:32px;margin-bottom:24px}
+.wizhead .title{flex:0 0 auto;max-width:520px}
+.wizhead h1{font-size:23px;font-weight:700;margin:0;display:flex;align-items:center;gap:8px;line-height:1.3}
+.stepper{display:flex;gap:14px;flex:1;border-left:1px solid var(--border);padding-left:32px;align-items:flex-start;flex-wrap:wrap}
+.step{min-width:92px;text-align:left}
+.step .bar{height:3px;border-radius:2px;background:#DCE9F8;margin-bottom:8px}
+.step.done .bar,.step.current .bar{background:var(--primary)}
+.step .lbl{font-size:12.5px;color:var(--ink-4)}
+.step.done .lbl{color:var(--ink-2)}
+.step.current .lbl{color:var(--ink);font-weight:600}
+.step[data-clickable="1"]{cursor:pointer}
+
+.backlink{display:inline-flex;align-items:center;gap:8px;color:var(--ink-2);font-weight:600;font-size:14px;margin-bottom:14px}
+.backlink:hover{color:var(--ink)}
+
+.wizbody{display:flex;gap:20px;align-items:stretch;flex:1;min-height:560px;padding-bottom:8px}
+.panel{flex:1;min-width:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;overflow:visible}
+.panel-head{display:flex;gap:14px;padding:20px 22px;border-bottom:1px solid var(--border);align-items:flex-start;border-radius:var(--radius) var(--radius) 0 0}
+.panel-icon{width:38px;height:38px;border-radius:9px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;color:var(--primary);flex:0 0 38px}
+.panel-head h2{margin:0 0 3px;font-size:17px;font-weight:600}
+.panel-head p{margin:0;color:var(--ink-3);font-size:13.5px}
+.panel-body{padding:20px 22px;flex:1}
+
+/* ---------- Períodos fechados de compra (etapa Produtos) ---------- */
+.percaixa{border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:20px;background:#FBFCFE}
+.perhead{display:flex;gap:20px;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}
+.seg.segsm button{height:32px;padding:0 14px;font-size:12.5px}
+.pertags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.linkbtn{color:var(--primary);font-weight:600;font-size:12.5px;text-decoration:underline;margin-left:10px}
+.linkbtn:disabled{color:var(--ink-4);text-decoration:none;cursor:default}
+.selacts{display:inline-flex;align-items:center;gap:2px;margin-left:12px;font-weight:400}
+.selacts .sep{color:var(--ink-4);margin-left:10px}
+.selacts .linkbtn{margin-left:10px}
+.btnfiltro{height:44px;border:1px solid var(--border-strong);border-radius:8px;padding:0 15px;background:#fff;font-size:13px;white-space:nowrap;color:var(--ink-2)}
+.btnfiltro:hover{border-color:var(--primary);color:var(--primary)}
+.janela-nota{margin:10px 0 0;font-size:11px;color:var(--ink-4);text-align:center;line-height:1.4}
+
+/* ---------- Seletor de períodos (meses e semanas) ---------- */
+.dpwrap{position:relative;z-index:40}
+.dptrigger{display:flex;align-items:center;gap:9px;height:42px;padding:0 14px;border:1px solid var(--border-strong);
+  border-radius:9px;background:#fff;font-size:13px;color:var(--ink-2);min-width:250px;transition:.12s}
+.dptrigger span{flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dptrigger:hover{border-color:var(--primary)}
+.dptrigger.tem{color:var(--ink);font-weight:600}
+.dptrigger.on{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.dppop{position:absolute;top:calc(100% + 8px);right:0;z-index:55;width:308px;background:#fff;
+  border:1px solid var(--border-strong);border-radius:12px;box-shadow:0 14px 40px rgba(15,35,60,.18);overflow:hidden}
+.dp-head{padding:12px 14px 0}
+.dp-head .seg{width:100%}
+.dp-head .seg button{flex:1}
+.dp-body{padding:12px 14px 4px}
+.dp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid var(--border);background:#FBFCFE}
+.dp-foot .linkbtn{margin-left:0}
+.btnsm{height:34px;padding:0 16px;font-size:12.5px;border-radius:8px}
+.dp-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.dp-nav b{font-size:13.5px;font-weight:600;color:var(--ink)}
+.dp-nav button{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);transition:.12s}
+.dp-nav button:hover:not(:disabled){background:#EDF1F6;color:var(--ink)}
+.dp-nav button:disabled{color:#CBD5E1;cursor:default}
+.dp-meses{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-bottom:8px}
+.dp-m{height:38px;border-radius:8px;border:1px solid transparent;font-size:12.5px;color:var(--ink-2);text-transform:capitalize;transition:.12s}
+.dp-m:hover:not(:disabled){background:#EDF1F6;color:var(--ink)}
+.dp-m:disabled{color:#CBD5E1;cursor:default}
+.dp-m.on{background:var(--primary);color:#fff;font-weight:600}
+.dp-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 30px 4px 4px}
+.dp-dow i{font-style:normal;font-size:10.5px;font-weight:600;color:var(--ink-4);text-align:center}
+.dp-wks{display:flex;flex-direction:column;gap:3px}
+.dp-wk{display:flex;align-items:center;gap:4px;padding:3px 4px;border-radius:8px;border:1px solid transparent;transition:.12s;width:100%}
+.dp-wk-dias{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp-wk-dias i{font-style:normal;font-size:12px;color:var(--ink-2);text-align:center;line-height:26px}
+.dp-wk-dias i.fora{color:#CBD5E1}
+.dp-wk-dias i.hoje{font-weight:700;color:var(--primary)}
+.dp-wk-tag{width:22px;display:flex;align-items:center;justify-content:center;color:#fff}
+.dp-wk:hover:not(:disabled){background:#EDF1F6}
+.dp-wk:disabled{opacity:.42;cursor:default}
+.dp-wk.on{background:var(--primary)}
+.dp-wk.on .dp-wk-dias i,.dp-wk.on .dp-wk-dias i.fora,.dp-wk.on .dp-wk-dias i.hoje{color:#fff}
+.dp-nota{margin:10px 0 4px;font-size:11px;color:var(--ink-4);line-height:1.45}
+
+/* ---------- Insights por grau de aderência ---------- */
+.dna-ins{border-top:1px solid var(--border);background:#F7FAFE;padding:15px 18px 17px}
+.dna-ins-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.dna-ins-sub{flex:1;font-size:12px;color:var(--ink-3)}
+.grau-pill{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.01em}
+.grau-pill.g-baixa{background:#EDF1F6;color:#5B6B7D}
+.grau-pill.g-media{background:#E3F0FF;color:#0B6FD0}
+.grau-pill.g-alta{background:#DCF3E6;color:#0E7A48}
+.dna-ins-perfil{margin:0 0 13px;font-size:13px;color:var(--ink);line-height:1.5;font-weight:500;max-width:760px}
+.dna-ins-cols{display:flex;gap:36px;flex-wrap:wrap}
+.dna-ins-cols > div{flex:1;min-width:230px}
+.dna-ins-cols b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--ink-4);margin-bottom:7px}
+.dna-ins-cols .li{font-size:12.5px;color:var(--ink-2);line-height:1.5;padding:3px 0 3px 15px;position:relative}
+.dna-ins-cols .li:before{content:'';position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:#B4C4D6}
+.dna-ins-cols .li-op:before{background:var(--primary)}
+
+/* ---------- Funil da estimativa ---------- */
+.funil{border:1px solid var(--border);border-radius:9px;margin:12px 0 4px;overflow:hidden}
+.funil.on{border-color:#CFE0F5;background:#FBFDFF}
+.fn-head{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--ink-2);text-align:left}
+.fn-head:hover{color:var(--primary)}
+.fn-head span{flex:1}
+.fn-caret{display:inline-flex;transition:.15s}
+.funil.on .fn-caret{transform:rotate(180deg)}
+.fn-body{padding:0 12px 12px}
+.fn-hint{margin:0 0 12px;font-size:11.5px;color:var(--ink-4);line-height:1.45}
+.fn-item{margin-bottom:11px}
+.fn-item:last-child{margin-bottom:0}
+.fn-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.fn-nome{font-size:12.5px;color:var(--ink-2)}
+.fn-num{font-size:13px;font-weight:700;color:var(--ink)}
+.fn-bar{height:7px;border-radius:4px;background:#E8EEF6;overflow:hidden}
+.fn-bar i{display:block;height:100%;border-radius:4px;background:var(--primary);transition:width .3s}
+.fn-bar i.bad{background:var(--danger)}
+.fn-sub{margin-top:3px;font-size:11px;color:var(--ink-4)}
+.fn-corte{color:#B4531F;font-weight:600}
+.fn-corte.none{color:var(--ink-4);font-weight:400}
+.fn-corte.bad{color:var(--danger);font-weight:700}
+.fn-base{color:var(--ink-4)}
+
+.infobox{background:#E9F2FE;border-radius:8px;padding:14px 16px;color:#123A63;font-size:13px;line-height:1.55;margin-bottom:18px}
+
+/* ---------- Aside estimativa ---------- */
+.aside{flex:0 0 306px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;position:sticky;top:18px;z-index:1;align-self:flex-start}
+.aside h3{margin:0 0 14px;font-size:14px;font-weight:500;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.bignum{background:#F5F8FC;border-radius:8px;padding:16px;margin-bottom:10px}
+.bignum .v{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.bignum .c{font-size:12.5px;color:var(--ink-3);margin-top:4px}
+.metric{background:#F5F8FC;border-radius:8px;padding:11px 14px;margin-bottom:8px}
+.metric .k{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.metric .k svg{color:var(--primary)}
+.metric .v{font-size:15px;font-weight:600}
+.aside-actions{border-top:1px solid var(--border);margin-top:14px;padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.aside .btn{width:100%}
+.nav-pair{display:flex;gap:10px}
+.nav-pair .btn{flex:1}
+.stale .bignum,.stale .metric{opacity:.38;filter:grayscale(.35)}
+.stale-flag{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn-ink);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:12px}
+.stale-flag b{display:block;color:#5F4708;font-weight:700;margin-bottom:2px}
+.stale-flag b + b,.stale-flag b:not(:first-child){display:inline;margin:0;font-weight:600}
+.warnbox{background:var(--warn-bg);border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.45;color:var(--warn-ink);display:flex;gap:9px;margin-top:12px}
+.warnbox b{display:block;color:#5F4708}
+
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.skel{background:linear-gradient(90deg,#EDF1F6 25%,#F7FAFD 50%,#EDF1F6 75%);background-size:200% 100%;animation:sk 1.1s infinite;border-radius:6px;color:transparent!important}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* ---------- Form bits ---------- */
+.field{margin-bottom:0}
+.field label{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:5px}
+.input{height:44px;border:1px solid var(--border-strong);border-radius:8px;padding:0 12px;background:#fff;outline:none;width:100%;color:var(--ink)}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.input.err{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+.hint{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.errmsg{display:flex;gap:7px;align-items:flex-start;color:var(--danger);font-size:12.5px;margin-top:10px;background:var(--danger-soft);padding:9px 11px;border-radius:7px}
+
+.chip{border:1px solid transparent;background:#EDF1F6;color:var(--ink-2);border-radius:999px;padding:7px 15px;font-size:13px;transition:.12s}
+.chip:hover{background:#E2E8F0}
+.chip.on{background:var(--primary);color:#fff}
+.chipwrap{display:flex;flex-wrap:wrap;gap:9px}
+.sublabel{font-size:13px;font-weight:600;margin:0 0 9px}
+.sublabel + .chipwrap{margin-bottom:22px}
+
+.switch{width:38px;height:21px;border-radius:999px;background:#CBD5E1;position:relative;flex:0 0 38px;transition:.15s}
+.switch:after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch.on{background:var(--primary)}
+.switch.on:after{transform:translateX(17px)}
+
+/* ---------- RFV cards ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rfv{border:1px solid var(--border);border-radius:9px;overflow:hidden;background:#fff;transition:.12s;text-align:left;display:block;width:100%}
+.rfv:hover{border-color:var(--border-strong)}
+.rfv.on{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
+.rfv-top{padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.rfv-top h4{margin:0 0 4px;font-size:17px;font-weight:600}
+.rfv-top p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.45}
+.rfv-bot{padding:13px 18px;border-top:1px solid var(--border);background:#FBFCFE;font-size:12.5px;color:var(--ink-3)}
+.rfv-bot b{display:block;font-weight:500;color:var(--ink-2);margin-bottom:3px}
+
+/* ---------- DNA cards ---------- */
+.dna{border:1px solid var(--border);border-radius:9px;background:#fff;margin-bottom:12px;overflow:hidden;transition:.12s}
+.dna.on{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
+.dna-row{display:flex;align-items:stretch}
+.dna-a{flex:1.05;padding:15px 18px;display:flex;gap:13px;align-items:flex-start;text-align:left}
+.dna-a h4{margin:0 0 3px;font-size:16px;font-weight:600}
+.dna-a p{margin:0;font-size:12.5px;color:var(--ink-3);line-height:1.45}
+.dna-b{flex:1;padding:15px 18px;border-left:1px solid var(--border);font-size:12.5px;color:var(--ink-3);line-height:1.45}
+.dna-b b{display:block;font-weight:500;color:var(--ink-2);margin-bottom:3px}
+.dna-c{flex:0 0 178px;padding:15px 18px;border-left:1px solid var(--border)}
+.dna-c .k{font-size:12.5px;color:var(--ink-2);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.seg{display:flex;gap:6px}
+.seg button{border:1px solid var(--border-strong);background:#fff;border-radius:6px;padding:5px 11px;font-size:12.5px;color:var(--ink-2)}
+.seg button:hover{border-color:var(--primary);color:var(--primary)}
+.seg button.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
+.seg button:disabled:hover{border-color:var(--border-strong);color:var(--ink-2)}
+
+/* ---------- Tabelas ---------- */
+.selbox{background:#F5F8FC;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:16px}
+.selbox .t{font-weight:600;font-size:13.5px;margin-bottom:10px}
+.selbox .muted{color:var(--ink-3);font-size:13px;text-align:center;padding:2px 0}
+.tag{display:inline-flex;align-items:center;gap:7px;background:var(--primary-soft);color:#0B6FD0;border-radius:6px;padding:5px 9px;font-size:12.5px;font-weight:600;margin:0 7px 7px 0}
+.tag button{color:#0B6FD0;font-weight:700;line-height:1}
+.filters{display:flex;gap:12px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap}
+.filters .search{flex:1;min-width:230px}
+.filters .search input{height:44px}
+.filters .search svg{top:13px}
+.filters .field{flex:0 0 158px}
+.tablewrap{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F5F8FC;text-align:left;font-weight:600;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap;color:var(--ink)}
+td{padding:11px 14px;border-bottom:1px solid #EFF3F8;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#FAFCFE;cursor:pointer}
+tbody tr.sel{background:#F3F8FF}
+.cb{width:17px;height:17px;border:1.5px solid var(--border-strong);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;background:#fff;vertical-align:middle}
+.cb.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.cb.mixed{background:var(--primary);border-color:var(--primary);color:#fff}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 4px 0;font-size:12.5px;color:var(--ink-3);flex-wrap:wrap}
+.pgesq{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.pgsep{color:var(--ink-4);margin:0 8px}
+.selinfo{font-weight:600;color:var(--ink-2)}
+.pgesq .linkbtn{margin-left:12px}
+.avisozero{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12.5px;color:var(--danger);line-height:1.45}
+.pager .pg{display:flex;gap:6px}
+.pager .pg button{border:1px solid var(--border-strong);background:#fff;border-radius:6px;min-width:30px;height:30px;font-size:12.5px;color:var(--ink-2)}
+.pager .pg button.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.tempty{padding:44px 20px;text-align:center;color:var(--ink-3);font-size:13.5px}
+.tempty b{display:block;color:var(--ink);font-size:14.5px;margin-bottom:5px}
+
+/* ---------- Filtro de status da lista ---------- */
+.stbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.stchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border-strong);background:#fff;
+  border-radius:999px;padding:8px 15px;font-size:13px;color:var(--ink-2);transition:.12s}
+.stchip i{font-style:normal;font-size:11.5px;font-weight:700;background:#EDF1F6;color:var(--ink-3);
+  border-radius:999px;padding:2px 7px;min-width:20px;text-align:center}
+.stchip:hover{border-color:var(--primary);color:var(--primary)}
+.stchip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+.stchip.on i{background:rgba(255,255,255,.24);color:#fff}
+.stchip.zero:not(.on){color:var(--ink-4)}
+
+/* ---------- Cards de segmentação ---------- */
+.segcard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
+.segcard-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.maiswrap{position:relative;margin-left:8px;z-index:20}
+.mais{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.12s}
+.mais:hover{background:#EDF1F6}
+.mais.on{background:#E2E8F0;color:var(--ink)}
+.segmenu{position:absolute;top:calc(100% + 6px);right:0;z-index:30;min-width:196px;background:#fff;
+  border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 12px 32px rgba(15,35,60,.16);padding:6px;overflow:hidden}
+.segmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border-radius:7px;
+  font-size:13px;color:var(--ink-2);text-align:left;transition:.1s}
+.segmenu button svg{flex:0 0 15px;color:var(--ink-4)}
+.segmenu button:hover{background:#F1F5F9;color:var(--ink)}
+.segmenu button:hover svg{color:var(--ink-2)}
+.segmenu button.perigo{color:var(--danger)}
+.segmenu button.perigo svg{color:var(--danger)}
+.segmenu button.perigo:hover{background:var(--danger-soft);color:var(--danger)}
+.badge{border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:600}
+.badge.blue{background:var(--primary-soft);color:#0B6FD0}
+.badge.green{background:var(--green-soft);color:#0E7A48}
+.badge.pink{background:var(--pink-soft);color:var(--pink)}
+.pill{border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:12.5px;color:var(--ink-3)}
+.pill b{color:var(--ink);font-weight:600}
+.segcard h3{margin:0 0 4px;font-size:18px;font-weight:600}
+.segcard .obj{color:var(--ink-2);font-size:13.5px;margin:0 0 6px}
+.segcard .per{color:var(--ink-3);font-size:12.5px;display:flex;align-items:center;gap:6px}
+.segcard-main{display:flex;justify-content:space-between;align-items:flex-end;gap:22px}
+.kpis{display:flex;gap:26px}
+.kpi .k{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:5px}
+.kpi .v{font-size:16px;font-weight:700;margin-top:2px}
+.kpi .d{font-size:12.5px;color:var(--green);font-weight:500}
+.runbox{background:#EAF3FE;border-radius:8px;padding:16px 20px;text-align:center;color:#123A63;font-size:13.5px;line-height:1.5;flex:1;max-width:520px}
+.progress{width:180px;height:3px;background:#E3E8EF;border-radius:2px;overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--green)}
+.progress.blue i{background:var(--primary)}
+
+/* ---------- Modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(15,40,70,.42);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:568px;padding:26px 28px;box-shadow:0 18px 50px rgba(15,40,70,.22)}
+.modal h2{margin:0 0 20px;font-size:20px;font-weight:700}
+.modal .field{margin-bottom:16px}
+.togglebox{border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:20px}
+.togglebox-top{padding:15px 17px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.togglebox-top h4{margin:0 0 3px;font-size:14.5px;font-weight:600}
+.togglebox-top p{margin:0;font-size:12.5px;color:var(--ink-3)}
+.togglebox-bot{border-top:1px solid var(--border);background:#FBFCFE;padding:15px 17px}
+.togglebox-bot > p{margin:0 0 12px;font-size:12.5px;color:var(--ink-3)}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:9px;font-size:13.5px;z-index:80;box-shadow:0 8px 24px rgba(15,40,70,.28)}
+
+/* ---------- Date range picker ---------- */
+.okmsg{display:inline-flex;gap:8px;align-items:center;margin-top:14px;background:var(--green-soft);color:#0E7A48;border-radius:7px;padding:9px 13px;font-size:12.5px}
+
+/* ---------- Tooltip ---------- */
+.ttip{position:relative;display:inline-flex;color:var(--ink-4);cursor:help}
+.ttip:hover{color:var(--primary)}
+.ttip .bubble{
+  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:9px 12px;border-radius:7px;font-size:12px;line-height:1.45;
+  width:246px;opacity:0;pointer-events:none;transition:.12s;z-index:40;font-weight:400;text-align:left;
+}
+.ttip:hover .bubble{opacity:1}
+
+/* ---------- Painel do facilitador ---------- */
+#fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
+#fac{position:fixed;top:0;right:0;bottom:0;width:352px;background:#fff;border-left:1px solid var(--border);z-index:75;transform:translateX(100%);transition:.22s;display:flex;flex-direction:column;box-shadow:-8px 0 28px rgba(15,40,70,.1)}
+#fac.open{transform:none}
+#fac header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+#fac header h3{margin:0;font-size:15px;font-weight:700}
+#fac .sec{padding:16px 18px;border-bottom:1px solid var(--border)}
+#fac .sec h4{margin:0 0 10px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-4);font-weight:700}
+#fac .scroll{overflow:auto;flex:1}
+.task{border:1px solid var(--border);border-radius:8px;padding:11px 12px;margin-bottom:9px;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+.task b{display:block;color:var(--ink);margin-bottom:3px;font-size:13px}
+.optrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.optrow .lbl{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.optrow .lbl small{display:block;color:var(--ink-4);font-size:11.5px}
+.switch2{display:flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden;flex:0 0 auto}
+.switch2 button{padding:5px 10px;font-size:11.5px;color:var(--ink-2);background:#fff}
+.switch2 button.on{background:var(--primary);color:#fff}
+#log{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.55;color:var(--ink-2);max-height:230px;overflow:auto;background:#F7FAFD;border-radius:7px;padding:10px}
+#log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#log .t{color:var(--ink-4)}
+.mini{display:flex;gap:8px}
+.mini button{flex:1;border:1px solid var(--border-strong);border-radius:7px;height:34px;font-size:12px;font-weight:600;color:var(--ink-2);background:#fff}
+.mini button:hover{border-color:var(--primary);color:var(--primary)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<button id="fab">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  Teste
+</button>
+
+<aside id="fac">
+  <header>
+    <h3>Painel do facilitador</h3>
+    <button class="btn-ghost" id="fac-close" style="font-size:20px;line-height:1">&times;</button>
+  </header>
+  <div class="scroll">
+    <div class="sec">
+      <h4>Roteiro de tarefas</h4>
+      <div id="tasks"></div>
+    </div>
+    <div class="sec">
+      <h4>Hipóteses em teste</h4>
+      <div class="optrow">
+        <div class="lbl">Vários DNAs<small>Somam ou cruzam públicos?</small></div>
+        <div class="switch2" data-opt="dnaLogic"><button data-v="OR">OU (soma)</button><button data-v="AND">E (cruza)</button></div>
+      </div>
+      <div class="optrow">
+        <div class="lbl">Layout do DNA<small>Uma coluna ou duas?</small></div>
+        <div class="switch2" data-opt="dnaLayout"><button data-v="lista">Lista</button><button data-v="grade">Grade</button></div>
+      </div>
+    </div>
+    <div class="sec">
+      <h4>Sessão</h4>
+      <div class="mini">
+        <button id="btn-reset">Reiniciar</button>
+        <button id="btn-seed">Exemplos</button>
+        <button id="btn-export">Baixar log</button>
+      </div>
+      <div style="margin-top:12px" id="log"></div>
+    </div>
+  </div>
+</aside>
+
+<script>
+/* =========================================================================
+   1. DADOS SINTÉTICOS
+   ========================================================================= */
+const BASE_TOTAL = 155000;
+const N = 3000;                       // clientes simulados
+const SCALE = BASE_TOTAL / N;
+
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rnd = mulberry(20260821);
+const pick = arr => arr[Math.floor(rnd()*arr.length)];
+const between = (a,b) => a + rnd()*(b-a);
+
+const BANDEIRAS = ['Ultrapopular','São Paulo','Drogaria Popular','Farmais'];
+const CIDADES = [['São Paulo','SP'],['Campinas','SP'],['Santo André','SP'],['Belo Horizonte','MG'],['Uberlândia','MG'],['Curitiba','PR'],['Londrina','PR'],['Goiânia','GO']];
+
+const LOJAS = Array.from({length:26},(_,i)=>{
+  const [cid,uf] = CIDADES[i % CIDADES.length];
+  const band = BANDEIRAS[i % BANDEIRAS.length];
+  return {
+    id:'L'+i,
+    cnpj:String(10+i).padStart(2,'0')+'.'+String(100+i*7%900).padStart(3,'0')+'.'+String(200+i*13%800).padStart(3,'0')+'/0001-'+String(i*3%90+10),
+    bandeira:band, nome:band+' '+(cid.split(' ')[0])+' '+(i+1), cidade:cid, uf
+  };
+});
+
+const CATS = {
+  'Medicamentos':['Analgésicos','Anti-hipertensivos','Antidiabéticos','Hormonais','Psicotrópicos'],
+  'Dermocosméticos':['Facial','Corporal','Cabelo','Proteção solar'],
+  'Higiene pessoal':['Higiene íntima','Bucal','Banho'],
+  'Infantil':['Fraldas','Leites infantis','Higiene infantil'],
+  'Vitaminas':['Multivitamínicos','Suplementos','Minerais']
+};
+const INDUSTRIAS = ['EMS','Hypera','Neo Química','Eurofarma','Cimed','Sanofi','Bayer','Nestlé'];
+const TIPOS = ['Genérico','Similar','Referência'];
+const NOMES_PROD = ['Dipirona 500mg','Losartana 50mg','Metformina 850mg','Levotiroxina 25mcg','Sertralina 50mg','Protetor Solar FPS 50','Shampoo Anticaspa','Hidratante Corporal 400ml','Sabonete Íntimo 200ml','Fralda G 40un','Fórmula Infantil 800g','Vitamina D 2000UI','Ômega 3 1000mg','Enalapril 10mg','Insulina NPH','Fita Glicêmica 50un','Anticoncepcional 21cp','Creme Facial Antissinais','Escova Dental Macia','Whey Protein 900g','Paracetamol 750mg','Atenolol 25mg','Glifage XR 500mg','Puran T4 50mcg','Fluoxetina 20mg','Água Micelar 200ml','Condicionador 300ml','Óleo Corporal 200ml','Absorvente 8un','Lenço Umedecido 96un'];
+
+const PRODUTOS = Array.from({length:60},(_,i)=>{
+  const cat = Object.keys(CATS)[i % 5];
+  const sub = CATS[cat][i % CATS[cat].length];
+  return {
+    id:'P'+i,
+    nome:NOMES_PROD[i % NOMES_PROD.length] + (i>=30?' (2)':''),
+    categoria:cat, sub, tipo:TIPOS[i%3], industria:INDUSTRIAS[i%INDUSTRIAS.length],
+    ean:'78'+String(90000000+i*137).padStart(8,'0')+'-0'+(i%10),
+    medicamento: cat==='Medicamentos'
+  };
+});
+
+const DNAS = [
+  {id:'anticon', nome:'Anticoncepcionais', desc:'Clientes com recorrência de compra de pílulas e outros métodos contraceptivos.', uso:'Ideal para criar lembretes automáticos de recompra mensal e ofertas de higiene íntima.', comport:['Compra recorrente','Compra anticoncepcional + higiene íntima','Baixo ticket','Cliente fiel','Cliente que parou de comprar','Compra vários itens de cuidado pessoal','Compra em uma loja específica'], oport:['Lembrete próximo ao período de recompra','Ofertas relacionadas','Produtos complementares','Benefícios de relacionamento','Campanha de reativação','Montar uma oferta combinada','Campanha direcionada para essa loja']},
+  {id:'beleza', nome:'Beleza', desc:'Consumidores focados em autocuidado, que compram dermocosméticos, maquiagem e produtos para cabelo, pele ou unhas.', uso:'Ótimo público para lançamentos de cosméticos, campanhas de protetor solar ou produtos de skincare.', comport:['Compra sazonal','Alto ticket','Testa novidades','Sensível a lançamento'], oport:['Lançamentos','Kits promocionais','Programa de pontos']},
+  {id:'diabetes', nome:'Diabetes', desc:'Clientes que adquirem medicamentos, insulinas, fitas medidoras ou alimentos dietéticos para controle glicêmico.', uso:'Perfil excelente para campanhas de saúde preventiva, nutrição especializada e aparelhos de medição.', comport:['Uso contínuo','Recompra previsível','Compra acessórios'], oport:['Programa de adesão','Aparelhos e insumos','Nutrição especializada']},
+  {id:'cardio', nome:'Doenças Cardíacas', desc:'Pessoas que utilizam medicamentos contínuos para o coração e cuidados cardiovasculares.', uso:'Público focado em uso contínuo. Ideal para programas de fidelidade, descontos em laboratório e dicas de bem-estar.', comport:['Uso contínuo','Alta frequência','Baixo abandono'], oport:['Fidelidade','Descontos em laboratório','Conteúdo de bem-estar']},
+  {id:'hiper', nome:'Hipertensão', desc:'Clientes que buscam medicamentos para controlar a pressão arterial e cuidar da saúde cardiovascular.', uso:'Crie uma comunicação focada em prevenção, qualidade de vida, hábitos saudáveis e acompanhamento do tratamento.', comport:['Uso contínuo','Recompra mensal','Compra em uma loja específica'], oport:['Lembrete de recompra','Aferição de pressão','Conteúdo educativo']},
+  {id:'tireoide', nome:'Hormônios Tireoidianos', desc:'Pacientes que fazem uso contínuo de reposição hormonal e medicamentos para o funcionamento da tireoide.', uso:'Público fiel à marca do medicamento. Foque em garantir o estoque e oferecer assinaturas mensais.', comport:['Fidelidade à marca','Recompra mensal','Baixa troca'], oport:['Assinatura mensal','Garantia de estoque','Aviso de chegada']},
+  {id:'mae', nome:'Mãe', desc:'Mulheres em fase de gestação ou mães de bebês e crianças pequenas. Consomem fraldas, leites infantis, vitaminas e produtos pediátricos.', uso:'Um dos públicos mais engajados. Perfeito para campanhas de Dia das Mães, chás de bebê, ofertas de fraldas e produtos infantis.', comport:['Alta frequência','Ticket alto','Compra por necessidade','Cesta grande'], oport:['Clube de fraldas','Campanhas sazonais','Kits infantis']},
+  {id:'nervoso', nome:'Sistema Nervoso', desc:'Clientes que buscam medicamentos para ansiedade, depressão, qualidade do sono ou tratamentos neurológicos.', uso:'Crie uma comunicação mais empática e focada em qualidade de vida, bem-estar, chás calmantes ou vitaminas de suporte cognitivo.', comport:['Uso contínuo','Sensível à privacidade','Recompra mensal'], oport:['Comunicação empática','Bem-estar e sono','Suporte cognitivo']}
+];
+
+/* Insights por DNA x grau de aderência.
+   O mesmo DNA descreve pessoas muito diferentes conforme o grau:
+   Baixa = periférico, Média = já é rotina mas dividida, Alta = centro do consumo. */
+const DNA_INSIGHTS = {
+  anticon:{
+    Baixa:{perfil:'Comprou anticoncepcional pouquíssimas vezes aqui. Provavelmente compra em outro lugar.',
+      comport:['Compra esporádica, sem repetição mensal','Costuma levar só o remédio, sem outros itens','A maior parte do consumo está em outra categoria','Pode estar comprando em outra farmácia'],
+      oport:['Testar uma primeira oferta para medir interesse real','Combinar com higiene íntima para aumentar a cesta','Comunicar preço e disponibilidade da marca','Ainda não vale campanha de recompra: não existe rotina']},
+    'Média':{perfil:'Já tem alguma regularidade, mas divide a compra com outra farmácia.',
+      comport:['Compra volta e meia, mas pula alguns meses','Nem sempre leva a mesma marca','Cesta pequena, focada no medicamento','Some quando o produto falta'],
+      oport:['Lembrete no mês em que ela costuma sumir','Garantir estoque da marca que ela usa','Oferta combinada com higiene íntima ou absorvente','Convite para assinatura mensal']},
+    Alta:{perfil:'O anticoncepcional é o motivo principal da vinda dela à farmácia.',
+      comport:['Recompra mensal previsível','Fiel à mesma marca','Chega quase sempre na mesma semana do mês','Leva outros itens de cuidado pessoal na mesma visita'],
+      oport:['Assinatura ou clube com desconto recorrente','Aviso automático 3 dias antes da recompra','Ampliar a cesta com dermocosmético e higiene íntima','Atenção à ruptura de estoque: qualquer falta perde a cliente']}
+  },
+  beleza:{
+    Baixa:{perfil:'Compra beleza de vez em quando, quase sempre por impulso.',
+      comport:['Compra em datas pontuais','Leva um item por vez','Reage a desconto, não a marca','Não volta para repor'],
+      oport:['Kit de entrada ou amostra para gerar experimentação','Comunicar promoção em datas comerciais','Cross-sell a partir da categoria que ela já compra','Ainda não vale investir em fidelidade']},
+    'Média':{perfil:'Já tem rotina de autocuidado, mas parte da compra vai para outro canal.',
+      comport:['Compra a cada 2 ou 3 meses','Repete algumas marcas','Ticket acima da média da loja','Olha novidade, mas nem sempre leva'],
+      oport:['Kit de reposição para encurtar o intervalo entre compras','Convite antecipado para lançamentos','Programa de pontos para trazer o gasto que hoje vai para fora','Recomendação por tipo de pele ou cabelo']},
+    Alta:{perfil:'Beleza é o centro do consumo dela. Compra bastante e testa novidade.',
+      comport:['Compra com frequência e ticket alto','Testa lançamento cedo','Marca preferida bem definida','Leva mais de um item por visita'],
+      oport:['Pré-venda e acesso antecipado a lançamento','Consultoria ou brinde exclusivo','Clube de assinatura de skincare','Programa de indicação: esse perfil influencia outras clientes']}
+  },
+  diabetes:{
+    Baixa:{perfil:'Aparece pouco nessa categoria. Pode ser compra para outra pessoa da casa.',
+      comport:['Compra pontual de fita ou medicamento','Sem recompra previsível','Pouca ligação com acessórios','Talvez esteja comprando para um familiar'],
+      oport:['Descobrir se a compra é para ele ou para alguém da família','Conteúdo educativo sobre controle glicêmico','Aparelho de medição com preço de entrada','Ainda não vale campanha de adesão ao tratamento']},
+    'Média':{perfil:'Está em tratamento, mas nem tudo passa pela rede.',
+      comport:['Compra medicamento com alguma regularidade','Compra poucos insumos e acessórios','Intervalo irregular entre as compras','Sensível ao preço da fita'],
+      oport:['Puxar os insumos que hoje vão para outro canal','Combo medicamento + fitas com preço melhor','Lembrete no mês da renovação da receita','Programa de acompanhamento']},
+    Alta:{perfil:'Diabetes é o eixo do consumo dele. Uso contínuo e recompra previsível.',
+      comport:['Recompra mensal estável','Leva medicamento, fita e acessório juntos','Baixo abandono do tratamento','Cesta previsível mês a mês'],
+      oport:['Programa de adesão com desconto progressivo','Assinatura mensal com entrega garantida','Nutrição especializada e alimentos dietéticos','Serviços de aferição na loja']}
+  },
+  cardio:{
+    Baixa:{perfil:'Comprou pouco. Pode ser tratamento recente ou compra para outra pessoa.',
+      comport:['Uma ou duas compras isoladas','Sem padrão mensal','Não leva itens complementares','O tratamento pode ter começado agora'],
+      oport:['Conteúdo simples sobre a importância do uso contínuo','Oferta na segunda caixa para criar rotina','Convite para aferição de pressão na loja','Ainda não tratar como paciente crônico']},
+    'Média':{perfil:'Faz o tratamento, mas some em alguns meses.',
+      comport:['Compra na maior parte dos meses, com falhas','Troca de marca ou de genérico','Cesta enxuta','Existe risco real de abandono'],
+      oport:['Lembrete no mês em que ele costuma falhar','Desconto por continuidade','Garantir o genérico que ele usa','Acompanhamento por WhatsApp']},
+    Alta:{perfil:'Uso contínuo consolidado. Um dos públicos mais previsíveis da base.',
+      comport:['Recompra mensal sem falha','Alta frequência de visita','Abandono muito baixo','Costuma levar mais de um contínuo junto'],
+      oport:['Fidelidade com desconto fixo no medicamento contínuo','Descontos em laboratório e check-up','Conteúdo de bem-estar e alimentação','Ampliar a cesta com vitaminas e cuidados diários']}
+  },
+  hiper:{
+    Baixa:{perfil:'Passou pela categoria, mas sem rotina nenhuma.',
+      comport:['Compra avulsa','Sem repetição','Sem ligação com outros contínuos','Pode ter comprado para um familiar'],
+      oport:['Aferição gratuita de pressão para criar contato','Conteúdo sobre por que não interromper o tratamento','Preço de entrada no genérico','Esperar a segunda compra antes de investir mais']},
+    'Média':{perfil:'Trata, mas divide a compra com outra farmácia.',
+      comport:['Compra em parte dos meses','Troca de marca com frequência','Ticket baixo','Alguns meses sem nenhuma compra'],
+      oport:['Trazer os meses que faltam com lembrete de recompra','Preço melhor na compra de 2 ou 3 caixas','Aferição na loja como motivo de visita','Combinar com vitaminas e cuidado diário']},
+    Alta:{perfil:'A hipertensão é o motivo principal da relação dele com a farmácia.',
+      comport:['Recompra mensal previsível','Compra quase sempre na mesma loja','Fiel à marca ou ao genérico','Visita frequente, mas cesta pequena'],
+      oport:['Assinatura mensal com preço travado','Aumentar a cesta: ele vem todo mês e leva pouco','Serviços de saúde na loja','Programa de qualidade de vida']}
+  },
+  tireoide:{
+    Baixa:{perfil:'Comprou poucas vezes. Ainda não virou rotina na rede.',
+      comport:['Compra isolada','Marca ainda indefinida','Sem recompra','Pode estar comprando em outro lugar'],
+      oport:['Garantir que a marca dele exista em estoque','Aviso de chegada do produto','Preço competitivo para atrair a próxima caixa','Ainda não vale oferecer assinatura']},
+    'Média':{perfil:'Faz o tratamento, mas nem todo mês compra aqui.',
+      comport:['Compra em boa parte dos meses','Fiel à marca, mas não à loja','Some quando o produto falta','Cesta pequena'],
+      oport:['Aviso de chegada e reserva do produto','Desconto para levar mais de uma caixa','Lembrete no mês em que ele costuma sumir','Aproveitar a visita para oferecer vitaminas']},
+    Alta:{perfil:'Uso contínuo com fidelidade forte à marca do medicamento.',
+      comport:['Recompra mensal previsível','Não troca de marca','Troca por genérico muito baixa','Interrompe o tratamento se faltar'],
+      oport:['Assinatura mensal com estoque reservado','Alerta imediato de reposição em caso de falta','Ampliar cesta com vitaminas e suporte','Reter: perder esse cliente é perder 12 compras por ano']}
+  },
+  mae:{
+    Baixa:{perfil:'Comprou item infantil poucas vezes. Pode até ter sido presente.',
+      comport:['Uma ou duas compras de produto infantil','Sem repetição mensal','O resto da cesta não é infantil','Pode ter comprado para presentear'],
+      oport:['Descobrir se existe criança na casa antes de investir','Oferta de entrada em fralda ou lenço','Cross-sell a partir da categoria principal dela','Ainda não vale clube de fraldas']},
+    'Média':{perfil:'Tem criança em casa, mas boa parte da compra vai para outro canal.',
+      comport:['Compra infantil em alguns meses','Compra a fralda fora e os complementos aqui','Ticket médio a alto quando compra','Muito sensível ao preço da fralda'],
+      oport:['Trazer a compra de fralda com preço de pacote','Clube de fraldas com desconto recorrente','Lembrete no ritmo de consumo do bebê','Kit com lenço, pomada e sabonete']},
+    Alta:{perfil:'Rotina infantil consolidada. Um dos públicos mais engajados da base.',
+      comport:['Alta frequência e cesta grande','Compra por necessidade, não por promoção','Ticket alto','Consumo previsível e que muda com a idade da criança'],
+      oport:['Clube de fraldas ou assinatura mensal','Campanhas sazonais: Dia das Mães, volta às aulas','Kits infantis e leite de fórmula','Antecipar a próxima fase: trocar o tamanho da fralda antes dela pedir']}
+  },
+  nervoso:{
+    Baixa:{perfil:'Comprou poucas vezes. Pode ser um uso pontual e passageiro.',
+      comport:['Compra isolada','Sem recompra mensal','Pode ser tratamento curto','Sem itens complementares'],
+      oport:['Comunicação discreta, sem rótulo','Conteúdo sobre sono e bem-estar','Chás e suporte natural','Não segmentar pela condição na comunicação']},
+    'Média':{perfil:'Tratamento em andamento, com falhas em alguns meses.',
+      comport:['Compra na maior parte dos meses','Interrompe e retoma','Cesta pequena','Sensível à privacidade'],
+      oport:['Lembrete discreto de recompra','Desconto por continuidade','Bem-estar, sono e vitaminas de suporte','Comunicação empática, sem mencionar a condição']},
+    Alta:{perfil:'Uso contínuo consolidado. Exige a comunicação mais cuidadosa da base.',
+      comport:['Recompra mensal previsível','Fiel à marca','Abandono baixo','Costuma comprar sozinho, sem interação'],
+      oport:['Assinatura com retirada rápida e discreta','Suporte cognitivo e qualidade do sono','Fidelidade sem exposição do cliente','Atenção: essa categoria não pode ser usada em publicidade']}
+  }
+};
+function insightDna(id,grau){
+  const d = DNA_INSIGHTS[id];
+  if(d && d[grau]) return d[grau];
+  const base = DNAS.find(x=>x.id===id) || {comport:[],oport:[]};
+  return {perfil:'', comport:base.comport, oport:base.oport};
+}
+
+const RFVS = [
+  {id:'fiel', nome:'Fiel', desc:'Compra com frequência e mantém um relacionamento constante com a loja.', obj:'Fortalecer o relacionamento e manter a frequência de compra.', peso:.18},
+  {id:'valioso', nome:'Valioso', desc:'Compra produtos de maior valor e gera mais receita para a loja.', obj:'Aumentar o valor que esse cliente gera para a loja.', peso:.12},
+  {id:'potencial', nome:'Potencial', desc:'Tem bons sinais de compra e pode se tornar um cliente mais valioso.', obj:'Estimular novas compras e aproximá-lo de clientes mais fiéis.', peso:.20},
+  {id:'ocasional', nome:'Ocasional', desc:'Compra de vez em quando, mas ainda não tem uma frequência constante.', obj:'Incentivar o cliente a comprar com mais frequência.', peso:.24},
+  {id:'abandonador', nome:'Abandonador', desc:'Já comprou, mas está há um tempo sem realizar novas compras.', obj:'Incentivar o cliente a voltar a comprar.', peso:.16},
+  {id:'novo', nome:'Novos clientes', desc:'Comprou pela primeira vez há pouco tempo e ainda não tem histórico.', obj:'Criar o hábito da segunda compra.', peso:.10}
+];
+
+const GENEROS = [['F','Feminino'],['M','Masculino'],['S','Sem gênero']];
+const FAIXAS = ['0 - 19','20 - 29','30 - 39','40 - 49','50 - 59','60 - 69','70 - 79','80+','Indefinido'];
+
+const HOJE = new Date(2026,7,21);
+const DIA = 86400000;
+
+function rfvSorteio(){
+  let r = rnd(), acc = 0;
+  for(const p of RFVS){ acc += p.peso; if(r <= acc) return p.id; }
+  return 'ocasional';
+}
+
+const CLIENTES = Array.from({length:N},(_,i)=>{
+  const rfv = rfvSorteio();
+  const nCompras = rfv==='fiel'?Math.round(between(8,26)) : rfv==='valioso'?Math.round(between(5,16)) : rfv==='potencial'?Math.round(between(3,9)) : rfv==='ocasional'?Math.round(between(2,5)) : rfv==='abandonador'?Math.round(between(1,4)) : 1;
+  const janelaFim = rfv==='abandonador' ? 200 + rnd()*380 : rfv==='novo' ? rnd()*60 : rnd()*45;
+  const compras = [];
+  const lojaBase = Math.floor(rnd()*LOJAS.length);
+  for(let c=0;c<nCompras;c++){
+    const d = new Date(HOJE.getTime() - (janelaFim + c*between(14,52))*DIA);
+    if(d.getTime() < HOJE.getTime() - 730*DIA) break;
+    compras.push({ dt:d.getTime(), loja: rnd()<.82 ? lojaBase : Math.floor(rnd()*LOJAS.length), prod: Math.floor(rnd()*PRODUTOS.length) });
+  }
+  if(!compras.length) compras.push({dt:HOJE.getTime()-Math.floor(rnd()*300)*DIA, loja:lojaBase, prod:Math.floor(rnd()*PRODUTOS.length)});
+  const dna = {};
+  const principais = [];
+  const nDna = 1 + Math.floor(rnd()*2.6);
+  while(principais.length < nDna){ const d = pick(DNAS).id; if(!principais.includes(d)) principais.push(d); }
+  DNAS.forEach(d => { dna[d.id] = principais.includes(d.id) ? between(.45,1) : between(0,.42); });
+  const ticket = rfv==='valioso'?between(180,420) : rfv==='fiel'?between(90,190) : between(28,130);
+  return {
+    id:i, rfv,
+    genero: rnd()<.58?'F':rnd()<.9?'M':'S',
+    faixa: FAIXAS[Math.min(8, Math.floor(Math.abs(between(-1,1)+between(0,1))*4.2)+1)],
+    ticket, freq: compras.length, ltv: ticket*compras.length*between(.8,1.5),
+    compras, dna,
+    lojas:[...new Set(compras.map(c=>c.loja))],
+    prods:[...new Set(compras.map(c=>c.prod))]
+  };
+});
+
+/* =========================================================================
+   2. ESTADO
+   ========================================================================= */
+const OPTS = { dnaLogic:'OR' };
+
+// O funil "Como chegamos nesse número" fica no código para uma evolução futura.
+const MOSTRAR_FUNIL = false;
+
+/* A etapa de "Período de análise" saiu do fluxo.
+   A análise passa a usar sempre uma janela fixa de histórico (12 meses),
+   e o recorte de tempo que o usuário controla é o de COMPRA DOS PRODUTOS,
+   na etapa Produtos. */
+const JANELA_MESES = 12;
+const JANELA_INI = new Date(HOJE.getFullYear(), HOJE.getMonth()-JANELA_MESES, 1).getTime();
+const JANELA_FIM = HOJE.getTime() + DIA - 1;
+
+const STEPS = [
+  {id:'lojas', label:'Lojas'},
+  {id:'comportamento', label:'Perfil RFV'},
+  {id:'dna', label:'DNA'},
+  {id:'demografico', label:'Demográfico'},
+  {id:'produtos', label:'Produtos'}
+];
+const STEP_PRODUTOS = 4;
+
+function estadoInicial(){
+  return {
+    screen:'list',            // list | wizard
+    step:0,
+    // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
+    // usuário RECORTA, em vez de começar do zero e ter que construir a base.
+    lojas: LOJAS.map(l=>l.id),
+    produtos:[],
+    genero:[], faixa:[],
+    rfv:[],
+    dna:{},                   // {dnaId: 'Baixa'|'Média'|'Alta'}
+    dnaExpandido:null,
+    dnaGrauAberto:null,       // grau cujos insights estão abertos
+    dnaView:'lista',          // lista | grade
+    lojaBusca:'', lojaBandeira:'', lojaUf:'', lojaCidade:'', lojaPag:1,
+    prodBusca:'', prodCat:'', prodSub:'', prodInd:'', prodPag:1,
+    compraTipo:'mes',         // semana | mes
+    compraPeriodos:[],        // chaves dos períodos fechados escolhidos
+    perAberto:false,          // popover de períodos aberto?
+    perAno:HOJE.getFullYear(),// ano exibido na grade de meses
+    perMes:new Date(HOJE.getFullYear(),HOJE.getMonth(),1).getTime(), // mês exibido no calendário de semanas
+    stale:false, calculando:false, pendentes:0,
+    estimativa:null, funilAberto:false,
+    modal:false,
+    modalTitulo:'', modalObjetivo:'', modalCampanha:true, modalIni:'', modalFim:'', modalErro:'',
+    segmentacoes: segmentacoesDemo(),
+    busca:'',
+    filtroStatus:'todos',     // todos | ativa | criado | encerrada
+    menuSeg:null,             // id da segmentação com o menu "..." aberto
+    toast:''
+  };
+}
+let S = estadoInicial();
+
+/* ---------- Segmentações fictícias (para simular com usuários) ----------
+   Números coerentes entre si: valor estimado ≈ clientes × ticket × frequência.
+   Trocar por base real depois é só substituir este array.                    */
+function segmentacoesDemo(){
+  return [
+    {id:'s1', status:'ativa', titulo:'Hipertensos sem compra há mais de 60 dias',
+     objetivo:'Trazer de volta quem usa medicamento contínuo e parou de renovar a receita na rede.',
+     clientes:8420, prods:14, valor:412580, ticket:48.99, ltv:1180, faturamento:412580,
+     periodo:'01/06/2026 - 29/08/2026', campIni:'10/08/2026', campFim:'09/09/2026', progresso:62},
+
+    {id:'s2', status:'ativa', titulo:'Mães de bebês — recompra de fraldas',
+     objetivo:'Manter a recompra mensal de fraldas e lenços antes que a família compre em outro canal.',
+     clientes:3175, prods:22, valor:186900, ticket:58.86, ltv:940, faturamento:186900,
+     periodo:'01/07/2026 - 20/08/2026', campIni:'15/08/2026', campFim:'14/09/2026', progresso:21},
+
+    {id:'s3', status:'criado', titulo:'Diabéticos com alta aderência em cuidado diário',
+     objetivo:'Oferecer combo de tiras de glicemia e cuidados com os pés para clientes fiéis.',
+     clientes:2640, prods:9, valor:158400, ticket:60.00, ltv:1620, faturamento:158400,
+     periodo:'22/05/2026 - 20/08/2026'},
+
+    {id:'s4', status:'criado', titulo:'Dermocosméticos — ticket alto, baixa frequência',
+     objetivo:'Aumentar a frequência de clientes que gastam bem, mas voltam poucas vezes por ano.',
+     clientes:1180, prods:31, valor:224200, ticket:190.00, ltv:2310, faturamento:224200,
+     periodo:'01/03/2026 - 31/05/2026'},
+
+    {id:'s5', status:'criado', titulo:'Clientes novos da região Sul',
+     objetivo:'Fazer a segunda compra acontecer em até 30 dias depois da primeira.',
+     clientes:5930, prods:6, valor:172970, ticket:29.17, ltv:290, faturamento:172970,
+     periodo:'01/08/2026 - 20/08/2026'},
+
+    {id:'s6', status:'encerrada', titulo:'Beleza — protetor solar verão',
+     objetivo:'Aproveitar o pico de procura por protetor solar antes do fim do verão.',
+     clientes:12480, prods:18, valor:598000, ticket:47.92, ltv:860, faturamento:598000,
+     periodo:'01/11/2025 - 28/01/2026', campIni:'05/01/2026', campFim:'05/02/2026'},
+
+    {id:'s7', status:'encerrada', titulo:'Gripe e resfriado — inverno 2026',
+     objetivo:'Comunicar antigripais e vitamina C na entrada do inverno.',
+     clientes:21050, prods:27, valor:735500, ticket:34.94, ltv:610, faturamento:735500,
+     periodo:'15/03/2026 - 12/06/2026', campIni:'20/06/2026', campFim:'20/07/2026'}
+  ];
+}
+
+/* ---------- Log de eventos ---------- */
+const LOG = [];
+let tStep = Date.now();
+function log(tipo, det){
+  const e = { t:new Date().toISOString(), ms:Date.now()-T0, tipo, det:det||'' , tela: S.screen==='wizard' ? STEPS[S.step].label : 'Lista' };
+  LOG.push(e);
+  const el = document.getElementById('log');
+  if(el){
+    const d = document.createElement('div');
+    d.innerHTML = '<span class="t">'+String(Math.round(e.ms/1000)).padStart(4,'0')+'s</span> '+tipo+(det?' · '+det:'');
+    el.appendChild(d); el.scrollTop = el.scrollHeight;
+  }
+}
+const T0 = Date.now();
+</script>
+<script>
+OPTS.dnaLayout = 'lista';
+
+/* =========================================================================
+   3. UTILITÁRIOS
+   ========================================================================= */
+const nf  = new Intl.NumberFormat('pt-BR');
+const nf1 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
+const brl = v => 'R$ ' + new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtD = ts => new Date(ts).toLocaleDateString('pt-BR');
+
+const I = {
+  info:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+  search:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+  box:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg>',
+  back:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+  fwd:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+  funnel:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v7l-4 2v-9z"/></svg>',
+  chev:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  left:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  right:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+  refresh:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>',
+  plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>',
+  check:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"><path d="M20 6L9 17l-5-5"/></svg>',
+  minus:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"><path d="M5 12h14"/></svg>',
+  cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  cal2:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  checkc:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>',
+  play:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg>',
+  up:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M9 7h8v8"/></svg>',
+  dots:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>',
+  alert:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  sheet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
+  pen:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
+  copy:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>',
+  trash:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  money:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>',
+  users:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/></svg>',
+  repeat:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>',
+  file:'<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#B7C2CF" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/><circle cx="11" cy="13" r="1.3" fill="#B7C2CF"/><circle cx="14" cy="17" r="1.3" fill="#B7C2CF"/></svg>'
+};
+
+const TIPS = {
+  estimativa:'Prévia de quantos clientes atendem aos critérios que você escolheu até aqui. O número muda a cada critério novo.',
+  faturamento:'Soma do que esses clientes compraram nos últimos 12 meses.',
+  ticket:'Valor médio de cada compra desses clientes.',
+  ltv:'Quanto cada cliente já gerou de receita desde a primeira compra.',
+  freq:'Quantas vezes, em média, esses clientes compraram nos últimos 12 meses.',
+  prodsel:'Quantos produtos você marcou para filtrar o público.',
+  periodoCompra:'Os períodos que você escolheu na etapa Produtos. Só entram clientes que compraram dentro deles.',
+  aderencia:'O quanto esse comportamento aparece nas compras do cliente. Alta = esse DNA é o centro do consumo dele.',
+  painel:'Aqui você acompanha seus clientes e cria públicos para campanhas.',
+  campIni:'Data em que a campanha começa a valer.',
+  campFim:'Data em que a campanha termina. Os resultados aparecem 2 dias depois.'
+};
+const tip = k => `<span class="ttip">${I.info}<span class="bubble">${esc(TIPS[k])}</span></span>`;
+
+/* =========================================================================
+   4. MOTOR DE CÁLCULO
+   ========================================================================= */
+/* ---------- Períodos fechados de compra (etapa Produtos) ----------
+   Semanas: segunda a domingo, apenas semanas já encerradas.
+   Meses:   meses de calendário já encerrados, montados a partir do histórico. */
+const dd = n => String(n).padStart(2,'0');
+const meiaNoite = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const HOJE_MS = meiaNoite(HOJE).getTime();
+
+/* Segunda-feira da semana que contém a data. */
+function segundaDe(d){
+  const x = meiaNoite(d);
+  return new Date(x.getTime() - ((x.getDay()+6)%7)*DIA);
+}
+/* Objeto período a partir de qualquer data dentro da semana. */
+function semanaDe(d){
+  const ini = segundaDe(d), fim = new Date(ini.getTime()+6*DIA);
+  return {
+    tipo:'semana', chave:'w:'+ymd(ini),
+    rotulo:`${dd(ini.getDate())}/${dd(ini.getMonth()+1)} a ${dd(fim.getDate())}/${dd(fim.getMonth()+1)}`,
+    nota: MESES[fim.getMonth()].slice(0,3)+'/'+String(fim.getFullYear()).slice(2),
+    ini: ini.getTime(), fim: fim.getTime()+DIA-1
+  };
+}
+function mesDe(ano,mes){
+  const ini = new Date(ano,mes,1), fim = new Date(ano,mes+1,0);
+  return {
+    tipo:'mes', chave:'m:'+ano+'-'+dd(mes+1),
+    rotulo: MESES[mes].charAt(0).toUpperCase()+MESES[mes].slice(1),
+    nota: String(ano),
+    ini: ini.getTime(), fim: fim.getTime()+DIA-1
+  };
+}
+/* Só períodos JÁ FECHADOS e dentro da janela de análise ficam clicáveis —
+   assim ninguém compara um mês pela metade com um mês inteiro. */
+function periodoFechado(p){ return p.fim < HOJE_MS && p.ini >= JANELA_INI; }
+
+function periodoDaChave(k){
+  if(!k) return null;
+  if(k[0]==='w') return semanaDe(parseYmd(k.slice(2)));
+  const [a,m] = k.slice(2).split('-').map(Number);
+  return mesDe(a, m-1);
+}
+function periodosEscolhidos(){
+  return S.compraPeriodos.map(periodoDaChave).filter(Boolean).sort((x,y)=>x.ini-y.ini);
+}
+function rotuloPeriodo(p){
+  return p.tipo==='semana' ? `${p.rotulo} (${p.nota})` : `${p.rotulo} de ${p.nota}`;
+}
+function resumoPeriodos(){
+  const p = periodosEscolhidos();
+  if(!p.length) return '';
+  return p.length===1 ? rotuloPeriodo(p[0]) : p.length+' períodos escolhidos';
+}
+/* Limites de navegação do calendário. */
+const ANO_MIN = new Date(JANELA_INI).getFullYear();
+const ANO_MAX = HOJE.getFullYear();
+
+function calcular(){
+  const a = JANELA_INI, b = JANELA_FIM;
+  const dentro = c => c.compras.filter(x => x.dt>=a && x.dt<=b);
+
+  let base = [];
+  for(const c of CLIENTES){ const cp = dentro(c); if(cp.length) base.push({c,cp}); }
+  const baseN = base.length || 1;
+
+  // filtros nomeados, na MESMA ordem das etapas do fluxo —
+  // permitem montar o funil e diagnosticar quem zerou o público
+  const MIN_AFIN = {'Baixa':0.20,'Média':0.45,'Alta':0.72};
+  const dnaSel = Object.keys(S.dna);
+  const filtros = [];
+  // Lojas entra SEMPRE: como o padrão é tudo marcado, desmarcar é um recorte de verdade.
+  // Nenhuma loja marcada = nenhum cliente (e não "todas", que seria o oposto do que o clique diz).
+  { const set = new Set(S.lojas);
+    filtros.push(['Lojas', o=>o.cp.some(x=>set.has(LOJAS[x.loja].id)), 'Lojas']); }
+  if(S.rfv.length)    filtros.push(['Perfil (RFV)', o=>S.rfv.includes(o.c.rfv), 'Perfil RFV']);
+  if(dnaSel.length){
+    const testa=(o,d)=>o.c.dna[d] >= MIN_AFIN[S.dna[d]];
+    filtros.push(['DNA', OPTS.dnaLogic==='AND' ? o=>dnaSel.every(d=>testa(o,d)) : o=>dnaSel.some(d=>testa(o,d)), 'DNA']);
+  }
+  if(S.genero.length) filtros.push(['Gênero', o=>S.genero.includes(o.c.genero), 'Demográfico']);
+  if(S.faixa.length)  filtros.push(['Faixa etária', o=>S.faixa.includes(o.c.faixa), 'Demográfico']);
+  // Produtos + período de compra formam UM critério só:
+  // a mesma compra precisa ser do produto marcado E ter acontecido no período escolhido.
+  const janelas = periodosEscolhidos();
+  if(S.produtos.length || janelas.length){
+    const set = S.produtos.length ? new Set(S.produtos) : null;
+    const nome = S.produtos.length && janelas.length ? 'Produtos no período'
+               : janelas.length ? 'Período de compra' : 'Produtos';
+    filtros.push([nome, o=>o.cp.some(x =>
+      (!set || set.has(PRODUTOS[x.prod].id)) &&
+      (!janelas.length || janelas.some(p => x.dt>=p.ini && x.dt<=p.fim))
+    ), 'Produtos']);
+  }
+
+  const aplicar = pular => base.filter(o => filtros.every((f,i)=> i===pular || f[1](o)));
+  let out = aplicar(-1);
+
+  // ---- funil: quantos clientes sobram depois de cada etapa ----
+  const funil = [{etapa:'Base de clientes', clientes: Math.round(baseN*SCALE), corte:0, primeiro:true}];
+  let atual = base, anterior = baseN;
+  for(let i=0; i<filtros.length; i++){
+    atual = atual.filter(filtros[i][1]);
+    const etapa = filtros[i][2];
+    const linha = {etapa, clientes: Math.round(atual.length*SCALE), corte: anterior ? 1 - atual.length/anterior : 0};
+    const ult = funil[funil.length-1];
+    if(ult.etapa === etapa){ // Demográfico soma gênero + faixa numa linha só
+      ult.clientes = linha.clientes;
+      ult.corte = 1 - atual.length/ult._ent;
+    } else {
+      linha._ent = anterior;
+      funil.push(linha);
+    }
+    anterior = atual.length;
+  }
+  funil.forEach(f=>{ delete f._ent; f.pctBase = baseN ? f.clientes/(baseN*SCALE) : 0; });
+
+  if(!out.length){
+    // qual critério, se removido, devolve mais gente?
+    let culpado = null, melhor = 0;
+    filtros.forEach((f,i)=>{ const n = aplicar(i).length; if(n > melhor){ melhor = n; culpado = f[0]; } });
+    let extra = '';
+    if(!S.lojas.length)
+      extra = 'Você desmarcou todas as lojas. Marque pelo menos uma para o público voltar a existir.';
+    else if(culpado==='Período de compra' || culpado==='Produtos no período')
+      extra = `Ninguém que atende aos outros critérios comprou ${S.produtos.length?'esses produtos ':''}nos períodos escolhidos. Tente marcar mais períodos${S.produtos.length?' ou mais produtos':''}.`;
+    else if(dnaSel.length>1 && OPTS.dnaLogic==='AND' && culpado==='DNA')
+      extra = `Você pediu clientes que se encaixam em <b>todos</b> os ${dnaSel.length} DNAs ao mesmo tempo. Isso é raro — tente um DNA de cada vez ou baixe o grau de aderência.`;
+    return {vazio:'sem-resultado', culpado, recupera: Math.round(melhor*SCALE), extra,
+      unico: filtros.length===1, criterios: filtros.map(f=>f[0]), funil};
+  }
+
+  const n = out.length;
+  const fat = out.reduce((s,o)=> s + o.c.ticket*o.cp.length, 0) * SCALE;
+  return {
+    clientes: Math.round(n*SCALE),
+    pct: n/baseN,
+    faturamento: fat,
+    ticket: out.reduce((s,o)=>s+o.c.ticket,0)/n,
+    ltv: out.reduce((s,o)=>s+o.c.ltv,0)/n,
+    freq: out.reduce((s,o)=>s+o.cp.length,0)/n,
+    prods: S.produtos.length,
+    funil
+  };
+}
+
+// A estimativa NUNCA recalcula sozinha: só no clique em "Atualizar estimativa".
+// Qualquer mudança de critério marca o card como desatualizado.
+function marcarSujo(motivo){
+  if(!S.stale) log('estimativa-desatualizada', motivo||'');
+  S.stale = true;
+  S.pendentes++;
+  render();
+}
+function recalcular(motivo){
+  S.calculando = true; S.stale = false; render();
+  log('recalculo', motivo+' · '+S.pendentes+' mudança(s)');
+  S.pendentes = 0;
+  setTimeout(()=>{ S.estimativa = calcular(); S.calculando = false; render(); }, 700);
+}
+
+/* =========================================================================
+   5. RENDER — chrome
+   ========================================================================= */
+const root = document.getElementById('root');
+
+function shell(inner){
+  return `<div class="topbar"></div>
+  <div class="shell"><div class="sidebar"></div><div class="main">${inner}
+    <div class="footer"><div>© <strong>Copyright Radar Farmarcas</strong> - Todos os direitos reservados.</div>
+    <div style="display:flex;align-items:center;gap:8px"><span>Desenvolvido por</span> <span class="brand">FARMARCAS</span></div></div>
+  </div></div>`;
+}
+
+function tabs(){
+  const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Segmentação'];
+  return `<h1 class="page">Painel CRM ${tip('painel')}</h1>
+  <div class="tabs">${t.map(x=>`<div class="tab ${x==='Segmentação'?'active':''}" data-act="tabNoop" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
+}
+
+/* ---------- Tela: lista de segmentações ---------- */
+const STATUS_SEG = [
+  ['todos','Todos'],
+  ['ativa','Campanha ativa'],
+  ['criado','Público criado'],
+  ['encerrada','Campanha encerrada']
+];
+
+function telaLista(){
+  const filtro = S.busca.trim().toLowerCase();
+  const porBusca = S.segmentacoes.filter(s => !filtro || s.titulo.toLowerCase().includes(filtro) || s.objetivo.toLowerCase().includes(filtro));
+  const lista = porBusca.filter(s => S.filtroStatus==='todos' || s.status===S.filtroStatus);
+
+  // a contagem de cada aba respeita a busca ativa, senão o número mente
+  const conta = k => k==='todos' ? porBusca.length : porBusca.filter(s=>s.status===k).length;
+  const abas = STATUS_SEG.map(([k,rot])=>{
+    const n = conta(k);
+    return `<button class="stchip ${S.filtroStatus===k?'on':''} ${n?'':'zero'}" data-act="filtroStatus" data-v="${k}">
+      ${rot} <i>${n}</i></button>`;
+  }).join('');
+
+  const rotuloAtual = (STATUS_SEG.find(x=>x[0]===S.filtroStatus)||[])[1] || '';
+
+  let corpo;
+  if(!S.segmentacoes.length){
+    corpo = `<div class="empty">${I.file}
+      <h2>Nenhuma segmentação de público<br>foi criada até o momento.</h2>
+      <p>Uma segmentação de público é uma forma de separar os clientes em grupos que têm características ou comportamentos em comum.</p>
+    </div>`;
+  } else if(!lista.length){
+    corpo = `<div class="empty">${I.file}
+      <h2>${filtro ? `Nenhum resultado para “${esc(S.busca)}”` : `Nenhuma segmentação em “${rotuloAtual}”`}</h2>
+      <p>${filtro ? 'Tente outro nome ou limpe a busca.' : 'Escolha outro status acima para ver as demais segmentações.'}</p>
+      ${S.filtroStatus!=='todos'?`<button class="btn btn-soft" style="margin-top:18px" data-act="filtroStatus" data-v="todos">Ver todas</button>`:''}
+    </div>`;
+  } else {
+    corpo = lista.map(cardSeg).join('');
+  }
+
+  return shell(`${tabs()}
+  <div class="searchrow">
+    <div class="search">${I.search}<input data-k="busca" data-act="busca" placeholder="Pesquise aqui" value="${esc(S.busca)}"></div>
+    <button class="btn btn-primary" data-act="nova">${I.plus} Nova Segmentação</button>
+  </div>
+  ${S.segmentacoes.length?`<div class="stbar">${abas}</div>`:''}
+  ${corpo}`);
+}
+
+/* Menu "..." de cada card. Só demonstra as opções — nenhuma executa de verdade. */
+function menuSeg(s){
+  const itens = [
+    ['excel','Exportar em Excel', I.sheet, ''],
+    ['editar','Editar', I.pen, ''],
+    ['duplicar','Duplicar', I.copy, ''],
+    ['excluir','Excluir', I.trash, 'perigo']
+  ];
+  return `<div class="segmenu" data-stop="1">
+    ${itens.map(([k,rot,ic,cls])=>`<button class="${cls}" data-act="acaoSeg" data-v="${s.id}|${k}">${ic}<span>${rot}</span></button>`).join('')}
+  </div>`;
+}
+function botaoMais(s){
+  return `<div class="maiswrap">
+    <button class="btn-ghost mais ${S.menuSeg===s.id?'on':''}" data-act="abrirMenuSeg" data-v="${s.id}">${I.dots}</button>
+    ${S.menuSeg===s.id ? menuSeg(s) : ''}
+  </div>`;
+}
+
+function cardSeg(s){
+  const pills = `<span class="pill">Clientes <b>${nf.format(s.clientes)}</b></span>
+    <span class="pill">Produtos <b>${s.prods}</b></span>
+    <span class="pill">Valor estimado <b>${brl(s.valor)}</b></span>
+    <span class="pill">Ticket <b>${brl(s.ticket)}</b></span>`;
+
+  if(s.status==='ativa'){
+    return `<div class="segcard">
+      <div class="segcard-top"><span class="badge green">Campanha Ativa</span>${pills}
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:12.5px;color:var(--ink-3);display:flex;gap:6px;align-items:center;justify-content:flex-end">${I.cal} ${s.campIni} - ${s.campFim}</div>
+          <div class="progress"><i style="width:${s.progresso}%"></i></div>
+        </div>
+        ${botaoMais(s)}
+      </div>
+      <div class="segcard-main">
+        <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
+          <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
+        <div class="runbox">Campanha em andamento.<br>Os resultados aparecem 2 dias depois do encerramento.</div>
+      </div></div>`;
+  }
+  if(s.status==='encerrada'){
+    const k=(nome,val,tipK)=>`<div class="kpi"><div class="k">${nome} ${tipK?tip(tipK):''}</div><div class="v">${val}</div><div class="d">${I.up} 4,45%</div></div>`;
+    return `<div class="segcard">
+      <div class="segcard-top"><span class="badge pink">Campanha encerrada</span>${pills}
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:12.5px;color:var(--ink-3);display:flex;gap:6px;align-items:center;justify-content:flex-end">${I.cal} ${s.campIni} - ${s.campFim}</div>
+          <div class="progress blue"><i style="width:100%"></i></div>
+        </div>
+        ${botaoMais(s)}
+      </div>
+      <div class="segcard-main">
+        <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
+          <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
+        <div class="kpis">${k('Faturamento',brl(s.faturamento),'faturamento')}${k('Ticket médio',brl(s.ticket),'ticket')}${k('LTV médio',brl(s.ltv),'ltv')}${k('Unidade de vendas',nf.format(s.clientes))}</div>
+      </div></div>`;
+  }
+  return `<div class="segcard">
+    <div class="segcard-top"><span class="badge blue">Público Criado</span>${pills}
+      <div style="margin-left:auto">${botaoMais(s)}</div></div>
+    <div class="segcard-main">
+      <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
+        <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
+      <button class="btn btn-soft" data-act="iniciarCamp" data-v="${s.id}">Iniciar campanha ${I.play}</button>
+    </div></div>`;
+}
+
+/* =========================================================================
+   6. RENDER — wizard
+   ========================================================================= */
+const PERGUNTAS = [
+  'Em quais lojas os clientes compram?',
+  'Que perfil de comportamento você busca?',
+  'Preferências de compra dos seus clientes',
+  'Quem são esses clientes?',
+  'Escolha os produtos que impactam o seu público'
+];
+const CABECALHOS = [
+  ['Lojas onde compraram','Selecione uma ou mais lojas para considerar apenas os clientes que compraram nelas.'],
+  ['Perfil comportamental','O comportamento recente ajuda a definir melhor o seu público.'],
+  ['DNA','Identifique as necessidades e tipos de produtos que esses clientes costumam buscar.'],
+  ['Informações demográficas','Aumente a precisão da segmentação com dados do perfil do cliente.'],
+  ['Produtos','Escolha os produtos e quando essas compras aconteceram, ou siga para salvar o público.']
+];
+
+function telaWizard(){
+  const stepper = STEPS.map((s,i)=>`<div class="step ${i<S.step?'done':''} ${i===S.step?'current':''}" ${i<S.step?'data-clickable="1" data-act="pular" data-v="'+i+'"':''}>
+      <div class="bar"></div><div class="lbl">${s.label}</div></div>`).join('');
+
+  const [ht,hs] = CABECALHOS[S.step];
+  const corpo = [painelLojas,painelComportamento,painelDna,painelDemografico,painelProdutos][S.step]();
+
+  return shell(`
+  <button class="backlink" data-act="${S.step===0?'sair':'voltar'}">${I.back} ${S.step===0?'Sair':'Voltar'}</button>
+  <div class="wizhead">
+    <div class="title"><h1>${PERGUNTAS[S.step]} ${tip('estimativa')}</h1></div>
+    <div class="stepper">${stepper}</div>
+  </div>
+  <div class="wizbody">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-icon">${I.box}</div><div><h2>${ht}</h2><p>${hs}</p></div></div>
+      <div class="panel-body">${corpo}</div>
+    </div>
+    ${aside()}
+  </div>`);
+}
+
+/* ---------- Aside ---------- */
+function aside(){
+  const e = S.estimativa;
+  const load = S.calculando;
+  const sk = v => load ? `<span class="skel">${v}</span>` : v;
+
+  let bloco;
+  if(!load && e && e.vazio==='sem-resultado'){
+    // quando nenhum critério isolado é o responsável, é a soma deles que fecha o público
+    const lista = (e.criterios||[]).map(c=>`<b>${c}</b>`);
+    const listaTxt = lista.length>1
+      ? lista.slice(0,-1).join(', ')+' e '+lista[lista.length-1]
+      : lista[0]||'';
+    const dica = e.extra ? e.extra
+      : e.culpado ? `O critério <b>${e.culpado}</b> parece ser o mais restritivo. Sem ele, o público volta a ter cerca de ${nf.format(e.recupera)} clientes.`
+      : lista.length>1 ? `Não é um critério só: a combinação de ${listaTxt} não encontra ninguém. Tire um deles para ver o público voltar.`
+      : 'Tente afrouxar esse critério para encontrar clientes.';
+    bloco = `<div class="bignum" style="background:var(--danger-soft)">
+      <div class="v" style="color:var(--danger)">0</div>
+      <div class="c" style="color:#8B2E2E">Nenhum cliente atende a todos os critérios</div></div>
+      <div style="font-size:12.5px;color:var(--ink-3);line-height:1.55;padding:2px 2px 12px">${dica}</div>`;
+  } else {
+    const pct = e ? (e.pct>=0.995 ? '100' : nf1.format(e.pct*100)) : '—';
+    bloco = `<div class="bignum">
+      <div class="v">${sk(e?nf.format(e.clientes):'—')}</div>
+      <div class="c">Clientes &nbsp;${sk(pct+'% da base')}</div></div>
+      ${metric(I.money,'Faturamento total','faturamento', e?brl(e.faturamento):'—', load)}
+      ${metric(I.money,'Ticket médio','ticket', e?brl(e.ticket):'—', load)}
+      ${metric(I.users,'LTV','ltv', e?brl(e.ltv):'—', load)}
+      ${metric(I.repeat,'Frequência de compras','freq', e?nf1.format(e.freq)+'x':'—', load)}
+      ${metric(I.box,'Produtos selecionados','prodsel', String(S.produtos.length), load)}
+      ${S.compraPeriodos.length ? metric(I.cal,'Período de compra','periodoCompra', resumoPeriodos(), load) : ''}`;
+  }
+
+  const funil = (MOSTRAR_FUNIL && !load && e) ? funilBloco(e) : '';
+
+  const temMed = PRODUTOS.filter(p=>S.produtos.includes(p.id)).some(p=>p.medicamento) || (S.step===STEP_PRODUTOS);
+  const avisoMed = temMed ? `<div class="warnbox">${I.alert}<div><b>Atenção ao uso</b>Dados de medicamentos não podem ser usados para promoção ou publicidade.</div></div>` : '';
+
+  const ultimo = S.step === STEPS.length-1;
+
+  const n = S.pendentes;
+  const flag = S.stale ? `<div class="stale-flag">
+      <b>Estimativa desatualizada</b>
+      ${n===1?'Você mudou 1 critério':'Você mudou '+n+' critérios'} depois do último cálculo. Clique em <b>Atualizar estimativa</b> para ver o público novo.
+    </div>` : '';
+
+  const travado = ultimo && S.stale;
+
+  return `<div class="aside ${S.stale?'stale':''}">
+    <h3>Estimativa de impacto ${tip('estimativa')}</h3>
+    ${flag}
+    ${bloco}${funil}${avisoMed}
+    <div class="aside-actions">
+      <button class="btn ${S.stale?'btn-primary':'btn-soft'}" data-act="atualizar" ${(!S.stale||load)?'disabled':''}>
+        ${load?'<span class="spin"></span>':I.refresh} ${load?'Calculando...':'Atualizar estimativa'}</button>
+      ${S.step===0
+        ? `<button class="btn btn-primary" data-act="avancar">Avançar ${I.fwd}</button>`
+        : `<div class="nav-pair">
+             <button class="btn btn-soft" data-act="voltar">${I.back} Voltar</button>
+             <button class="btn btn-primary" data-act="${ultimo?'abrirModal':'avancar'}" ${travado?'disabled':''}>${ultimo?'Salvar público':'Avançar'} ${ultimo?'':I.fwd}</button>
+           </div>`}
+      ${travado?`<p style="margin:0;font-size:12px;color:var(--ink-4);line-height:1.45;text-align:center">Atualize a estimativa antes de salvar.</p>`:''}
+      <p class="janela-nota">Análise feita sobre os últimos ${JANELA_MESES} meses de compras.</p>
+    </div></div>`;
+}
+/* ---------- Funil: como cada etapa reduz o público ---------- */
+function funilBloco(e){
+  if(!e || !e.funil || e.funil.length < 2) return '';
+  const topo = e.funil[0].clientes || 1;
+  let jaZerou = false;
+  const linhas = e.funil.map(f=>{
+    const larg = Math.max(3, Math.round((f.clientes/topo)*100));
+    const zerouAqui = f.clientes === 0 && !jaZerou;
+    if(f.clientes === 0) jaZerou = true;
+    const corte = f.primeiro ? '<span class="fn-base">ponto de partida</span>'
+      : zerouAqui ? '<span class="fn-corte bad">o público zerou nesta etapa</span>'
+      : f.clientes === 0 ? '<span class="fn-corte none">já não havia clientes aqui</span>'
+      : f.corte < 0.005 ? '<span class="fn-corte none">não reduziu</span>'
+      : `<span class="fn-corte">−${nf1.format(f.corte*100)}% em relação à etapa anterior</span>`;
+    const zero = zerouAqui;
+    return `<div class="fn-item">
+      <div class="fn-top"><span class="fn-nome">${f.etapa}</span><span class="fn-num">${nf.format(f.clientes)}</span></div>
+      <div class="fn-bar"><i style="width:${larg}%" class="${zero?'bad':''}"></i></div>
+      <div class="fn-sub">${corte}</div>
+    </div>`;
+  }).join('');
+  const aberto = S.funilAberto;
+  return `<div class="funil ${aberto?'on':''}">
+    <button class="fn-head" data-act="toggleFunil">
+      ${I.funnel} <span>Como chegamos nesse número</span> <i class="fn-caret">${I.chev}</i>
+    </button>
+    ${aberto ? `<div class="fn-body">
+      <p class="fn-hint">Cada etapa filtra os clientes que sobraram da etapa anterior.</p>
+      ${linhas}
+    </div>` : ''}
+  </div>`;
+}
+
+function metric(ic,nome,tk,val,load){
+  return `<div class="metric"><div class="k">${ic} ${nome} ${tip(tk)}</div>
+    <div class="v ${load?'skel':''}">${val}</div></div>`;
+}
+
+/* ---------- Helpers de data (usados pelos períodos de compra) ---------- */
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+const ymd = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const parseYmd = s => s ? new Date(s+'T12:00:00') : null;
+const fmtBr = s => s ? parseYmd(s).toLocaleDateString('pt-BR') : '';
+const addDias = (d,n) => new Date(d.getTime()+n*DIA);
+
+/* ---------- Etapa 2: lojas ---------- */
+/* Filtra as lojas. `ignorar` deixa um campo de fora — é assim que cada dropdown
+   descobre quais opções ainda levam a algum resultado, sem se filtrar a si mesmo. */
+function filtrarLojas(ignorar){
+  const b = S.lojaBusca.trim().toLowerCase();
+  return LOJAS.filter(l=>{
+    if(ignorar!=='busca' && b && !(l.nome.toLowerCase().includes(b)||l.cnpj.includes(b)||l.cidade.toLowerCase().includes(b))) return false;
+    if(ignorar!=='lojaBandeira' && S.lojaBandeira && l.bandeira!==S.lojaBandeira) return false;
+    if(ignorar!=='lojaUf'       && S.lojaUf       && l.uf!==S.lojaUf) return false;
+    if(ignorar!=='lojaCidade'   && S.lojaCidade   && l.cidade!==S.lojaCidade) return false;
+    return true;
+  });
+}
+const ordAZ = (a,b)=>a.localeCompare(b,'pt-BR');
+
+function painelLojas(){
+  const list = filtrarLojas();
+  const PP=8, pgs=Math.max(1,Math.ceil(list.length/PP));
+  if(S.lojaPag>pgs) S.lojaPag=pgs;
+  if(S.lojaPag<1) S.lojaPag=1;
+  const page = list.slice((S.lojaPag-1)*PP, S.lojaPag*PP);
+  const todosNaPag = page.length && page.every(l=>S.lojas.includes(l.id));
+
+  const tudo = S.lojas.length===LOJAS.length;
+
+  // cada dropdown mostra só o que ainda tem loja correspondente
+  const bandeiras = [...new Set(filtrarLojas('lojaBandeira').map(l=>l.bandeira))].sort(ordAZ);
+  const ufs       = [...new Set(filtrarLojas('lojaUf').map(l=>l.uf))].sort(ordAZ);
+  const cidades   = [...new Set(filtrarLojas('lojaCidade').map(l=>l.cidade))].sort(ordAZ);
+  const temFiltro = S.lojaBusca || S.lojaBandeira || S.lojaUf || S.lojaCidade;
+
+  // contagem + ações em massa ficam na linha do rodapé da tabela, sem caixa extra
+  const rodape = `<span class="selinfo">${S.lojas.length} de ${LOJAS.length} selecionadas</span>
+    <button class="linkbtn" data-act="lojasTodas" ${tudo?'disabled':''}>Marcar todas</button>
+    <button class="linkbtn" data-act="lojasNenhuma" ${S.lojas.length?'':'disabled'}>Desmarcar todas</button>`;
+
+  return `<div class="filters">
+    <div class="search">${I.search}<input data-k="lb" data-act="lojaBusca" placeholder="Busque pelo nome, CNPJ, cidade..." value="${esc(S.lojaBusca)}"></div>
+    ${sel('Bandeira','lojaBandeira',bandeiras,S.lojaBandeira)}
+    ${sel('Estado','lojaUf',ufs,S.lojaUf)}
+    ${sel('Cidade','lojaCidade',cidades,S.lojaCidade)}
+    ${temFiltro?`<div class="field"><label>&nbsp;</label><button class="btn btn-ghost btnfiltro" data-act="limparFiltrosLoja">Limpar filtros</button></div>`:''}
+  </div>
+  ${!list.length ? vazioTabela('Nenhuma loja encontrada','Ajuste a busca ou clique em “Limpar filtros” para ver as lojas novamente.') : `
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:44px"><span class="cb ${todosNaPag?'on':''}" data-act="lojasPag">${todosNaPag?I.check:''}</span></th>
+      <th>CNPJ</th><th>Bandeira</th><th>Nome da loja</th><th>Cidade</th><th>Estado</th></tr></thead>
+    <tbody>${page.map(l=>{const on=S.lojas.includes(l.id);
+      return `<tr class="${on?'sel':''}" data-act="toggleLoja" data-v="${l.id}">
+        <td><span class="cb ${on?'on':''}">${on?I.check:''}</span></td>
+        <td>${l.cnpj}</td><td>${l.bandeira}</td><td>${esc(l.nome)}</td><td>${l.cidade}</td><td>${l.uf}</td></tr>`}).join('')}
+    </tbody></table></div>
+  ${pager(list.length,S.lojaPag,pgs,'lojaPag',rodape)}
+  ${S.lojas.length?'':`<p class="avisozero">${I.alert} Sem nenhuma loja marcada o público fica zerado. Marque pelo menos uma.</p>`}`}`;
+}
+
+/* ---------- Etapa 3: produtos ---------- */
+/* Períodos fechados de compra — só semanas e meses já encerrados,
+   para o usuário nunca comparar um período pela metade com um período inteiro. */
+/* Grade de meses de um ano — 4 colunas, meses fechados clicáveis. */
+function gradeMeses(){
+  const ano = S.perAno;
+  const cells = Array.from({length:12},(_,m)=>{
+    const p = mesDe(ano,m);
+    const livre = periodoFechado(p);
+    const on = S.compraPeriodos.includes(p.chave);
+    const razao = !livre ? (p.ini >= HOJE_MS || p.fim >= HOJE_MS ? 'Mês ainda não fechou' : 'Fora dos últimos '+JANELA_MESES+' meses') : '';
+    return `<button class="dp-m ${on?'on':''}" ${livre?'':'disabled'} title="${razao}"
+      data-act="togglePeriodo" data-v="${p.chave}">${MESES[m].slice(0,3)}</button>`;
+  }).join('');
+  return `<div class="dp-nav">
+      <button data-act="perAno" data-v="${ano-1}" ${ano-1<ANO_MIN?'disabled':''} aria-label="Ano anterior">${I.left}</button>
+      <b>${ano}</b>
+      <button data-act="perAno" data-v="${ano+1}" ${ano+1>ANO_MAX?'disabled':''} aria-label="Próximo ano">${I.right}</button>
+    </div>
+    <div class="dp-meses">${cells}</div>`;
+}
+
+/* Calendário do mês com as SEMANAS como linhas clicáveis —
+   mesma moldura da grade de meses, para o usuário não reaprender o componente. */
+function gradeSemanas(){
+  const ref = new Date(S.perMes);
+  const ultimo = new Date(ref.getFullYear(), ref.getMonth()+1, 0);
+  const primeiraSeg = segundaDe(new Date(ref.getFullYear(), ref.getMonth(), 1));
+  const antes = new Date(ref.getFullYear(), ref.getMonth()-1, 1);
+  const depois = new Date(ref.getFullYear(), ref.getMonth()+1, 1);
+  const podeAntes = antes.getTime() >= new Date(new Date(JANELA_INI).getFullYear(), new Date(JANELA_INI).getMonth(), 1).getTime();
+  const podeDepois = depois.getTime() <= new Date(HOJE.getFullYear(), HOJE.getMonth(), 1).getTime();
+
+  let linhas = '';
+  for(let i=0;i<6;i++){
+    const wIni = new Date(primeiraSeg.getTime() + i*7*DIA);
+    if(wIni > ultimo) break;
+    const p = semanaDe(wIni);
+    const livre = periodoFechado(p);
+    const on = S.compraPeriodos.includes(p.chave);
+    const dias = Array.from({length:7},(_,k)=>{
+      const d = new Date(wIni.getTime()+k*DIA);
+      const fora = d.getMonth()!==ref.getMonth();
+      const hoje = d.getTime()===HOJE_MS;
+      return `<i class="${fora?'fora':''} ${hoje?'hoje':''}">${d.getDate()}</i>`;
+    }).join('');
+    linhas += `<button class="dp-wk ${on?'on':''}" ${livre?'':'disabled'}
+      title="${livre?'Semana de '+p.rotulo:'Semana ainda não fechou ou está fora do histórico'}"
+      data-act="togglePeriodo" data-v="${p.chave}">
+      <span class="dp-wk-dias">${dias}</span>
+      <span class="dp-wk-tag">${on?I.check:''}</span></button>`;
+  }
+  return `<div class="dp-nav">
+      <button data-act="perMes" data-v="${antes.getTime()}" ${podeAntes?'':'disabled'} aria-label="Mês anterior">${I.left}</button>
+      <b>${MESES[ref.getMonth()].charAt(0).toUpperCase()+MESES[ref.getMonth()].slice(1)} ${ref.getFullYear()}</b>
+      <button data-act="perMes" data-v="${depois.getTime()}" ${podeDepois?'':'disabled'} aria-label="Próximo mês">${I.right}</button>
+    </div>
+    <div class="dp-dow"><i>S</i><i>T</i><i>Q</i><i>Q</i><i>S</i><i>S</i><i>D</i></div>
+    <div class="dp-wks">${linhas}</div>
+    <p class="dp-nota">Clique na linha para escolher a semana inteira (segunda a domingo).</p>`;
+}
+
+function popPeriodos(){
+  const semana = S.compraTipo==='semana';
+  return `<div class="dppop" data-stop="1">
+    <div class="dp-head">
+      <div class="seg segsm">
+        <button class="${semana?'':'on'}" data-act="compraTipo" data-v="mes">Por mês</button>
+        <button class="${semana?'on':''}" data-act="compraTipo" data-v="semana">Por semana</button>
+      </div>
+    </div>
+    <div class="dp-body">${semana ? gradeSemanas() : gradeMeses()}</div>
+    <div class="dp-foot">
+      <button class="linkbtn" data-act="limparPeriodos" ${S.compraPeriodos.length?'':'disabled'}>Limpar</button>
+      <button class="btn btn-primary btnsm" data-act="fecharPeriodos">Pronto</button>
+    </div>
+  </div>`;
+}
+
+function blocoPeriodoCompra(){
+  const sel = periodosEscolhidos();
+  const rotulo = sel.length ? resumoPeriodos() : `Todo o histórico (${JANELA_MESES} meses)`;
+  const tags = sel.map(p=>`<span class="tag">${rotuloPeriodo(p)} <button data-act="togglePeriodo" data-v="${p.chave}">×</button></span>`).join('');
+
+  return `<div class="percaixa">
+    <div class="perhead">
+      <div>
+        <p class="sublabel" style="margin:0 0 2px">Quando essas compras aconteceram?</p>
+        <p class="hint" style="margin:0">Escolha um ou mais períodos já fechados. O público vai ter só quem comprou dentro deles.</p>
+      </div>
+      <div class="dpwrap">
+        <button class="dptrigger ${S.perAberto?'on':''} ${sel.length?'tem':''}" data-act="abrirPeriodos">
+          ${I.cal}<span>${rotulo}</span>${I.chev}</button>
+        ${S.perAberto ? popPeriodos() : ''}
+      </div>
+    </div>
+    ${sel.length
+      ? `<div class="pertags">${tags}<button class="linkbtn" data-act="limparPeriodos">Limpar tudo</button></div>`
+      : `<p class="hint" style="margin-top:12px;color:var(--ink-4)">Sem período escolhido, valem as compras de todo o histórico disponível (últimos ${JANELA_MESES} meses).</p>`}
+  </div>`;
+}
+
+function painelProdutos(){
+  const b = S.prodBusca.trim().toLowerCase();
+  let list = PRODUTOS.filter(p=>{
+    if(b && !(p.nome.toLowerCase().includes(b)||p.ean.includes(b))) return false;
+    if(S.prodCat && p.categoria!==S.prodCat) return false;
+    if(S.prodSub && p.sub!==S.prodSub) return false;
+    if(S.prodInd && p.industria!==S.prodInd) return false;
+    return true;
+  });
+  const PP=10, pgs=Math.max(1,Math.ceil(list.length/PP));
+  if(S.prodPag>pgs) S.prodPag=pgs;
+  const page = list.slice((S.prodPag-1)*PP, S.prodPag*PP);
+  const todosNaPag = page.length && page.every(p=>S.produtos.includes(p.id));
+  const subs = S.prodCat ? CATS[S.prodCat] : [];
+
+  const tags = S.produtos.length
+    ? PRODUTOS.filter(p=>S.produtos.includes(p.id)).slice(0,14).map(p=>`<span class="tag">${esc(p.nome)} <button data-act="toggleProd" data-v="${p.id}">×</button></span>`).join('') + (S.produtos.length>14?`<span class="tag" style="background:#EDF1F6;color:var(--ink-3)">+${S.produtos.length-14}</span>`:'')
+    : `<div class="muted">Selecione abaixo os produtos que deseja incluir na sua segmentação de público.</div>`;
+
+  return `${blocoPeriodoCompra()}
+  <div class="selbox"><div class="t">Produtos selecionados: ${S.produtos.length}</div>${tags}</div>
+  <div class="filters">
+    <div class="search">${I.search}<input data-k="pb" data-act="prodBusca" placeholder="Digite o nome, EAN ou SKU" value="${esc(S.prodBusca)}"></div>
+    ${sel('Categorias','prodCat',Object.keys(CATS),S.prodCat)}
+    ${sel('Sub-categorias','prodSub',subs,S.prodSub,!S.prodCat)}
+    ${sel('Indústria','prodInd',INDUSTRIAS,S.prodInd)}
+  </div>
+  ${!list.length ? vazioTabela('Nenhum produto encontrado','Verifique o nome ou o EAN digitado, ou limpe os filtros.') : `
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:44px"><span class="cb ${todosNaPag?'on':''}" data-act="prodsPag">${todosNaPag?I.check:''}</span></th>
+      <th>Produto</th><th>Categoria</th><th>Sub-categoria</th><th>EAN</th></tr></thead>
+    <tbody>${page.map(p=>{const on=S.produtos.includes(p.id);
+      return `<tr class="${on?'sel':''}" data-act="toggleProd" data-v="${p.id}">
+        <td><span class="cb ${on?'on':''}">${on?I.check:''}</span></td>
+        <td>${esc(p.nome)}</td><td>${p.tipo}</td><td>${p.sub}</td><td>${p.ean}</td></tr>`}).join('')}
+    </tbody></table></div>
+  ${pager(list.length,S.prodPag,pgs,'prodPag')}`}`;
+}
+
+/* ---------- Etapa 4: demográfico ---------- */
+function painelDemografico(){
+  return `<p class="sublabel">Gênero</p>
+  <div class="chipwrap">${GENEROS.map(([k,v])=>`<button class="chip ${S.genero.includes(k)?'on':''}" data-act="toggleGen" data-v="${k}">${v}</button>`).join('')}</div>
+  <p class="sublabel">Faixa etária</p>
+  <div class="chipwrap">${FAIXAS.map(f=>`<button class="chip ${S.faixa.includes(f)?'on':''}" data-act="toggleFx" data-v="${esc(f)}">${f}</button>`).join('')}</div>
+  <p class="hint" style="margin-top:6px;color:var(--ink-4)">Se você não escolher nada, o público considera todos os gêneros e todas as idades.</p>`;
+}
+
+/* ---------- Etapa 5: comportamento (RFV) ---------- */
+function painelComportamento(){
+  return `<p class="sublabel" style="margin-bottom:2px">Perfil (RFV)</p>
+  <p class="hint" style="margin:0 0 16px">Qual é o nível de relacionamento desses clientes com a loja?</p>
+  <div class="grid2">${RFVS.map(r=>{const on=S.rfv.includes(r.id);
+    return `<div class="rfv ${on?'on':''}" data-act="toggleRfv" data-v="${r.id}">
+      <div class="rfv-top"><div style="flex:1"><h4>${r.nome}</h4><p>${r.desc}</p></div>
+        <span class="switch ${on?'on':''}"></span></div>
+      <div class="rfv-bot"><b>Ative esse perfil se o objetivo for:</b>${r.obj}</div></div>`}).join('')}</div>
+  <p class="hint" style="margin-top:16px;color:var(--ink-4)">Pode escolher mais de um perfil. Sem escolha, o público considera todos.</p>`;
+}
+
+/* ---------- Etapa 6: DNA ---------- */
+/* Insights que mudam conforme o grau de aderência escolhido.
+   Abre ao clicar em Baixa / Média / Alta — o usuário vê na hora
+   com que tipo de cliente ele acabou de decidir falar. */
+function insightsGrau(d, grau){
+  const ins = insightDna(d.id, grau);
+  const GTXT = {
+    'Baixa':'Clientes em que esse comportamento aparece pouco.',
+    'Média':'Clientes em que esse comportamento já é frequente.',
+    'Alta':'Clientes em que esse comportamento domina as compras.'
+  };
+  return `<div class="dna-ins">
+    <div class="dna-ins-head">
+      <span class="grau-pill g-${grau==='Média'?'media':grau.toLowerCase()}">Aderência ${grau}</span>
+      <span class="dna-ins-sub">${GTXT[grau]}</span>
+      <button class="linkbtn" data-act="fecharInsight">Fechar</button>
+    </div>
+    ${ins.perfil?`<p class="dna-ins-perfil">${ins.perfil}</p>`:''}
+    <div class="dna-ins-cols">
+      <div><b>O que costuma acontecer</b>
+        ${ins.comport.map(x=>`<div class="li">${x}</div>`).join('')}</div>
+      <div><b>Sugestões de ação</b>
+        ${ins.oport.map(x=>`<div class="li li-op">${x}</div>`).join('')}</div>
+    </div>
+  </div>`;
+}
+
+function painelDna(){
+  const grade = OPTS.dnaLayout==='grade';
+  const cards = DNAS.map(d=>{
+    const on = !!S.dna[d.id];
+    const grau = S.dna[d.id] || '';
+    const insAberto = S.dnaExpandido===d.id && S.dnaGrauAberto;
+    const aberto = S.dnaExpandido===d.id && !S.dnaGrauAberto;
+    const segs = ['Baixa','Média','Alta'].map(g=>`<button class="${grau===g?'on':''}" data-act="setGrau" data-v="${d.id}|${g}" ${on?'':'disabled'}>${g}</button>`).join('');
+    const painelIns = insAberto ? insightsGrau(d, S.dnaGrauAberto) : '';
+
+    if(grade){
+      return `<div class="dna ${on?'on':''}" style="margin:0">
+        <div style="padding:15px 18px;display:flex;gap:13px;align-items:flex-start">
+          <span class="switch ${on?'on':''}" data-act="toggleDna" data-v="${d.id}"></span>
+          <div><h4 style="margin:0 0 3px;font-size:16px;font-weight:600">${d.nome}</h4>
+          <p style="margin:0;font-size:12.5px;color:var(--ink-3);line-height:1.45">${d.desc}</p></div></div>
+        <div style="border-top:1px solid var(--border);background:#FBFCFE;padding:14px 18px;display:flex;gap:16px;align-items:flex-end">
+          <div style="flex:1;font-size:12.5px;color:var(--ink-3);line-height:1.45"><b style="display:block;font-weight:500;color:var(--ink-2);margin-bottom:3px">Como usar:</b>${d.uso}</div>
+          <div><div class="k" style="font-size:12.5px;color:var(--ink-2);margin-bottom:8px;display:flex;gap:5px;align-items:center">Grau de aderência: ${tip('aderencia')}</div><div class="seg">${segs}</div></div>
+        </div>${painelIns}</div>`;
+    }
+    return `<div class="dna ${on?'on':''}">
+      <div class="dna-row">
+        <div class="dna-a"><span class="switch ${on?'on':''}" data-act="toggleDna" data-v="${d.id}"></span>
+          <div style="cursor:pointer" data-act="expandDna" data-v="${d.id}"><h4>${d.nome}</h4><p>${d.desc}</p></div></div>
+        <div class="dna-b"><b>Como usar:</b>${d.uso}</div>
+        <div class="dna-c"><div class="k">Grau de aderência: ${tip('aderencia')}</div><div class="seg">${segs}</div></div>
+      </div>
+      ${painelIns}
+      ${aberto?`<div style="border-top:1px solid var(--border);padding:16px 18px;display:flex;gap:40px;background:#FBFCFE">
+        <div style="flex:1"><b style="display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin-bottom:7px">Comportamento identificado:</b>
+          ${d.comport.map(x=>`<div style="font-size:12.5px;color:var(--ink-3);line-height:1.75">${x}</div>`).join('')}</div>
+        <div style="flex:1"><b style="display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin-bottom:7px">Oportunidade</b>
+          ${d.oport.map(x=>`<div style="font-size:12.5px;color:var(--ink-3);line-height:1.75">${x}</div>`).join('')}</div>
+      </div>`:''}
+    </div>`;
+  }).join('');
+
+  return `<div class="infobox">Cada DNA representa o comportamento de compra dos clientes, agrupando perfis com interesses e necessidades semelhantes a partir dos produtos que costumam comprar. Assim, é possível entender melhor o perfil de consumo e quais produtos podem ser mais relevantes para cada cliente.</div>
+  <div ${grade?'class="grid2"':''}>${cards}</div>
+  ${Object.keys(S.dna).length>1?`<p class="hint" style="margin-top:16px;color:var(--ink-4)">Você escolheu ${Object.keys(S.dna).length} DNAs. O público inclui quem se encaixa em ${OPTS.dnaLogic==='AND'?'<b>todos</b> eles':'<b>qualquer um</b> deles'}.</p>`:''}`;
+}
+
+/* ---------- helpers de UI ---------- */
+function sel(label,campo,opts,valor,disabled){
+  return `<div class="field"><label>${label}</label>
+    <select class="input" data-act="filtro" data-v="${campo}" ${disabled?'disabled':''}>
+      <option value="">Selecionar</option>
+      ${opts.map(o=>`<option ${valor===o?'selected':''}>${esc(o)}</option>`).join('')}
+    </select></div>`;
+}
+function pager(total,pg,pgs,campo,extra){
+  const esq = pgs<=1
+    ? `${total} ${total===1?'item':'itens'}`
+    : `${total} itens · página ${pg} de ${pgs}`;
+  const btns = pgs<=1 ? ''
+    : `<div class="pg">${Array.from({length:pgs},(_,i)=>`<button class="${pg===i+1?'on':''}" data-act="pag" data-v="${campo}|${i+1}">${i+1}</button>`).join('')}</div>`;
+  return `<div class="pager"><div class="pgesq">${esq}${extra?`<span class="pgsep">·</span>${extra}`:''}</div>${btns||'<div></div>'}</div>`;
+}
+function vazioTabela(t,p){
+  return `<div class="tablewrap"><div class="tempty"><b>${t}</b>${p}</div></div>`;
+}
+
+/* ---------- Modal ---------- */
+function modalSalvar(){
+  const e = S.estimativa;
+  return `<div class="overlay" data-act="fecharModalBg"><div class="modal" data-stop="1">
+    <h2>Salvar segmentação de público</h2>
+    <div class="field"><label>Título</label>
+      <input class="input ${S.modalErro&&!S.modalTitulo.trim()?'err':''}" data-k="mt" data-act="modalTitulo" placeholder="Escreva o nome que deseja salvar esse público" value="${esc(S.modalTitulo)}"></div>
+    <div class="field"><label>Objetivo estratégico</label>
+      <input class="input" data-k="mo" data-act="modalObjetivo" placeholder="Descreva o objetivo dessa segmentação..." value="${esc(S.modalObjetivo)}"></div>
+    <div class="togglebox">
+      <div class="togglebox-top"><div><h4>Iniciar uma nova campanha com esse público</h4>
+        <p>Crie uma campanha usando este público ao salvar.</p></div>
+        <span class="switch ${S.modalCampanha?'on':''}" data-act="modalCamp"></span></div>
+      ${S.modalCampanha?`<div class="togglebox-bot">
+        <p>Defina a duração da campanha e, se quiser, o investimento.</p>
+        <div style="display:flex;gap:16px">
+          <div class="field" style="flex:1;margin:0"><label>Início ${tip('campIni')}</label>
+            <input type="date" class="input" data-k="mi" data-act="modalIni" value="${S.modalIni}"></div>
+          <div class="field" style="flex:1;margin:0"><label>Término ${tip('campFim')}</label>
+            <input type="date" class="input" data-k="mf" data-act="modalFim" value="${S.modalFim}"></div>
+        </div></div>`:''}
+    </div>
+    ${S.modalErro?`<div class="errmsg" style="margin-bottom:16px">${I.alert}<span>${esc(S.modalErro)}</span></div>`:''}
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-act="fecharModal">Cancelar</button>
+      <button class="btn btn-primary" data-act="salvar">Salvar</button>
+      <button class="btn btn-primary" data-act="salvarExportar">Salvar e exportar</button>
+    </div>
+  </div></div>`;
+}
+
+/* =========================================================================
+   7. RENDER PRINCIPAL
+   ========================================================================= */
+function render(){
+  const a = document.activeElement;
+  const key = a && a.dataset ? a.dataset.k : null;
+  let pos = null; try{ pos = a && a.selectionStart; }catch(e){}
+
+  let html = S.screen==='list' ? telaLista() : telaWizard();
+  if(S.modal) html += modalSalvar();
+  if(S.toast) html += `<div class="toast">${esc(S.toast)}</div>`;
+  root.innerHTML = html;
+
+  if(key){ const n = root.querySelector('[data-k="'+key+'"]'); if(n){ n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} } }
+}
+
+/* =========================================================================
+   8. AÇÕES
+   ========================================================================= */
+function toast(msg){ S.toast = msg; render(); setTimeout(()=>{ S.toast=''; render(); },2600); }
+const arrToggle = (arr,v)=> arr.includes(v) ? arr.filter(x=>x!==v) : arr.concat([v]);
+
+root.addEventListener('click', ev=>{
+  const el = ev.target.closest('[data-act]');
+  if(!el) return;
+  // BUG antigo: abrir um <select> disparava 'filtro' + render(), o que refazia o DOM
+  // e fechava a lista na cara do usuário. Select só responde ao evento 'change'.
+  if(el.tagName==='SELECT' || ev.target.tagName==='SELECT') return;
+  if(el.tagName==='INPUT' || ev.target.tagName==='INPUT') return;
+  const act = el.dataset.act, v = el.dataset.v;
+  if(act==='fecharModalBg' && ev.target.closest('[data-stop]')) return;
+  handle(act, v, el);
+});
+root.addEventListener('input', ev=>{
+  const el = ev.target.closest('[data-act]');
+  if(!el || el.tagName==='SELECT') return;
+  handle(el.dataset.act, el.value, el, true);
+});
+root.addEventListener('change', ev=>{
+  const el = ev.target.closest('[data-act]');
+  if(!el) return;
+  if(el.tagName==='SELECT') handle('filtro', el.dataset.v, el);
+});
+// clique fora fecha o seletor de períodos e o menu "..." dos cards
+document.addEventListener('mousedown', ev=>{
+  const dentro = sel => ev.target.closest && ev.target.closest(sel);
+  let mudou = false;
+  if(S.perAberto && !dentro('.dpwrap')){ S.perAberto=false; log('periodos-fechou','clique fora'); mudou=true; }
+  if(S.menuSeg && !dentro('.maiswrap')){ S.menuSeg=null; log('menu-segmentacao','clique fora'); mudou=true; }
+  if(mudou) render();
+});
+document.addEventListener('keydown', ev=>{
+  if(ev.key!=='Escape') return;
+  let mudou = false;
+  if(S.perAberto){ S.perAberto=false; log('periodos-fechou','esc'); mudou=true; }
+  if(S.menuSeg){ S.menuSeg=null; log('menu-segmentacao','esc'); mudou=true; }
+  if(mudou) render();
+});
+
+function handle(act, v, el, isInput){
+  switch(act){
+    case 'tabNoop': toast('Só a aba Segmentação está disponível neste protótipo.'); log('aba-indisponivel', v); return;
+
+    case 'nova':
+      S = Object.assign(estadoInicial(), {segmentacoes:S.segmentacoes, screen:'wizard', step:0});
+      // já entra com a estimativa da base inteira: todas as lojas vêm marcadas,
+      // então o número da direita tem que bater com isso desde o primeiro segundo
+      S.estimativa = calcular(); S.stale = false; S.pendentes = 0;
+      log('inicio-fluxo', nf.format(S.estimativa.clientes)+' clientes na base');
+      tStep = Date.now(); render(); return;
+
+    case 'sair':
+      log('saiu-fluxo'); S.screen='list'; S.modal=false; render(); return;
+
+    case 'voltar':
+      if(S.step>0){ log('voltou', STEPS[S.step].label+' → '+STEPS[S.step-1].label); S.step--; tStep=Date.now(); render(); }
+      return;
+
+    case 'avancar':
+      log('avancou', STEPS[S.step].label+' ('+Math.round((Date.now()-tStep)/1000)+'s'+(S.stale?', estimativa desatualizada':'')+')');
+      S.step = Math.min(STEPS.length-1, S.step+1); tStep=Date.now();
+      render();
+      return;
+
+    case 'pular':
+      log('pulou-para', STEPS[+v].label); S.step=+v; tStep=Date.now(); render(); return;
+
+    /* ---- períodos fechados de compra (etapa Produtos) ---- */
+    case 'abrirPeriodos':
+      S.perAberto = !S.perAberto;
+      if(S.perAberto){
+        // abre onde o usuário parou; sem escolha, no período fechado mais recente —
+        // que para MÊS é o mês passado e para SEMANA está dentro do mês corrente.
+        const p = periodosEscolhidos();
+        const ref = p.length ? new Date(p[p.length-1].ini)
+                  : S.compraTipo==='semana' ? new Date(HOJE.getFullYear(), HOJE.getMonth(), 1)
+                  : new Date(HOJE.getFullYear(), HOJE.getMonth()-1, 1);
+        S.perAno = Math.min(ANO_MAX, Math.max(ANO_MIN, ref.getFullYear()));
+        S.perMes = new Date(ref.getFullYear(), ref.getMonth(), 1).getTime();
+      }
+      log('periodos', S.perAberto?'abriu':'fechou'); render(); return;
+
+    case 'fecharPeriodos': S.perAberto=false; log('periodos','pronto'); render(); return;
+
+    case 'perAno':  S.perAno = +v; log('periodos-ano', v); render(); return;
+    case 'perMes':  S.perMes = +v; log('periodos-mes', fmtD(+v)); render(); return;
+
+    case 'compraTipo':
+      if(S.compraTipo===v) return;
+      S.compraTipo = v;
+      // reposiciona o calendário no período fechado mais recente da nova escala
+      S.perAno = HOJE.getFullYear();
+      S.perMes = new Date(HOJE.getFullYear(), HOJE.getMonth() - (v==='semana'?0:1), 1).getTime();
+      // trocar de semana para mês zera a escolha: misturar as duas escalas confunde
+      if(S.compraPeriodos.length){ S.compraPeriodos = []; log('periodo-compra-limpou','troca de escala'); marcarSujo('período de compra'); }
+      else render();
+      log('periodo-compra-tipo', v);
+      return;
+
+    case 'togglePeriodo': {
+      // um período de semana e um de mês na mesma seleção viram um público
+      // que o usuário não consegue explicar — a escala manda.
+      const tipo = v[0]==='w' ? 'semana' : 'mes';
+      if(tipo!==S.compraTipo){ S.compraTipo = tipo; S.compraPeriodos = []; }
+      S.compraPeriodos = arrToggle(S.compraPeriodos, v);
+      log('periodo-compra', v+' ('+S.compraPeriodos.length+' selecionado(s))');
+      marcarSujo('período de compra'); return; }
+
+    case 'limparPeriodos':
+      if(!S.compraPeriodos.length) return;
+      S.compraPeriodos = []; log('periodo-compra-limpou','clique');
+      marcarSujo('período de compra'); return;
+
+    case 'toggleLoja': S.lojas = arrToggle(S.lojas,v); log('loja', v); marcarSujo('lojas'); return;
+    case 'lojasPag': {
+      const vis = visiveisLojas(); const todos = vis.every(l=>S.lojas.includes(l.id));
+      S.lojas = todos ? S.lojas.filter(x=>!vis.some(l=>l.id===x)) : [...new Set(S.lojas.concat(vis.map(l=>l.id)))];
+      log('lojas-pagina', todos?'desmarcou':'marcou'); marcarSujo('lojas'); return; }
+    case 'lojaBusca': S.lojaBusca=v; S.lojaPag=1; render(); return;
+    case 'lojasTodas':
+      if(S.lojas.length===LOJAS.length) return;
+      S.lojas = LOJAS.map(l=>l.id); log('lojas-todas'); marcarSujo('lojas'); return;
+    case 'lojasNenhuma':
+      if(!S.lojas.length) return;
+      S.lojas = []; log('lojas-nenhuma'); marcarSujo('lojas'); return;
+    case 'limparFiltrosLoja':
+      S.lojaBusca=''; S.lojaBandeira=''; S.lojaUf=''; S.lojaCidade=''; S.lojaPag=1;
+      log('lojas-limpou-filtros'); render(); return;
+
+    case 'toggleProd': S.produtos = arrToggle(S.produtos,v); log('produto', v); marcarSujo('produtos'); return;
+    case 'prodsPag': {
+      const vis = visiveisProdutos(); const todos = vis.every(p=>S.produtos.includes(p.id));
+      S.produtos = todos ? S.produtos.filter(x=>!vis.some(p=>p.id===x)) : [...new Set(S.produtos.concat(vis.map(p=>p.id)))];
+      log('produtos-pagina', todos?'desmarcou':'marcou'); marcarSujo('produtos'); return; }
+    case 'prodBusca': S.prodBusca=v; S.prodPag=1; render(); return;
+
+    case 'filtro': {
+      const campo = v, val = el.value;
+      if(S[campo]===val) return;              // não redesenha à toa
+      S[campo] = val;
+      if(campo==='prodCat'){ S.prodSub=''; S.prodPag=1; }
+      if(campo==='prodInd'||campo==='prodSub') S.prodPag=1;
+      if(campo.startsWith('loja')){
+        S.lojaPag=1;
+        // Estado manda na Cidade: trocar de estado com uma cidade de outro estado
+        // marcada dava lista vazia sem explicação nenhuma.
+        if(campo==='lojaUf' && S.lojaCidade && !LOJAS.some(l=>l.uf===val && l.cidade===S.lojaCidade)) S.lojaCidade='';
+        if(campo==='lojaCidade' && val){
+          const l0 = LOJAS.find(l=>l.cidade===val);
+          if(l0 && S.lojaUf && l0.uf!==S.lojaUf) S.lojaUf = l0.uf;
+        }
+      }
+      log('filtro', campo+'='+(val||'todos')); render(); return; }
+
+    case 'pag': { const [c,p]=v.split('|'); S[c]=+p; render(); return; }
+
+    case 'toggleGen': S.genero=arrToggle(S.genero,v); log('genero',v); marcarSujo('gênero'); return;
+    case 'toggleFx':  S.faixa=arrToggle(S.faixa,v);   log('faixa',v);  marcarSujo('faixa etária'); return;
+    case 'toggleRfv': S.rfv=arrToggle(S.rfv,v);       log('rfv',v);    marcarSujo('perfil RFV'); return;
+
+    case 'toggleDna':
+      if(S.dna[v]){ delete S.dna[v]; if(S.dnaExpandido===v) S.dnaGrauAberto=null; }
+      else { S.dna[v]='Média'; S.dnaExpandido=v; S.dnaGrauAberto='Média'; }
+      log('dna', v+' '+(S.dna[v]?'ligado (Média)':'desligado')); marcarSujo('DNA'); return;
+
+    // Clicar no grau já abre os insights daquele DNA naquele grau.
+    case 'setGrau': {
+      const [d,g] = v.split('|');
+      if(!S.dna[d]) return;
+      const mesmo = S.dna[d]===g && S.dnaExpandido===d && S.dnaGrauAberto===g;
+      S.dna[d] = g;
+      S.dnaExpandido = mesmo ? null : d;
+      S.dnaGrauAberto = mesmo ? null : g;
+      log('aderencia', d+'='+g);
+      marcarSujo('aderência'); return; }
+
+    case 'fecharInsight': S.dnaGrauAberto=null; S.dnaExpandido=null; log('insight-fechou'); render(); return;
+
+    case 'expandDna':
+      if(S.dnaExpandido===v && !S.dnaGrauAberto){ S.dnaExpandido=null; }
+      else { S.dnaExpandido=v; S.dnaGrauAberto=null; }
+      log('dna-detalhe', v); render(); return;
+
+    case 'atualizar': recalcular('clique manual'); return;
+    case 'toggleFunil': S.funilAberto = !S.funilAberto; log('funil', S.funilAberto?'abriu':'fechou'); render(); return;
+
+    case 'abrirModal':
+      S.modal=true; S.modalErro=''; log('abriu-modal-salvar'); render(); return;
+    case 'fecharModal': case 'fecharModalBg': S.modal=false; log('fechou-modal'); render(); return;
+    case 'modalTitulo': S.modalTitulo=v; return;
+    case 'modalObjetivo': S.modalObjetivo=v; return;
+    case 'modalCamp': S.modalCampanha=!S.modalCampanha; render(); return;
+    case 'modalIni': S.modalIni=v; return;
+    case 'modalFim': S.modalFim=v; return;
+
+    case 'salvar': case 'salvarExportar': salvar(act==='salvarExportar'); return;
+
+    case 'iniciarCamp': {
+      const s = S.segmentacoes.find(x=>x.id===v); if(!s) return;
+      s.status='ativa'; s.campIni=s.campIni||fmtD(HOJE.getTime()); s.campFim=s.campFim||fmtD(HOJE.getTime()+30*DIA); s.progresso=42;
+      log('iniciou-campanha', s.titulo); render(); return; }
+
+    case 'busca': S.busca=v; render(); return;
+
+    case 'filtroStatus':
+      if(S.filtroStatus===v) return;
+      S.filtroStatus=v; S.menuSeg=null;
+      log('filtro-status', v); render(); return;
+
+    case 'abrirMenuSeg':
+      S.menuSeg = S.menuSeg===v ? null : v;
+      log('menu-segmentacao', S.menuSeg?'abriu':'fechou'); render(); return;
+
+    case 'acaoSeg': {
+      // protótipo: as opções existem para o usuário reconhecer, mas não executam
+      const [id,acao] = v.split('|');
+      const s = S.segmentacoes.find(x=>x.id===id);
+      const nomes = {excel:'Exportar em Excel', editar:'Editar', duplicar:'Duplicar', excluir:'Excluir'};
+      S.menuSeg = null;
+      log('acao-segmentacao', acao+' · '+(s?s.titulo:id));
+      toast(`“${nomes[acao]}” ainda não funciona neste protótipo.`);
+      return; }
+  }
+}
+
+function visiveisLojas(){
+  const b=S.lojaBusca.trim().toLowerCase();
+  let l = LOJAS.filter(x=>(!b||x.nome.toLowerCase().includes(b)||x.cnpj.includes(b)||x.cidade.toLowerCase().includes(b))
+    && (!S.lojaBandeira||x.bandeira===S.lojaBandeira) && (!S.lojaUf||x.uf===S.lojaUf) && (!S.lojaCidade||x.cidade===S.lojaCidade));
+  return l.slice((S.lojaPag-1)*8, S.lojaPag*8);
+}
+function visiveisProdutos(){
+  const b=S.prodBusca.trim().toLowerCase();
+  let l = PRODUTOS.filter(p=>(!b||p.nome.toLowerCase().includes(b)||p.ean.includes(b))
+    && (!S.prodCat||p.categoria===S.prodCat) && (!S.prodSub||p.sub===S.prodSub) && (!S.prodInd||p.industria===S.prodInd));
+  return l.slice((S.prodPag-1)*10, S.prodPag*10);
+}
+
+function salvar(exportar){
+  if(S.stale){ S.modalErro='A estimativa está desatualizada. Atualize antes de salvar para não guardar um público diferente do que você viu.'; render(); return; }
+  if(!S.modalTitulo.trim()){ S.modalErro='Dê um nome para essa segmentação antes de salvar.'; render(); return; }
+  if(S.modalCampanha && (!S.modalIni||!S.modalFim)){ S.modalErro='Preencha o início e o término da campanha, ou desligue a opção de campanha.'; render(); return; }
+  const e = S.estimativa && !S.estimativa.vazio ? S.estimativa : null;
+  if(!e){ S.modalErro='Esse público está com 0 clientes. Ajuste os critérios antes de salvar.'; render(); return; }
+
+  const seg = {
+    id:'S'+Date.now(), titulo:S.modalTitulo.trim(),
+    objetivo:S.modalObjetivo.trim()||'Sem objetivo descrito.',
+    periodo: S.compraPeriodos.length ? resumoPeriodos() : `Últimos ${JANELA_MESES} meses`,
+    clientes:e.clientes, prods:S.produtos.length, valor:e.faturamento, ticket:e.ticket, ltv:e.ltv,
+    faturamento:e.faturamento,
+    status: S.modalCampanha ? 'ativa' : 'criado',
+    campIni: S.modalIni?fmtD(new Date(S.modalIni+'T00:00:00')):'', campFim: S.modalFim?fmtD(new Date(S.modalFim+'T00:00:00')):'',
+    progresso: 38
+  };
+  S.segmentacoes.unshift(seg);
+  log('salvou', seg.titulo + (exportar?' (com exportação)':''));
+  S.modal=false; S.screen='list';
+  render();
+  toast(exportar ? 'Público salvo. O arquivo foi enviado para download.' : 'Público salvo com sucesso.');
+}
+
+/* =========================================================================
+   9. PAINEL DO FACILITADOR
+   ========================================================================= */
+const TAREFAS = [
+  ['1. Criar o primeiro público','Você quer falar com clientes que compram anticoncepcional e pararam de comprar nos últimos meses. Crie esse público.'],
+  ['2. Lojas já marcadas','Olhando a primeira tela, o que você entende que está incluído no público agora? E se quisesse só as lojas de São Paulo, o que faria?'],
+  ['3. Entender o número','Sem clicar em nada, me explique o que significa o número grande do lado direito e de onde ele vem.'],
+  ['4. Grau de aderência','O que você espera que aconteça se mudar o grau de aderência de Média para Alta? Diga antes de clicar. Agora clique e me diga o que apareceu.'],
+  ['5. Insights do DNA','Você acabou de ver as sugestões de ação. Escolheria alguma delas para uma campanha? Por quê?'],
+  ['6. Estimativa desatualizada','Marque dois perfis de RFV e, sem clicar em mais nada, me diga se o número da direita já considera essas escolhas.'],
+  ['7. Período de compra','Você quer só quem comprou no mês passado. Onde faria isso? O que acha que muda no público?'],
+  ['8. Semana x mês','Se você escolher duas semanas em vez de um mês, o público fica maior ou menor? Por quê?'],
+  ['9. Público vazio','Monte um público que não retorne ninguém. O que você faria a seguir?'],
+  ['10. Salvar e usar','Salve esse público e já deixe a campanha começando na semana que vem.']
+];
+
+const fac = document.getElementById('fac');
+document.getElementById('fab').onclick = ()=> fac.classList.toggle('open');
+document.getElementById('fac-close').onclick = ()=> fac.classList.remove('open');
+document.getElementById('tasks').innerHTML = TAREFAS.map(([t,d])=>`<div class="task"><b>${t}</b>${d}</div>`).join('');
+
+function pintarOpts(){
+  document.querySelectorAll('#fac .switch2').forEach(sw=>{
+    const k = sw.dataset.opt;
+    sw.querySelectorAll('button').forEach(b=> b.classList.toggle('on', String(OPTS[k])===b.dataset.v));
+  });
+}
+document.querySelectorAll('#fac .switch2 button').forEach(b=>{
+  b.onclick = ()=>{
+    const k = b.parentElement.dataset.opt;
+    OPTS[k] = b.dataset.v;
+    log('hipotese', k+'='+OPTS[k]);
+    pintarOpts();
+    if(S.screen==='wizard') marcarSujo('hipótese do teste'); else render();
+  };
+});
+pintarOpts();
+
+document.getElementById('btn-reset').onclick = ()=>{
+  S = estadoInicial(); LOG.length=0; document.getElementById('log').innerHTML='';
+  log('reiniciou'); render(); pintarSeed();
+};
+const btnSeed = document.getElementById('btn-seed');
+function pintarSeed(){ btnSeed.textContent = S.segmentacoes.length ? 'Esvaziar lista' : 'Carregar exemplos'; }
+btnSeed.onclick = ()=>{
+  const cheia = S.segmentacoes.length > 0;
+  S.segmentacoes = cheia ? [] : segmentacoesDemo();
+  S.busca = ''; S.screen='list'; S.filtroStatus='todos'; S.menuSeg=null;
+  log(cheia ? 'esvaziou-lista' : 'carregou-exemplos');
+  render(); pintarSeed();
+};
+document.getElementById('btn-export').onclick = ()=>{
+  const blob = new Blob([JSON.stringify({inicio:new Date(T0).toISOString(), opcoes:OPTS, eventos:LOG}, null, 2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sessao-teste-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json';
+  a.click();
+};
+
+/* ---------- boot ---------- */
+S.estimativa = calcular();
+render();
+pintarSeed();
+log('sessao-iniciada');
+</script>
+</body>
+</html>
