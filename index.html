@@ -160,21 +160,42 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .dp-wk.on .dp-wk-dias i,.dp-wk.on .dp-wk-dias i.fora,.dp-wk.on .dp-wk-dias i.hoje{color:#fff}
 .dp-nota{margin:10px 0 4px;font-size:11px;color:var(--ink-4);line-height:1.45}
 
-/* ---------- Insights por grau de aderência ---------- */
-.dna-ins{border-top:1px solid var(--border);background:#F7FAFE;padding:15px 18px 17px}
-.dna-ins-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
-.dna-ins-sub{flex:1;font-size:12px;color:var(--ink-3)}
-.grau-pill{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.01em}
-.grau-pill.g-baixa{background:#EDF1F6;color:#5B6B7D}
-.grau-pill.g-media{background:#E3F0FF;color:#0B6FD0}
-.grau-pill.g-alta{background:#DCF3E6;color:#0E7A48}
-.dna-ins-perfil{margin:0 0 13px;font-size:13px;color:var(--ink);line-height:1.5;font-weight:500;max-width:760px}
-.dna-ins-cols{display:flex;gap:36px;flex-wrap:wrap}
-.dna-ins-cols > div{flex:1;min-width:230px}
-.dna-ins-cols b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--ink-4);margin-bottom:7px}
-.dna-ins-cols .li{font-size:12.5px;color:var(--ink-2);line-height:1.5;padding:3px 0 3px 15px;position:relative}
-.dna-ins-cols .li:before{content:'';position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:#B4C4D6}
-.dna-ins-cols .li-op:before{background:var(--primary)}
+/* ---------- Faixas de aderência: uma seção por faixa ---------- */
+.gcount{font-size:11px;font-weight:600;color:#0B6FD0;background:var(--primary-soft);border-radius:999px;
+  padding:2px 9px;margin-left:7px;vertical-align:2px;letter-spacing:.01em}
+.dna-caret{display:inline-flex;color:var(--ink-4);transition:.15s}
+.dna-caret.on{transform:rotate(180deg)}
+.dna.aberto .dna-row{border-bottom:1px solid var(--border)}
+
+.gsecs{background:#F1F5FA}
+.gsec{background:#F1F5FA;padding:22px 26px 24px;border-bottom:1px solid var(--border);cursor:pointer;transition:.14s}
+.gsec:hover{background:#E9F0F8}
+.gsec.on{background:#fff}
+.gsec.on:hover{background:#fff}
+.gsec-head{display:flex;align-items:center;gap:15px;margin-bottom:12px}
+.gsec-tit{margin:0;font-size:19px;font-weight:500;letter-spacing:.03em;text-transform:uppercase;color:#8C9CB0;transition:.14s}
+.gsec.on .gsec-tit{color:var(--ink)}
+.gsec-desc{margin:0 0 18px;font-size:14px;color:#5B7290;line-height:1.5;max-width:860px;transition:.14s}
+.gsec.on .gsec-desc{color:var(--ink)}
+.switch.travado{background:#DDE4EC;cursor:not-allowed;opacity:.75}
+.switch.travado:after{box-shadow:none}
+.gsec-nota{display:flex;gap:8px;align-items:flex-start;margin:0;padding:12px 20px 4px;
+  font-size:12.5px;color:var(--ink-3);line-height:1.45}
+.gsec-nota.alerta{color:var(--danger)}
+.gsec-nota svg{flex:0 0 14px;margin-top:2px}
+.gfechar{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:14px 0 12px;
+  font-size:13px;font-weight:600;color:var(--primary)}
+.gfechar:hover{text-decoration:underline}
+.gf-caret{display:inline-flex;transform:rotate(180deg)}
+
+/* duas colunas simples, separadas só pelo espaço — sem ícone, sem marcador
+   e sem divisória, como no modelo do produto */
+.dna-par{display:flex;gap:34px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:15px}
+.dna-par-col{flex:1;min-width:240px}
+.dna-par-tit{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;
+  font-weight:600;color:var(--ink-3);margin-bottom:9px}
+.dna-par .li{font-size:13px;color:#5B7290;line-height:1.75;padding:1px 0}
+.gsec.on .dna-par .li{color:var(--ink-2)}
 
 /* ---------- Funil da estimativa ---------- */
 .funil{border:1px solid var(--border);border-radius:9px;margin:12px 0 4px;overflow:hidden}
@@ -263,14 +284,14 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 /* ---------- DNA cards ---------- */
 .dna{border:1px solid var(--border);border-radius:9px;background:#fff;margin-bottom:12px;overflow:hidden;transition:.12s}
 .dna.on{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
-.dna-row{display:flex;align-items:stretch}
-.dna-a{flex:1.05;padding:15px 18px;display:flex;gap:13px;align-items:flex-start;text-align:left}
-.dna-a h4{margin:0 0 3px;font-size:16px;font-weight:600}
-.dna-a p{margin:0;font-size:12.5px;color:var(--ink-3);line-height:1.45}
-.dna-b{flex:1;padding:15px 18px;border-left:1px solid var(--border);font-size:12.5px;color:var(--ink-3);line-height:1.45}
-.dna-b b{display:block;font-weight:500;color:var(--ink-2);margin-bottom:3px}
-.dna-c{flex:0 0 178px;padding:15px 18px;border-left:1px solid var(--border)}
-.dna-c .k{font-size:12.5px;color:var(--ink-2);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.dna-row{display:flex;align-items:stretch;cursor:pointer}
+.dna-row:hover{background:#FAFCFE}
+.dna-a{flex:1.6;padding:22px 26px;display:flex;gap:15px;align-items:flex-start;text-align:left}
+.dna-a h4{margin:0 0 4px;font-size:21px;font-weight:500;line-height:1.25}
+.dna-a p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.5}
+.dna-b{flex:0 0 268px;padding:22px 26px 22px 0;font-size:12.5px;color:var(--ink-3);line-height:1.55}
+.dna-b b{display:block;font-weight:600;color:var(--ink-2);margin-bottom:4px;font-size:12.5px}
+.dna-c{flex:0 0 52px;padding:15px 18px;border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center}
 .seg{display:flex;gap:6px}
 .seg button{border:1px solid var(--border-strong);background:#fff;border-radius:6px;padding:5px 11px;font-size:12.5px;color:var(--ink-2)}
 .seg button:hover{border-color:var(--primary);color:var(--primary)}
@@ -323,11 +344,215 @@ tbody tr.sel{background:#F3F8FF}
 .stchip.zero:not(.on){color:var(--ink-4)}
 
 /* ---------- Cards de segmentação ---------- */
-.segcard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
-.segcard-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.maiswrap{position:relative;margin-left:8px;z-index:20}
-.mais{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.12s}
-.mais:hover{background:#EDF1F6}
+.segcard{background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);
+  margin-bottom:16px;overflow:hidden}
+
+.sc-topo{display:flex;align-items:center;gap:26px;padding:22px 24px 20px}
+.sc-ident{flex:1;min-width:0}
+.sc-ident h3{margin:0 0 5px;font-size:21px;font-weight:700;line-height:1.25;color:var(--ink)}
+.sc-ident .obj{margin:0 0 8px;font-size:14px;color:var(--ink);line-height:1.45}
+.sc-ate{display:flex;align-items:center;gap:7px;margin:0;font-size:13px;color:var(--ink-3)}
+
+.sc-kpis{display:flex;gap:12px;flex-shrink:0}
+.kbox{border:1px solid var(--border);border-radius:9px;padding:12px 22px;min-width:172px;text-align:center;background:#fff}
+.kbox span{display:block;font-size:13px;color:var(--ink-2);margin-bottom:4px}
+.kbox b{display:block;font-size:21px;font-weight:700;color:var(--ink);line-height:1.2}
+
+/* Aberto, o rodapé de filtros e o painel de campanhas viram UMA gaveta só:
+   mesmo fundo, sem linha entre eles. O que separa é a borda de cima, que marca
+   onde termina a identificação da segmentação e começa o detalhe dela. */
+.sc-rodape{display:flex;align-items:center;gap:18px;flex-wrap:wrap;width:100%;
+  padding:13px 24px;border-top:1px solid var(--border);background:#fff;text-align:left;transition:.12s}
+.sc-rodape:hover{background:#FAFCFE}
+.sc-rodape.on{background:#F4F7FB;border-top-color:#DCE5EF}
+.sc-rodape.on:hover{background:#EFF4FA}
+.sc-filtros,.sc-camps-res{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sc-filtros{flex:1;min-width:0}
+.sc-filtros svg,.sc-camps-res svg{color:var(--ink-4);flex-shrink:0}
+.sc-filtros i,.sc-camps-res i{font-style:normal;font-size:12.5px;color:var(--ink-3)}
+.fpill{border:1px solid var(--border);background:#fff;border-radius:7px;padding:5px 11px;
+  font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+.fpill b{color:var(--ink-2);font-weight:600}
+.fpill.viva{border-color:#BFD9F5;background:var(--primary-soft);color:#0B6FD0}
+.fpill.viva b{color:#0B6FD0}
+.sc-caret{display:inline-flex;color:var(--ink-3);transition:.15s;margin-left:2px}
+.sc-caret.on{transform:rotate(180deg)}
+
+/* mesma cor do rodapé aberto e sem borda: a gaveta é contínua */
+.sc-painel{background:#F4F7FB;padding:4px 24px 22px}
+.sc-painel-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:14px 0 12px;margin-bottom:4px;border-top:1px solid #E3EAF3}
+.sc-painel-top h4{margin:0;font-size:14px;font-weight:600;color:var(--ink-2);letter-spacing:.01em}
+/* ação secundária dentro de um painel: só ícone + texto, sem moldura */
+.btn-nova-camp{display:inline-flex;align-items:center;gap:7px;padding:6px 2px;
+  font-size:13px;font-weight:600;color:var(--primary);transition:.12s}
+.btn-nova-camp:hover{text-decoration:underline}
+.btn-nova-camp svg{flex-shrink:0}
+.sc-vazio{margin:0;font-size:13.5px;color:var(--ink-3);line-height:1.5;background:#FAFCFE;
+  border:1px solid #E3EAF3;border-radius:10px;padding:20px 22px}
+
+/* Mesmo tratamento das faixas de DNA: a que está viva fica branca e legível,
+   as encerradas recuam para o fundo. Sem cor de contorno — o contraste basta. */
+/* Colunas fixas para os cards ficarem alinhados entre si */
+.cpc{display:grid;grid-template-columns:minmax(200px,1fr) 150px 158px 150px 34px;gap:16px;align-items:center;
+  background:#FAFCFE;border:1px solid #E3EAF3;border-radius:10px;padding:15px 18px;margin-bottom:10px;transition:.14s}
+.cpc:last-child{margin-bottom:0}
+.cpc.ativa{background:#fff;border-color:var(--border)}
+.cpc-datas{min-width:0}
+.cpc-per{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px;font-weight:600;color:var(--ink-4)}
+.cpc.ativa .cpc-per{color:var(--ink)}
+.cpc-tag{font-size:11px;font-weight:600;background:var(--primary-soft);color:#0B6FD0;border-radius:999px;padding:3px 10px}
+.cpc-criada{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:12.5px;color:var(--ink-4)}
+.cpc.ativa .cpc-criada{color:var(--ink-3)}
+.cpc-col{min-width:0}
+.cpc-canal{display:flex}
+.vdado{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
+  color:var(--ink-3);white-space:nowrap;transition:.14s}
+.cpc.ativa .vdado{font-weight:700;color:var(--ink)}
+.vdado svg{color:#B9C8DA;flex-shrink:0}
+.cpc.ativa .vdado svg{color:var(--ink-4)}
+/* ação de segundo plano: só o ícone, o card inteiro já diz do que se trata */
+.btn-res{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;
+  color:var(--ink-4);background:transparent;transition:.12s;justify-self:end}
+.btn-res:hover{background:var(--primary-soft);color:var(--primary)}
+.btn-res:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+.opc{font-size:11.5px;font-weight:500;color:var(--ink-4);background:#EDF1F6;border-radius:999px;padding:2px 8px;margin-left:4px}
+
+/* ---------- Tela de resultados da campanha ---------- */
+.res-topo{margin-bottom:18px}
+.btn-voltar{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;
+  color:var(--ink-3);padding:6px 2px;margin-bottom:14px;transition:.12s}
+.btn-voltar:hover{color:var(--primary)}
+.res-linha{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.res-per{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-3)}
+.res-selo{font-size:11.5px;font-weight:600;border-radius:999px;padding:4px 11px}
+.res-selo.sa{background:var(--primary-soft);color:#0B6FD0}
+.res-selo.sp{background:var(--warn-bg);color:var(--warn-ink)}
+.res-selo.se{background:#EDF1F6;color:var(--ink-3)}
+.res-selo.sf{background:#EDF1F6;color:var(--ink-3)}
+.res-tit{margin:0 0 6px;font-size:24px;font-weight:700;line-height:1.25;color:var(--ink)}
+.res-sub{margin:0;font-size:13.5px;color:var(--ink-3)}
+
+/* Veredito: mesma casca dos demais blocos (.bloco cuida de fundo, borda, raio e
+   sombra). O que o destaca é só o corpo de texto maior — sem traço lateral, que
+   nesta interface significa alerta e aqui era ruído. */
+.res-veredito{font-size:17px;line-height:1.5;color:var(--ink-2)}
+.res-veredito b{color:var(--ink);font-weight:700}
+
+.res-parcial{display:flex;gap:11px;align-items:flex-start;background:var(--warn-bg);
+  border:1px solid var(--warn-border);border-radius:10px;padding:13px 16px;margin:14px 0 0;
+  font-size:13.5px;line-height:1.5;color:var(--warn-ink)}
+.res-parcial svg{flex-shrink:0;margin-top:1px}
+.res-parcial b{font-weight:700}
+
+/* Três heróis, todos com o mesmo peso. O valor é o maior texto da tela. */
+.herois{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px}
+.hero-rot{font-size:13px;font-weight:600;color:var(--ink-2)}
+.hero-val{font-size:31px;font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
+.hero-ap{font-size:13px;color:var(--ink-3)}
+.dlt{margin-top:5px;font-size:12.5px;font-weight:600}
+.dlt.up{color:var(--green)}
+.dlt.down{color:var(--danger)}
+.dlt.flat{color:var(--ink-4)}
+
+/* Ressalva de rodapé: vale para a página inteira, então fecha a página. */
+.nota-inc{display:flex;gap:11px;align-items:flex-start;background:transparent;border:1px dashed var(--border-strong);
+  border-radius:10px;padding:14px 17px;margin:4px 0 14px;font-size:13px;line-height:1.55;color:var(--ink-3)}
+.nota-inc svg{flex-shrink:0;margin-top:2px;color:var(--ink-4)}
+.nota-inc b{color:var(--ink-2);font-weight:600}
+
+.bloco{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
+  box-shadow:var(--shadow);margin-bottom:14px}
+.bloco-vazio{background:#FAFCFE;box-shadow:none}
+.bloco-tit{margin:0 0 14px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.bloco-nota{margin:14px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-4)}
+.bloco-vazio .bloco-nota{margin-top:0;font-size:13.5px;color:var(--ink-3)}
+
+/* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
+.barras{display:flex;flex-direction:column;gap:9px}
+.bar-lin{display:grid;grid-template-columns:170px 1fr 120px;gap:14px;align-items:center}
+.bar-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-lin.atual .bar-rot{color:var(--ink);font-weight:600}
+.bar-rot i{font-style:normal;color:var(--primary);font-weight:600}
+.bar-trilho{height:22px;background:#F1F5F9;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;background:#CBDCF0;border-radius:5px}
+.bar-lin.atual .bar-fill{background:var(--primary)}
+.bar-val{font-size:13.5px;color:var(--ink-2);text-align:right}
+.bar-lin.atual .bar-val{font-weight:700;color:var(--ink)}
+
+/* ---------- Funil ----------
+   Duas decisões de alinhamento que estavam quebradas antes:
+
+   1. O recuo do ramo e a coluna de rótulo tinham que fechar a conta. Com
+      recuo 42px e rótulo 208px contra 230px do pai, o trilho do ramo começava
+      20px fora do trilho de cima. Agora é uma variável só: --fun-rot menos
+      --fun-ind dá a coluna do ramo, e os quatro trilhos nascem no mesmo x.
+   2. O bloco encostava na borda do card. Ganhou respiro em cima e embaixo. */
+.funil-camp{--fun-rot:236px; --fun-ind:32px; --fun-val:150px;
+  display:flex;flex-direction:column;gap:11px;margin:2px 0 18px}
+.fun-lin{display:grid;grid-template-columns:var(--fun-rot) minmax(0,1fr) var(--fun-val);
+  gap:20px;align-items:center}
+.fun-rot{font-size:13.5px;color:var(--ink-2);line-height:1.35}
+.fun-trilho{height:34px;background:#EFF4F9;border-radius:9px;overflow:hidden}
+.fun-fill{height:100%;border-radius:9px;background:var(--primary);min-width:6px;
+  transition:width .25s ease}
+.fun-lin.d1 .fun-fill{background:linear-gradient(90deg,#DCE7F4,#CCDDEF)}
+.fun-lin.d2 .fun-fill{background:linear-gradient(90deg,#2D8FFC,var(--primary))}
+.fun-lin.d3 .fun-trilho{height:28px;border-radius:8px}
+.fun-lin.d3 .fun-fill{background:#93C3F5;border-radius:8px}
+.fun-lin.d3 .fun-rot{font-size:13px;color:var(--ink-3)}
+.fun-val{text-align:right}
+.fun-val b{display:block;font-size:18px;font-weight:700;color:var(--ink);line-height:1.15;
+  font-variant-numeric:tabular-nums}
+.fun-val span{display:block;font-size:12px;color:var(--ink-3);margin-top:3px}
+.fun-lin.d3 .fun-val b{font-size:16px;color:var(--ink-2)}
+
+/* Legenda de base: cada trecho declara sobre o que a barra está medindo. */
+.fun-base{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:-3px}
+
+/* Ramo: recuo com um fio de árvore em vez de uma borda grossa colada no texto.
+   O fio para antes do fim da última linha, como conector — não como divisória. */
+.fun-ramo{position:relative;padding-left:var(--fun-ind);margin-top:5px;
+  display:flex;flex-direction:column;gap:11px}
+.fun-ramo::before{content:'';position:absolute;left:11px;top:0;bottom:20px;
+  width:1px;background:var(--border-strong)}
+.fun-ramo .fun-lin{grid-template-columns:calc(var(--fun-rot) - var(--fun-ind)) minmax(0,1fr) var(--fun-val)}
+.fun-ramo .fun-rot{position:relative}
+.fun-ramo .fun-rot::before{content:'';position:absolute;left:calc(-1 * var(--fun-ind) + 11px);
+  top:50%;width:14px;height:1px;background:var(--border-strong)}
+.fun-ramo .fun-base{margin-left:calc(-1 * var(--fun-ind) + 25px)}
+
+/* Comparação de ticket: três colunas de mesmo peso, a leitura é lado a lado. */
+.tkcmp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tk-col{background:#FAFCFE;border:1px solid var(--border);border-radius:10px;padding:15px 17px}
+.tk-col span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:6px;line-height:1.4}
+.tk-col b{display:block;font-size:22px;font-weight:700;color:var(--ink);line-height:1.2}
+.tk-col b.pos{color:var(--green)}
+.tk-col b.neg{color:var(--danger)}
+.tk-col i{display:block;font-style:normal;font-size:12px;color:var(--ink-4);margin-top:5px;line-height:1.4}
+
+.retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
+.ret-num b{display:block;font-size:31px;font-weight:700;color:var(--ink);line-height:1.15}
+.ret-num span{display:block;font-size:13px;color:var(--ink-3);margin-top:3px}
+.ret-lado{display:flex;gap:26px;flex-wrap:wrap;padding-left:30px;border-left:1px solid var(--border)}
+.ret-lado span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
+.ret-lado b{display:block;font-size:17px;font-weight:700;color:var(--ink-2)}
+
+@media(max-width:1080px){
+  .herois{grid-template-columns:1fr}
+  .tkcmp{grid-template-columns:1fr}
+  .bar-lin{grid-template-columns:120px 1fr 100px;gap:10px}
+  .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
+  .fun-lin{gap:12px}
+}
+
+.maiswrap{position:relative;z-index:20;flex-shrink:0}
+.mais{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.12s;color:var(--ink-3)}
+.mais:hover{background:#EDF1F6;color:var(--ink)}
 .mais.on{background:#E2E8F0;color:var(--ink)}
 .segmenu{position:absolute;top:calc(100% + 6px);right:0;z-index:30;min-width:196px;background:#fff;
   border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 12px 32px rgba(15,35,60,.16);padding:6px;overflow:hidden}
@@ -339,37 +564,99 @@ tbody tr.sel{background:#F3F8FF}
 .segmenu button.perigo{color:var(--danger)}
 .segmenu button.perigo svg{color:var(--danger)}
 .segmenu button.perigo:hover{background:var(--danger-soft);color:var(--danger)}
-.badge{border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:600}
-.badge.blue{background:var(--primary-soft);color:#0B6FD0}
-.badge.green{background:var(--green-soft);color:#0E7A48}
-.badge.pink{background:var(--pink-soft);color:var(--pink)}
-.pill{border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:12.5px;color:var(--ink-3)}
-.pill b{color:var(--ink);font-weight:600}
-.segcard h3{margin:0 0 4px;font-size:18px;font-weight:600}
-.segcard .obj{color:var(--ink-2);font-size:13.5px;margin:0 0 6px}
-.segcard .per{color:var(--ink-3);font-size:12.5px;display:flex;align-items:center;gap:6px}
-.segcard-main{display:flex;justify-content:space-between;align-items:flex-end;gap:22px}
-.kpis{display:flex;gap:26px}
-.kpi .k{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:5px}
-.kpi .v{font-size:16px;font-weight:700;margin-top:2px}
-.kpi .d{font-size:12.5px;color:var(--green);font-weight:500}
-.runbox{background:#EAF3FE;border-radius:8px;padding:16px 20px;text-align:center;color:#123A63;font-size:13.5px;line-height:1.5;flex:1;max-width:520px}
-.progress{width:180px;height:3px;background:#E3E8EF;border-radius:2px;overflow:hidden;margin-top:6px}
-.progress i{display:block;height:100%;background:var(--green)}
-.progress.blue i{background:var(--primary)}
+
+/* pills de canal */
+.canal{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.canal svg{flex-shrink:0;opacity:.85}
+.ca-email{background:#E6F1FB;color:#0C447C}
+.ca-zap{background:#E1F5EE;color:#085041}
+.ca-tel{background:#EEEDFE;color:#3C3489}
+.ca-sms{background:#FAEEDA;color:#854F0B}
+
+/* modal de campanha */
+.mc-secao{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink)}
+.mc-datas{display:flex;gap:16px;flex-wrap:wrap}
+.mc-datas .field{flex:1;min-width:180px;margin-bottom:0}
+.mc-canais{display:flex;gap:9px;flex-wrap:wrap}
+.mc-canal{border:1px solid var(--border-strong);background:#fff;border-radius:9px;padding:9px 11px;transition:.12s}
+.mc-canal:hover{border-color:var(--primary)}
+.mc-canal.on{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}
+.mc-canal:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+@media(max-width:980px){
+  .sc-topo{flex-direction:column;align-items:stretch;gap:18px}
+  .sc-kpis{flex-wrap:wrap}
+  .kbox{flex:1;min-width:140px}
+  .maiswrap{position:absolute;top:18px;right:18px}
+  .segcard{position:relative}
+}
+@media(max-width:900px){
+  .cpc{grid-template-columns:1fr 1fr;gap:12px 16px}
+  .cpc-datas{grid-column:1 / -1}
+  .btn-res{grid-column:2;justify-self:end}
+}
+@media(max-width:520px){
+  .cpc{grid-template-columns:1fr auto}
+}
 
 /* ---------- Modal ---------- */
 .overlay{position:fixed;inset:0;background:rgba(15,40,70,.42);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
 .modal{background:#fff;border-radius:12px;width:100%;max-width:568px;padding:26px 28px;box-shadow:0 18px 50px rgba(15,40,70,.22)}
 .modal h2{margin:0 0 20px;font-size:20px;font-weight:700}
 .modal .field{margin-bottom:16px}
-.togglebox{border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:20px}
-.togglebox-top{padding:15px 17px;display:flex;justify-content:space-between;align-items:center;gap:16px}
-.togglebox-top h4{margin:0 0 3px;font-size:14.5px;font-weight:600}
-.togglebox-top p{margin:0;font-size:12.5px;color:var(--ink-3)}
-.togglebox-bot{border-top:1px solid var(--border);background:#FBFCFE;padding:15px 17px}
-.togglebox-bot > p{margin:0 0 12px;font-size:12.5px;color:var(--ink-3)}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+
+/* ---------- Modal: salvar segmentação ---------- */
+.modal-salvar{max-width:600px;padding:0;display:flex;flex-direction:column;max-height:calc(100vh - 40px)}
+.ms-head{padding:24px 28px 18px;border-bottom:1px solid var(--border)}
+.ms-head h2{margin:0 0 6px;font-size:20px;font-weight:700}
+.ms-head p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.5}
+.ms-corpo{padding:20px 28px 4px;overflow-y:auto;flex:1}
+
+/* resumo: confirmação rápida, não uma etapa nova — por isso caixa chapada e fonte pequena */
+.rm{border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;background:#fff}
+.rm-head{display:flex;align-items:center;gap:8px;padding:11px 16px;background:#F5F8FC;
+  border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--ink-2);
+  text-transform:uppercase;letter-spacing:.05em}
+.rm-head svg{color:var(--ink-4)}
+.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.rm-item{display:flex;flex-direction:column;gap:2px;padding:11px 16px;min-width:0;
+  border-bottom:1px solid var(--border)}
+.rm-grid .rm-item:nth-child(odd){border-right:1px solid var(--border)}
+.rm-grid .rm-item:nth-last-child(-n+2){border-bottom:0}
+.rm-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--ink-4)}
+.rm-v{font-size:13.5px;color:var(--ink);line-height:1.4;overflow-wrap:anywhere}
+@media(max-width:520px){
+  .rm-grid{grid-template-columns:1fr}
+  .rm-grid .rm-item:nth-child(odd){border-right:0}
+  .rm-grid .rm-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
+  .rm-grid .rm-item:last-child{border-bottom:0}
+}
+
+.ms-form .field{margin-bottom:20px}
+.ms-form .field.com-erro{margin-bottom:18px}
+.ms-form label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.ajuda{margin:6px 0 0;font-size:12px;color:var(--ink-4);line-height:1.5}
+.ajuda-ate{margin-top:-12px;margin-bottom:20px}
+/* erro colado no campo, não só no topo do modal */
+.erro-campo{display:flex;align-items:flex-start;gap:6px;margin:7px 0 0;font-size:12.5px;
+  color:var(--danger);line-height:1.45;font-weight:500}
+.erro-campo svg{flex:0 0 14px;margin-top:1px}
+.ok-data{display:flex;align-items:center;gap:7px;margin:8px 0 0;font-size:12.5px;color:#0E7A48}
+.ok-data b{font-weight:600}
+.ms-erro{margin:0 0 20px}
+.ms-acoes{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:16px 28px;border-top:1px solid var(--border);background:#FBFCFE;border-radius:0 0 12px 12px}
+.ms-primarias{display:flex;gap:10px;flex-wrap:wrap}
+.ms-acoes .btn:disabled{opacity:.5;cursor:not-allowed}
+.spin{animation:girar .9s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+@media(max-width:620px){
+  .ms-acoes{flex-direction:column-reverse;align-items:stretch}
+  .ms-primarias{flex-direction:column}
+  .ms-acoes .btn{width:100%;justify-content:center}
+}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:9px;font-size:13.5px;z-index:80;box-shadow:0 8px 24px rgba(15,40,70,.28)}
 
 /* ---------- Date range picker ---------- */
@@ -433,10 +720,6 @@ tbody tr.sel{background:#F3F8FF}
       <div class="optrow">
         <div class="lbl">Vários DNAs<small>Somam ou cruzam públicos?</small></div>
         <div class="switch2" data-opt="dnaLogic"><button data-v="OR">OU (soma)</button><button data-v="AND">E (cruza)</button></div>
-      </div>
-      <div class="optrow">
-        <div class="lbl">Layout do DNA<small>Uma coluna ou duas?</small></div>
-        <div class="switch2" data-opt="dnaLayout"><button data-v="lista">Lista</button><button data-v="grade">Grade</button></div>
       </div>
     </div>
     <div class="sec">
@@ -604,6 +887,10 @@ const DNA_INSIGHTS = {
       oport:['Assinatura com retirada rápida e discreta','Suporte cognitivo e qualidade do sono','Fidelidade sem exposição do cliente','Atenção: essa categoria não pode ser usada em publicidade']}
   }
 };
+/* Faixas de aderência. Fechadas e sem sobreposição: um cliente cai em
+   exatamente uma delas, então marcar as três devolve a base inteira do DNA. */
+const FAIXA_ADER = { 'Baixa':[0.20,0.45], 'Média':[0.45,0.72], 'Alta':[0.72,1.01] };
+
 function insightDna(id,grau){
   const d = DNA_INSIGHTS[id];
   if(d && d[grau]) return d[grau];
@@ -620,8 +907,21 @@ const RFVS = [
   {id:'novo', nome:'Novos clientes', desc:'Comprou pela primeira vez há pouco tempo e ainda não tem histórico.', obj:'Criar o hábito da segunda compra.', peso:.10}
 ];
 
-const GENEROS = [['F','Feminino'],['M','Masculino'],['S','Sem gênero']];
-const FAIXAS = ['0 - 19','20 - 29','30 - 39','40 - 49','50 - 59','60 - 69','70 - 79','80+','Indefinido'];
+const GENEROS = [['F','Feminino'],['M','Masculino'],['N','Não definido']];
+/* Faixas começam em 18: o cadastro da farmácia é do responsável pela compra.
+   "Não definido" é uma faixa de verdade — cliente sem data de nascimento no
+   cadastro existe e some do público se a gente não deixar escolher. */
+const FAIXAS = ['18 - 25','26 - 35','36 - 45','46 - 55','56 - 65','+65','Não definido'];
+
+/* Pesos por faixa. Numa base de farmácia o 56-65 e o +65 pesam — é onde está
+   o medicamento contínuo. Uma curva enviesada para jovens deixaria essas
+   faixas com quase ninguém e o filtro pareceria quebrado no teste. */
+const PESO_FAIXA = [.11, .19, .21, .19, .15, .09, .06];
+function sorteiaFaixa(r){
+  let acc = 0;
+  for(let i=0;i<FAIXAS.length;i++){ acc += PESO_FAIXA[i]; if(r < acc) return FAIXAS[i]; }
+  return FAIXAS[FAIXAS.length-1];
+}
 
 const HOJE = new Date(2026,7,21);
 const DIA = 86400000;
@@ -648,12 +948,20 @@ const CLIENTES = Array.from({length:N},(_,i)=>{
   const principais = [];
   const nDna = 1 + Math.floor(rnd()*2.6);
   while(principais.length < nDna){ const d = pick(DNAS).id; if(!principais.includes(d)) principais.push(d); }
-  DNAS.forEach(d => { dna[d.id] = principais.includes(d.id) ? between(.45,1) : between(0,.42); });
+  /* Aderência por DNA. A curva é enviesada de propósito: entre os DNAs principais
+     do cliente, poucos chegam ao topo. Com uma distribuição uniforme, as faixas
+     Média e Alta saíam do mesmo tamanho e "Alta aderência" deixava de significar
+     um grupo seleto — o que quebra o conceito na hora do teste com usuário. */
+  DNAS.forEach(d => {
+    dna[d.id] = principais.includes(d.id)
+      ? .45 + .55*Math.pow(rnd(), 2.5)   // pirâmide: muita Média, pouca Alta
+      : between(0, .42);                 // demais DNAs: entre nada e Baixa
+  });
   const ticket = rfv==='valioso'?between(180,420) : rfv==='fiel'?between(90,190) : between(28,130);
   return {
     id:i, rfv,
-    genero: rnd()<.58?'F':rnd()<.9?'M':'S',
-    faixa: FAIXAS[Math.min(8, Math.floor(Math.abs(between(-1,1)+between(0,1))*4.2)+1)],
+    genero: rnd()<.58?'F':rnd()<.93?'M':'N',
+    faixa: sorteiaFaixa(rnd()),
     ticket, freq: compras.length, ltv: ticket*compras.length*between(.8,1.5),
     compras, dna,
     lojas:[...new Set(compras.map(c=>c.loja))],
@@ -688,7 +996,7 @@ const STEP_PRODUTOS = 4;
 
 function estadoInicial(){
   return {
-    screen:'list',            // list | wizard
+    screen:'list',            // list | wizard | resultados
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
     // usuário RECORTA, em vez de começar do zero e ter que construir a base.
@@ -696,9 +1004,8 @@ function estadoInicial(){
     produtos:[],
     genero:[], faixa:[],
     rfv:[],
-    dna:{},                   // {dnaId: 'Baixa'|'Média'|'Alta'}
-    dnaExpandido:null,
-    dnaGrauAberto:null,       // grau cujos insights estão abertos
+    dna:{},                   // {dnaId: ['Baixa'|'Média'|'Alta', ...]} — uma ou mais faixas
+    dnaExpandido:null,        // DNA com o painel de insights aberto
     dnaView:'lista',          // lista | grade
     lojaBusca:'', lojaBandeira:'', lojaUf:'', lojaCidade:'', lojaPag:1,
     prodBusca:'', prodCat:'', prodSub:'', prodInd:'', prodPag:1,
@@ -710,11 +1017,18 @@ function estadoInicial(){
     stale:false, calculando:false, pendentes:0,
     estimativa:null, funilAberto:false,
     modal:false,
-    modalTitulo:'', modalObjetivo:'', modalCampanha:true, modalIni:'', modalFim:'', modalErro:'',
+    modalTitulo:'', modalObjetivo:'',
+    modalAte:'',              // data até quando a segmentação fica disponível
+    modalErro:'',
+    modalSalvando:'',         // '' | 'salvar' | 'exportar'
+    modalFase:'',             // 'salvando' | 'exportando' (só no salvar+exportar)
     segmentacoes: segmentacoesDemo(),
     busca:'',
-    filtroStatus:'todos',     // todos | ativa | criado | encerrada
     menuSeg:null,             // id da segmentação com o menu "..." aberto
+    campAberta:null,          // id da segmentação com as campanhas expandidas
+    modalCamp:null,           // id da segmentação no modal de nova campanha
+    campIni:'', campFim:'', campCanal:'', campInvest:'', campErro:'',
+    resSeg:null, resCamp:null,  // campanha aberta na tela de resultados
     toast:''
   };
 }
@@ -724,41 +1038,65 @@ let S = estadoInicial();
    Números coerentes entre si: valor estimado ≈ clientes × ticket × frequência.
    Trocar por base real depois é só substituir este array.                    */
 function segmentacoesDemo(){
+  /* Faturamento e ticket do card NÃO ficam guardados: são calculados a partir
+     das campanhas. Segmentação sem campanha mostra R$ 0,00 — que é a verdade. */
   return [
-    {id:'s1', status:'ativa', titulo:'Hipertensos sem compra há mais de 60 dias',
+    {id:'s1', titulo:'Hipertensos sem compra há mais de 60 dias',
      objetivo:'Trazer de volta quem usa medicamento contínuo e parou de renovar a receita na rede.',
-     clientes:8420, prods:14, valor:412580, ticket:48.99, ltv:1180, faturamento:412580,
-     periodo:'01/06/2026 - 29/08/2026', campIni:'10/08/2026', campFim:'09/09/2026', progresso:62},
+     clientes:8420, ticketHist:96.00, pctAcimaHist:38, prods:14, disponivelAte:'30/11/2026',
+     rfv:'Fiel, Valioso', dna:'Anticoncepcional', demo:'Feminino · 36 - 45 anos',
+     campanhas:[
+       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, ticket:118.40, compras:814, clientesComp:733, clientesAcima:337, clientesRecompra:69, investimento:4200},
+       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, ticket:96.10,  compras:741, clientesComp:667, clientesAcima:253, clientesRecompra:63, investimento:1800},
+       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, ticket:88.75,  compras:664, clientesComp:598, clientesAcima:191, clientesRecompra:56, investimento:0}
+     ]},
 
-    {id:'s2', status:'ativa', titulo:'Mães de bebês — recompra de fraldas',
+    {id:'s2', titulo:'Mães de bebês — recompra de fraldas',
      objetivo:'Manter a recompra mensal de fraldas e lenços antes que a família compre em outro canal.',
-     clientes:3175, prods:22, valor:186900, ticket:58.86, ltv:940, faturamento:186900,
-     periodo:'01/07/2026 - 20/08/2026', campIni:'15/08/2026', campFim:'14/09/2026', progresso:21},
+     clientes:3175, ticketHist:118.00, pctAcimaHist:36, prods:22, disponivelAte:'31/12/2026',
+     rfv:'Fiel', dna:'Mãe', demo:'Feminino · 26 - 35 anos',
+     campanhas:[
+       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, ticket:132.20, compras:320, clientesComp:288, clientesAcima:127, clientesRecompra:27, investimento:2600},
+       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, ticket:110.60, compras:344, clientesComp:310, clientesAcima:102, clientesRecompra:29, investimento:0}
+     ]},
 
-    {id:'s3', status:'criado', titulo:'Diabéticos com alta aderência em cuidado diário',
+    {id:'s3', titulo:'Diabéticos com alta aderência em cuidado diário',
      objetivo:'Oferecer combo de tiras de glicemia e cuidados com os pés para clientes fiéis.',
-     clientes:2640, prods:9, valor:158400, ticket:60.00, ltv:1620, faturamento:158400,
-     periodo:'22/05/2026 - 20/08/2026'},
+     clientes:2640, ticketHist:131.00, pctAcimaHist:39, prods:9, disponivelAte:'30/11/2026',
+     rfv:'Fiel', dna:'Diabetes', demo:'Todos · +65 anos',
+     campanhas:[
+       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, ticket:142.90, compras:362, clientesComp:326, clientesAcima:143, clientesRecompra:31, investimento:3100}
+     ]},
 
-    {id:'s4', status:'criado', titulo:'Dermocosméticos — ticket alto, baixa frequência',
+    {id:'s4', titulo:'Dermocosméticos — ticket alto, baixa frequência',
      objetivo:'Aumentar a frequência de clientes que gastam bem, mas voltam poucas vezes por ano.',
-     clientes:1180, prods:31, valor:224200, ticket:190.00, ltv:2310, faturamento:224200,
-     periodo:'01/03/2026 - 31/05/2026'},
+     clientes:1180, ticketHist:148.00, pctAcimaHist:35, prods:31, disponivelAte:'15/10/2026',
+     rfv:'Valioso', dna:'Beleza', demo:'Feminino · 36 - 45 anos',
+     campanhas:[]},
 
-    {id:'s5', status:'criado', titulo:'Clientes novos da região Sul',
+    {id:'s5', titulo:'Clientes novos da região Sul',
      objetivo:'Fazer a segunda compra acontecer em até 30 dias depois da primeira.',
-     clientes:5930, prods:6, valor:172970, ticket:29.17, ltv:290, faturamento:172970,
-     periodo:'01/08/2026 - 20/08/2026'},
+     clientes:5930, ticketHist:62.00, pctAcimaHist:41, prods:6, disponivelAte:'31/12/2026',
+     rfv:'Novos', dna:'Nenhum', demo:'Todos · Todas as idades',
+     campanhas:[]},
 
-    {id:'s6', status:'encerrada', titulo:'Beleza — protetor solar verão',
+    {id:'s6', titulo:'Beleza — protetor solar verão',
      objetivo:'Aproveitar o pico de procura por protetor solar antes do fim do verão.',
-     clientes:12480, prods:18, valor:598000, ticket:47.92, ltv:860, faturamento:598000,
-     periodo:'01/11/2025 - 28/01/2026', campIni:'05/01/2026', campFim:'05/02/2026'},
+     clientes:12480, ticketHist:71.00, pctAcimaHist:37, prods:18, disponivelAte:'28/02/2026',
+     rfv:'Ocasional, Potencial', dna:'Beleza', demo:'Todos · 26 - 35 anos',
+     campanhas:[
+       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, ticket:74.20, compras:2484, clientesComp:2236, clientesAcima:939, clientesRecompra:211, investimento:8900},
+       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, ticket:66.50, compras:1907, clientesComp:1716, clientesAcima:549, clientesRecompra:162, investimento:5400}
+     ]},
 
-    {id:'s7', status:'encerrada', titulo:'Gripe e resfriado — inverno 2026',
+    {id:'s7', titulo:'Gripe e resfriado — inverno 2026',
      objetivo:'Comunicar antigripais e vitamina C na entrada do inverno.',
-     clientes:21050, prods:27, valor:735500, ticket:34.94, ltv:610, faturamento:735500,
-     periodo:'15/03/2026 - 12/06/2026', campIni:'20/06/2026', campFim:'20/07/2026'}
+     clientes:21050, ticketHist:58.00, pctAcimaHist:40, prods:27, disponivelAte:'30/06/2026',
+     rfv:'Todos os perfis', dna:'Nenhum', demo:'Todos · Todas as idades',
+     campanhas:[
+       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, ticket:52.80, compras:4581, clientesComp:4123, clientesAcima:1278, clientesRecompra:389, investimento:12000},
+       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, ticket:61.30, compras:2581, clientesComp:2323, clientesAcima:999, clientesRecompra:219, investimento:7500}
+     ]}
   ];
 }
 
@@ -766,7 +1104,8 @@ function segmentacoesDemo(){
 const LOG = [];
 let tStep = Date.now();
 function log(tipo, det){
-  const e = { t:new Date().toISOString(), ms:Date.now()-T0, tipo, det:det||'' , tela: S.screen==='wizard' ? STEPS[S.step].label : 'Lista' };
+  const e = { t:new Date().toISOString(), ms:Date.now()-T0, tipo, det:det||'' , tela: S.screen==='wizard' ? STEPS[S.step].label
+      : S.screen==='resultados' ? 'Resultados da campanha' : 'Lista' };
   LOG.push(e);
   const el = document.getElementById('log');
   if(el){
@@ -778,7 +1117,6 @@ function log(tipo, det){
 const T0 = Date.now();
 </script>
 <script>
-OPTS.dnaLayout = 'lista';
 
 /* =========================================================================
    3. UTILITÁRIOS
@@ -810,13 +1148,26 @@ const I = {
   up:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M9 7h8v8"/></svg>',
   dots:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>',
   alert:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  eye:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  arrow:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>',
+  card:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+  moeda:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2a3 3 0 00-2.5-1.2c-1.4 0-2.5.8-2.5 2s1.1 2 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2a3 3 0 01-2.5-1.2M12 6.2v11.6"/></svg>',
+  etiqueta:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7.2-7.2A2 2 0 013 12V5a2 2 0 012-2h7a2 2 0 011.4.6l7.2 7.2a2 2 0 010 2.6z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>',
+  zap:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-12.3 7.4L3 20.5l1.7-5.5A8.4 8.4 0 1121 11.5z"/></svg>',
+  fone:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>',
+  sms:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 01-9 8.5 9.8 9.8 0 01-4-.9L3 21l1.9-5a8.4 8.4 0 01-.9-4 8.5 8.5 0 018.5-8.5H13A8.5 8.5 0 0121 11v.5z"/></svg>',
+  chart:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 18V10M12 18V6M18 18v-5"/></svg>',
+  megafone:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16 9a4 4 0 010 6"/><path d="M19 6.5a8 8 0 010 11"/></svg>',
+  users:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/></svg>',
+  spin:'<svg class="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3a9 9 0 019 9" opacity=".9"/><circle cx="12" cy="12" r="9" opacity=".22"/></svg>',
   sheet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
   pen:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
   copy:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>',
   trash:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
   money:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>',
-  users:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/></svg>',
-  repeat:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>',
+
+
   file:'<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#B7C2CF" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/><circle cx="11" cy="13" r="1.3" fill="#B7C2CF"/><circle cx="14" cy="17" r="1.3" fill="#B7C2CF"/></svg>'
 };
 
@@ -825,13 +1176,10 @@ const TIPS = {
   faturamento:'Soma do que esses clientes compraram nos últimos 12 meses.',
   ticket:'Valor médio de cada compra desses clientes.',
   ltv:'Quanto cada cliente já gerou de receita desde a primeira compra.',
-  freq:'Quantas vezes, em média, esses clientes compraram nos últimos 12 meses.',
   prodsel:'Quantos produtos você marcou para filtrar o público.',
   periodoCompra:'Os períodos que você escolheu na etapa Produtos. Só entram clientes que compraram dentro deles.',
-  aderencia:'O quanto esse comportamento aparece nas compras do cliente. Alta = esse DNA é o centro do consumo dele.',
+  aderencia:'O quanto esse comportamento aparece nas compras do cliente. Baixa, Média e Alta são faixas separadas — pode marcar mais de uma, e o público soma as faixas marcadas.',
   painel:'Aqui você acompanha seus clientes e cria públicos para campanhas.',
-  campIni:'Data em que a campanha começa a valer.',
-  campFim:'Data em que a campanha termina. Os resultados aparecem 2 dias depois.'
 };
 const tip = k => `<span class="ttip">${I.info}<span class="bubble">${esc(TIPS[k])}</span></span>`;
 
@@ -904,7 +1252,11 @@ function calcular(){
 
   // filtros nomeados, na MESMA ordem das etapas do fluxo —
   // permitem montar o funil e diagnosticar quem zerou o público
-  const MIN_AFIN = {'Baixa':0.20,'Média':0.45,'Alta':0.72};
+  // Com marcação múltipla, cada grau vira uma FAIXA fechada, não um mínimo.
+  // Antes "Média" queria dizer "0,45 pra cima" e já engolia a Alta; agora
+  // Média é só a faixa do meio, e quem quiser as duas marca as duas.
+  // DNA ligado entra no filtro mesmo sem faixa marcada — e aí não traz ninguém,
+  // que é exatamente o que os três switches desligados dizem na tela.
   const dnaSel = Object.keys(S.dna);
   const filtros = [];
   // Lojas entra SEMPRE: como o padrão é tudo marcado, desmarcar é um recorte de verdade.
@@ -913,7 +1265,8 @@ function calcular(){
     filtros.push(['Lojas', o=>o.cp.some(x=>set.has(LOJAS[x.loja].id)), 'Lojas']); }
   if(S.rfv.length)    filtros.push(['Perfil (RFV)', o=>S.rfv.includes(o.c.rfv), 'Perfil RFV']);
   if(dnaSel.length){
-    const testa=(o,d)=>o.c.dna[d] >= MIN_AFIN[S.dna[d]];
+    const testa=(o,d)=>{ const v=o.c.dna[d];
+      return S.dna[d].some(g=>{ const f=FAIXA_ADER[g]; return v>=f[0] && v<f[1]; }); };
     filtros.push(['DNA', OPTS.dnaLogic==='AND' ? o=>dnaSel.every(d=>testa(o,d)) : o=>dnaSel.some(d=>testa(o,d)), 'DNA']);
   }
   if(S.genero.length) filtros.push(['Gênero', o=>S.genero.includes(o.c.genero), 'Demográfico']);
@@ -963,7 +1316,7 @@ function calcular(){
     else if(culpado==='Período de compra' || culpado==='Produtos no período')
       extra = `Ninguém que atende aos outros critérios comprou ${S.produtos.length?'esses produtos ':''}nos períodos escolhidos. Tente marcar mais períodos${S.produtos.length?' ou mais produtos':''}.`;
     else if(dnaSel.length>1 && OPTS.dnaLogic==='AND' && culpado==='DNA')
-      extra = `Você pediu clientes que se encaixam em <b>todos</b> os ${dnaSel.length} DNAs ao mesmo tempo. Isso é raro — tente um DNA de cada vez ou baixe o grau de aderência.`;
+      extra = `Você pediu clientes que se encaixam em <b>todos</b> os ${dnaSel.length} DNAs ao mesmo tempo. Isso é raro — tente um DNA de cada vez ou marque mais faixas de aderência.`;
     return {vazio:'sem-resultado', culpado, recupera: Math.round(melhor*SCALE), extra,
       unico: filtros.length===1, criterios: filtros.map(f=>f[0]), funil};
   }
@@ -976,7 +1329,6 @@ function calcular(){
     faturamento: fat,
     ticket: out.reduce((s,o)=>s+o.c.ticket,0)/n,
     ltv: out.reduce((s,o)=>s+o.c.ltv,0)/n,
-    freq: out.reduce((s,o)=>s+o.cp.length,0)/n,
     prods: S.produtos.length,
     funil
   };
@@ -1017,27 +1369,75 @@ function tabs(){
 }
 
 /* ---------- Tela: lista de segmentações ---------- */
-const STATUS_SEG = [
-  ['todos','Todos'],
-  ['ativa','Campanha ativa'],
-  ['criado','Público criado'],
-  ['encerrada','Campanha encerrada']
-];
+/* ---------- Vigência e campanhas ---------- */
+const CANAIS = {
+  email:   ['E-mail',   'ca-email', 'mail'],
+  whatsapp:['WhatsApp', 'ca-zap',   'zap'],
+  ligacao: ['Ligação',  'ca-tel',   'fone'],
+  sms:     ['SMS',      'ca-sms',   'sms']
+};
+const pillCanal = k => { const [rot,cls,ic] = CANAIS[k] || ['Outro','ca-email','mail'];
+  return `<span class="canal ${cls}">${I[ic]} ${rot}</span>`; };
+const brDate = d => parseYmd(d.split('/').reverse().join('-'));
+
+/* "R$ 2.500,00" → 2500. O ponto é separador de milhar e a vírgula é decimal;
+   trocar vírgula por ponto sem tirar os milhares dá NaN. */
+function parseBrl(txt){
+  const limpo = String(txt||'').replace(/[^\d,.-]/g,'');
+  if(!limpo) return 0;
+  const n = Number(limpo.replace(/\./g,'').replace(',','.'));
+  return isFinite(n) && n>0 ? n : 0;
+}
+const campanhaAtiva = c => brDate(c.ini) <= HOJE && brDate(c.fim) >= HOJE;
+
+/* Faturamento e ticket do card vêm SEMPRE das campanhas: o card mestre é a
+   soma do que as campanhas realizaram, não um número guardado à parte.
+
+   TICKET: média PONDERADA, não média das médias. Somar os tickets e dividir
+   pelo número de campanhas dá o mesmo peso a uma campanha de 4.581 compras e a
+   uma de 320 — e sempre puxa o resultado para a campanha pequena. O certo é
+   faturamento total ÷ total de compras. Na s1 a diferença é R$ 101,08 (errado)
+   contra R$ 102,07 (certo); com campanhas de tamanhos mais distantes, cresce. */
+function totaisSeg(s){
+  const c = s.campanhas || [];
+  const faturamento = c.reduce((a,x)=>a+(x.faturamento||0),0);
+  const compras = c.reduce((a,x)=>a+(x.compras||0),0);
+  const ticket = compras ? faturamento/compras : 0;
+  const emAndamento = c.filter(campanhaAtiva).length;
+  return {faturamento, compras, ticket, realizadas:c.length, emAndamento};
+}
+
+/* ---------- Estado de uma campanha no tempo ----------
+   Três situações que a tela precisa distinguir, porque cada uma pede um texto
+   diferente. Confundir "ainda não começou" com "não vendeu nada" faz o associado
+   concluir que a campanha fracassou no dia em que ela nasceu. */
+function faseCampanha(c){
+  const ini = brDate(c.ini), fim = brDate(c.fim);
+  if(ini > HOJE)  return 'futura';
+  if(fim >= HOJE) return 'andamento';
+  // janela de atribuição: 7 dias de rabo depois do fim
+  return addDias(fim,7) >= HOJE ? 'apurando' : 'encerrada';
+}
+const JANELA_RABO = 7;
+
+/* Retorno só existe com investimento informado. faturamento ÷ 0 dá Infinity,
+   e três das dez campanhas de exemplo estão com investimento zerado. */
+function retornoCamp(c){
+  return c.investimento > 0 ? c.faturamento / c.investimento : null;
+}
+
+/* Campanhas anteriores da MESMA segmentação, da mais recente para a mais antiga.
+   É a única base de comparação honesta que temos: mesmo público, mesma régua. */
+function anterioresDe(s, c){
+  return (s.campanhas||[])
+    .filter(x => x.id !== c.id && brDate(x.ini) < brDate(c.ini) && x.compras > 0)
+    .sort((a,b) => brDate(b.ini) - brDate(a.ini));
+}
 
 function telaLista(){
-  const filtro = S.busca.trim().toLowerCase();
-  const porBusca = S.segmentacoes.filter(s => !filtro || s.titulo.toLowerCase().includes(filtro) || s.objetivo.toLowerCase().includes(filtro));
-  const lista = porBusca.filter(s => S.filtroStatus==='todos' || s.status===S.filtroStatus);
-
-  // a contagem de cada aba respeita a busca ativa, senão o número mente
-  const conta = k => k==='todos' ? porBusca.length : porBusca.filter(s=>s.status===k).length;
-  const abas = STATUS_SEG.map(([k,rot])=>{
-    const n = conta(k);
-    return `<button class="stchip ${S.filtroStatus===k?'on':''} ${n?'':'zero'}" data-act="filtroStatus" data-v="${k}">
-      ${rot} <i>${n}</i></button>`;
-  }).join('');
-
-  const rotuloAtual = (STATUS_SEG.find(x=>x[0]===S.filtroStatus)||[])[1] || '';
+  const busca = S.busca.trim().toLowerCase();
+  const lista = S.segmentacoes.filter(s => !busca
+    || s.titulo.toLowerCase().includes(busca) || s.objetivo.toLowerCase().includes(busca));
 
   let corpo;
   if(!S.segmentacoes.length){
@@ -1047,9 +1447,8 @@ function telaLista(){
     </div>`;
   } else if(!lista.length){
     corpo = `<div class="empty">${I.file}
-      <h2>${filtro ? `Nenhum resultado para “${esc(S.busca)}”` : `Nenhuma segmentação em “${rotuloAtual}”`}</h2>
-      <p>${filtro ? 'Tente outro nome ou limpe a busca.' : 'Escolha outro status acima para ver as demais segmentações.'}</p>
-      ${S.filtroStatus!=='todos'?`<button class="btn btn-soft" style="margin-top:18px" data-act="filtroStatus" data-v="todos">Ver todas</button>`:''}
+      <h2>Nenhum resultado para “${esc(S.busca)}”</h2>
+      <p>Tente outro nome ou limpe a busca para ver todas as segmentações.</p>
     </div>`;
   } else {
     corpo = lista.map(cardSeg).join('');
@@ -1060,7 +1459,6 @@ function telaLista(){
     <div class="search">${I.search}<input data-k="busca" data-act="busca" placeholder="Pesquise aqui" value="${esc(S.busca)}"></div>
     <button class="btn btn-primary" data-act="nova">${I.plus} Nova Segmentação</button>
   </div>
-  ${S.segmentacoes.length?`<div class="stbar">${abas}</div>`:''}
   ${corpo}`);
 }
 
@@ -1078,56 +1476,370 @@ function menuSeg(s){
 }
 function botaoMais(s){
   return `<div class="maiswrap">
-    <button class="btn-ghost mais ${S.menuSeg===s.id?'on':''}" data-act="abrirMenuSeg" data-v="${s.id}">${I.dots}</button>
+    <button class="btn-ghost mais ${S.menuSeg===s.id?'on':''}" data-act="abrirMenuSeg" data-v="${s.id}"
+      aria-label="Mais ações em ${esc(s.titulo)}">${I.dots}</button>
     ${S.menuSeg===s.id ? menuSeg(s) : ''}
   </div>`;
 }
 
-function cardSeg(s){
-  const pills = `<span class="pill">Clientes <b>${nf.format(s.clientes)}</b></span>
-    <span class="pill">Produtos <b>${s.prods}</b></span>
-    <span class="pill">Valor estimado <b>${brl(s.valor)}</b></span>
-    <span class="pill">Ticket <b>${brl(s.ticket)}</b></span>`;
+/* Grid de colunas fixas: canal, faturamento e ticket caem sempre na mesma
+   posição, então os valores de um card alinham com os do card de baixo. */
+function cardCampanha(s, c){
+  const ativa = campanhaAtiva(c);
+  return `<div class="cpc ${ativa?'ativa':''}">
+    <div class="cpc-datas">
+      <div class="cpc-per">${c.ini} &nbsp;-&nbsp; ${c.fim}
+        ${ativa?`<span class="cpc-tag">Em andamento</span>`:''}</div>
+      <div class="cpc-criada">${I.cal} Criada em: ${c.criadaEm}</div>
+    </div>
+    <div class="cpc-col cpc-canal">${pillCanal(c.canal)}</div>
+    <div class="cpc-col"><span class="vdado" title="Faturamento da campanha">${I.moeda} ${brl(c.faturamento)}</span></div>
+    <div class="cpc-col"><span class="vdado" title="Ticket médio da campanha">${I.etiqueta} ${brl(c.ticket)}</span></div>
+    <button class="btn-res" data-act="verResultados" data-v="${s.id}|${c.id}"
+      aria-label="Ver resultados da campanha de ${c.ini} a ${c.fim}"
+      title="Ver resultados da campanha">${I.fwd}</button>
+  </div>`;
+}
 
-  if(s.status==='ativa'){
-    return `<div class="segcard">
-      <div class="segcard-top"><span class="badge green">Campanha Ativa</span>${pills}
-        <div style="margin-left:auto;text-align:right">
-          <div style="font-size:12.5px;color:var(--ink-3);display:flex;gap:6px;align-items:center;justify-content:flex-end">${I.cal} ${s.campIni} - ${s.campFim}</div>
-          <div class="progress"><i style="width:${s.progresso}%"></i></div>
-        </div>
-        ${botaoMais(s)}
+function cardSeg(s){
+  const t = totaisSeg(s);
+  const aberto = S.campAberta === s.id;
+  const caixa = (rot,val) => `<div class="kbox"><span>${rot}</span><b>${val}</b></div>`;
+  const filtro = (rot,val) => val && val!=='Nenhum'
+    ? `<span class="fpill">${rot}: <b>${esc(val)}</b></span>` : '';
+
+  return `<div class="segcard ${aberto?'aberto':''}">
+    <div class="sc-topo">
+      <div class="sc-ident">
+        <h3>${esc(s.titulo)}</h3>
+        <p class="obj">${esc(s.objetivo)}</p>
+        <p class="sc-ate">${I.cal} Disponível até ${s.disponivelAte}</p>
       </div>
-      <div class="segcard-main">
-        <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
-          <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
-        <div class="runbox">Campanha em andamento.<br>Os resultados aparecem 2 dias depois do encerramento.</div>
-      </div></div>`;
-  }
-  if(s.status==='encerrada'){
-    const k=(nome,val,tipK)=>`<div class="kpi"><div class="k">${nome} ${tipK?tip(tipK):''}</div><div class="v">${val}</div><div class="d">${I.up} 4,45%</div></div>`;
-    return `<div class="segcard">
-      <div class="segcard-top"><span class="badge pink">Campanha encerrada</span>${pills}
-        <div style="margin-left:auto;text-align:right">
-          <div style="font-size:12.5px;color:var(--ink-3);display:flex;gap:6px;align-items:center;justify-content:flex-end">${I.cal} ${s.campIni} - ${s.campFim}</div>
-          <div class="progress blue"><i style="width:100%"></i></div>
-        </div>
-        ${botaoMais(s)}
+      <div class="sc-kpis">
+        ${caixa('Clientes', nf.format(s.clientes))}
+        ${caixa('Faturamento total', brl(t.faturamento))}
+        ${caixa('Ticket Médio', brl(t.ticket))}
       </div>
-      <div class="segcard-main">
-        <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
-          <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
-        <div class="kpis">${k('Faturamento',brl(s.faturamento),'faturamento')}${k('Ticket médio',brl(s.ticket),'ticket')}${k('LTV médio',brl(s.ltv),'ltv')}${k('Unidade de vendas',nf.format(s.clientes))}</div>
-      </div></div>`;
+      ${botaoMais(s)}
+    </div>
+
+    <button class="sc-rodape ${aberto?'on':''}" data-act="abrirCampanhas" data-v="${s.id}" aria-expanded="${aberto}">
+      <span class="sc-filtros">${I.funnel} <i>Filtros aplicados:</i>
+        ${filtro('Perfil RFV', s.rfv)}${filtro('DNA', s.dna)}${filtro('Demográfico', s.demo)}</span>
+      <span class="sc-camps-res">${I.megafone} <i>Campanhas:</i>
+        <span class="fpill">Realizadas: <b>${t.realizadas}</b></span>
+        <span class="fpill ${t.emAndamento?'viva':''}">Em andamento: <b>${t.emAndamento}</b></span>
+        <i class="sc-caret ${aberto?'on':''}">${I.chev}</i></span>
+    </button>
+
+    ${aberto?`<div class="sc-painel">
+      <div class="sc-painel-top">
+        <h4>Campanhas</h4>
+        <button class="btn-nova-camp" data-act="abrirModalCamp" data-v="${s.id}">${I.plus} Criar campanha</button>
+      </div>
+      ${(s.campanhas||[]).length
+        ? s.campanhas.map(c=>cardCampanha(s,c)).join('')
+        : `<p class="sc-vazio">Nenhuma campanha ainda. Crie a primeira para começar a medir o desempenho desse público.</p>`}
+    </div>`:''}
+  </div>`;
+}
+
+/* =========================================================================
+   5b. TELA: RESULTADOS DA CAMPANHA
+   -------------------------------------------------------------------------
+   Uma pergunta só: "esta campanha vendeu mais do que custou, e foi melhor que
+   a anterior?". Quem lê é dono de farmácia, não analista.
+
+   Três números-herói, não quatro. O retorno desceu para o nível 2 porque
+   depende de `investimento`, que é campo livre e opcional na criação — herói
+   que fica vazio em metade das telas não é herói.
+
+   O que esta tela NÃO faz (e por quê está na spec, não no código): funil de
+   entrega, linha do tempo diária, quebra por loja/produto/perfil. Tudo isso
+   depende de dado que ninguém confirmou que existe. Desenhar agora seria
+   validar em teste uma tela que talvez não dê para construir.
+   ========================================================================= */
+
+/* Comparação é o que torna um número legível. "9,7% de conversão" não diz nada;
+   "acima da campanha anterior" diz. Só compara quando há com o que comparar. */
+function delta(atual, ant){
+  if(!ant) return null;   // sem base de comparação não se inventa seta
+  const p = (atual - ant) / ant * 100;
+  return { pct: p, dir: p > 0.5 ? 'up' : (p < -0.5 ? 'down' : 'flat') };
+}
+function selo(d, sufixo){
+  if(!d) return '';
+  const seta = d.dir==='up' ? '▲' : (d.dir==='down' ? '▼' : '=');
+  const txt = d.dir==='flat' ? 'igual à anterior'
+    : `${seta} ${nf1.format(Math.abs(d.pct))}% ${d.dir==='up'?'acima':'abaixo'} da ${sufixo}`;
+  return `<span class="dlt ${d.dir}">${txt}</span>`;
+}
+
+/* A frase que resume tudo. Se o associado ler só isto e fechar a tela, ele já
+   sabe o que precisava saber. Achado vira insight quando cabe numa frase. */
+function veredito(s, c, ant){
+  const fase = faseCampanha(c);
+  if(fase==='futura')
+    return `Esta campanha começa em <b>${c.ini}</b>. Os resultados aparecem aqui a partir dessa data.`;
+  if(!c.compras)
+    return `Ainda não há compra registrada neste público desde o início da campanha. ${
+      fase==='andamento' ? 'A campanha segue no ar até '+c.fim+'.' : ''}`;
+
+  const base = `Esta campanha trouxe <b>${brl(c.faturamento)}</b> em vendas de <b>${nf.format(c.clientesComp)}</b> clientes`;
+  if(!ant) return `${base}. É a primeira campanha deste público — a partir da próxima dá para comparar.`;
+  const d = delta(c.faturamento, ant.faturamento);
+  const cmp = d.dir==='flat' ? 'praticamente o mesmo faturamento da campanha anterior'
+    : `<b>${nf1.format(Math.abs(d.pct))}% ${d.dir==='up'?'a mais':'a menos'}</b> que a campanha anterior deste público`;
+  return `${base} — ${cmp}.`;
+}
+
+function heroi(rot, valor, apoio, dlt){
+  return `<div class="hero">
+    <span class="hero-rot">${rot}</span>
+    <b class="hero-val">${valor}</b>
+    ${apoio ? `<span class="hero-ap">${apoio}</span>` : ''}
+    ${dlt || ''}
+  </div>`;
+}
+
+/* Barra horizontal: comparação de categorias com rótulo longo. Escala única
+   para todas as barras — escala por barra mentiria sobre o tamanho relativo. */
+function barrasHistorico(s, c){
+  const todas = (s.campanhas||[]).filter(x=>x.compras>0)
+    .sort((a,b)=>brDate(b.ini)-brDate(a.ini)).slice(0,5);
+  if(todas.length < 2) return '';
+  const teto = Math.max(...todas.map(x=>x.faturamento));
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Comparado às outras campanhas deste público</h4>
+    <div class="barras">
+      ${todas.map(x=>{
+        const atual = x.id===c.id;
+        return `<div class="bar-lin ${atual?'atual':''}">
+          <div class="bar-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
+          <div class="bar-trilho"><div class="bar-fill" style="width:${(x.faturamento/teto*100).toFixed(1)}%"></div></div>
+          <div class="bar-val">${brl(x.faturamento)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <p class="bloco-nota">Mesma escala em todas as barras. Só campanhas que já tiveram resultado aparecem aqui.</p>
+  </div>`;
+}
+
+/* ---------- Funil: do público até a compra de qualidade ----------
+   ATENÇÃO À ESTRUTURA. Funil só não mente quando cada degrau é subconjunto
+   estrito do de cima. "Gastou acima do normal" e "voltou uma segunda vez" são
+   dois subconjuntos IRMÃOS de "comprou": dá para voltar a comprar gastando
+   pouco, e dá para gastar muito numa compra só. Empilhar os quatro em fila
+   sugeriria que o quarto está dentro do terceiro, o que é falso e faria o
+   associado ler o número final como "só 69 chegaram até o fim".
+
+   Por isso o desenho é uma bifurcação, não uma fila: dois degraus em cadeia e,
+   a partir de "compraram", dois ramos lado a lado com recuo. */
+function funilCampanha(s, c){
+  const total = s.clientes || 0;
+  if(!total || !c.clientesComp) return '';
+  const pct  = n => total ? n/total*100 : 0;
+  const dosQ = n => c.clientesComp ? Math.round(n/c.clientesComp*100) : 0;
+
+  const acima   = c.clientesAcima || 0;
+  const recompra= c.clientesRecompra || 0;
+  const pctAcima = dosQ(acima);
+  const base = s.pctAcimaHist || 0;
+  const dif  = pctAcima - base;
+
+  /* A barra desenha SEMPRE a mesma fração que o rótulo declara.
+     Antes o ramo dizia "46% de quem comprou" e desenhava 4% — porque a barra
+     usava o público como base e o texto usava quem comprou. Barra que contradiz
+     o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
+     mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
+  const degrau = (rot, n, largura, apoio, cls) => `<div class="fun-lin ${cls}">
+    <div class="fun-rot">${rot}</div>
+    <div class="fun-trilho"><div class="fun-fill" style="width:${largura.toFixed(1)}%"></div></div>
+    <div class="fun-val"><b>${nf.format(n)}</b><span>${apoio}</span></div>
+  </div>`;
+
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Do público até a compra</h4>
+    <div class="funil-camp">
+      <div class="fun-base">Sobre o público inteiro</div>
+      ${degrau('Receberam a campanha', total, 100, '100% do público', 'd1')}
+      ${degrau('Compraram', c.clientesComp, pct(c.clientesComp), `${Math.round(pct(c.clientesComp))}% do público`, 'd2')}
+      <div class="fun-ramo">
+        <div class="fun-base">Sobre os ${nf.format(c.clientesComp)} que compraram</div>
+        ${degrau('Gastaram acima do normal', acima, dosQ(acima), `${pctAcima}% de quem comprou`, 'd3')}
+        ${degrau('Voltaram uma segunda vez', recompra, dosQ(recompra), `${dosQ(recompra)}% de quem comprou`, 'd3')}
+      </div>
+    </div>
+    <p class="bloco-nota">Os dois últimos saem de quem comprou e <b>não se somam</b>: o mesmo cliente
+    pode estar nos dois, ou em nenhum. “Acima do normal” é gastar mais de ${brl(s.ticketHist||0)} por
+    compra, que é o que este público costuma gastar.</p>
+  </div>`;
+}
+
+/* Contexto que faz o número acima significar alguma coisa.
+   Numa distribuição de ticket, que é torta para a direita, cerca de 35% a 40%
+   das compras já ficam acima da média em mês NORMAL. Mostrar "46% acima" sem
+   dizer que o normal é 38% faria qualquer campanha parecer um sucesso. */
+function blocoTicket(s, c){
+  if(!c.clientesComp) return '';
+  const ticket = c.compras ? c.faturamento/c.compras : 0;
+  const hist = s.ticketHist || 0;
+  const pctAcima = Math.round((c.clientesAcima||0)/c.clientesComp*100);
+  const base = s.pctAcimaHist || 0;
+  const dif = pctAcima - base;
+  const dTk = hist ? (ticket-hist)/hist*100 : 0;
+  const bom = dif > 2, ruim = dif < -2;
+
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Estamos aumentando o ticket deste público?</h4>
+    <div class="tkcmp">
+      <div class="tk-col">
+        <span>Ticket nesta campanha</span>
+        <b class="${dTk>1?'pos':(dTk<-1?'neg':'')}">${brl(ticket)}</b>
+        <i>${dTk>1?'acima':(dTk<-1?'abaixo':'em linha com')} do normal do público</i>
+      </div>
+      <div class="tk-col">
+        <span>O que este público costuma gastar</span>
+        <b>${brl(hist)}</b>
+        <i>média por compra fora de campanha</i>
+      </div>
+      <div class="tk-col">
+        <span>Clientes que gastaram acima disso</span>
+        <b class="${bom?'pos':(ruim?'neg':'')}">${pctAcima} em cada 100</b>
+        <i>num período normal são ${base} em cada 100</i>
+      </div>
+    </div>
+    <p class="bloco-nota">As duas leituras juntas importam: a média sobe se poucos clientes gastam
+    muito, e a contagem mostra se o aumento foi de fato espalhado. ${
+      bom  ? '<b>Aqui subiram as duas</b> — mais gente gastando mais, não só alguns.' :
+      ruim ? '<b>Aqui a contagem caiu</b> — mesmo que a média tenha subido, menos gente passou do valor de sempre.' :
+             'Aqui a contagem ficou perto do normal do público.'}</p>
+  </div>`;
+}
+
+/* Investimento e retorno: nível 2, e com estado próprio quando não informado.
+   Mostrar "R$ 0,00" seria dizer que a campanha foi de graça, o que é diferente
+   de ninguém ter preenchido o campo. */
+function blocoInvestimento(c){
+  const r = retornoCamp(c);
+  if(r === null) return `<div class="bloco bloco-vazio">
+    <h4 class="bloco-tit">Retorno sobre o investimento</h4>
+    <p class="bloco-nota">Nenhum investimento foi informado para esta campanha, então não dá para
+    calcular o retorno. O valor é preenchido na criação da campanha.</p>
+  </div>`;
+  const cpc = c.clientesComp ? c.investimento / c.clientesComp : 0;
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Retorno sobre o investimento</h4>
+    <div class="retorno">
+      <div class="ret-num"><b>R$ ${nf1.format(r)}</b><span>de venda para cada R$ 1 investido</span></div>
+      <div class="ret-lado">
+        <div><span>Investido</span><b>${brl(c.investimento)}</b></div>
+        <div><span>Custo por cliente que comprou</span><b>${cpc?brl(cpc):'—'}</b></div>
+      </div>
+    </div>
+    <p class="bloco-nota">O valor investido é informado por quem cria a campanha e não é conferido pelo sistema.</p>
+  </div>`;
+}
+
+/* O aviso mais importante da tela. Sem grupo de controle, parte destas compras
+   ia acontecer de qualquer jeito — é medicação contínua, recompra de fralda.
+   O painel não tem como separar, e esconder isso ensina a conclusão errada. */
+function avisoIncremental(){
+  return `<div class="nota-inc">${I.info}
+    <div><b>Este número não é só o que a campanha causou.</b>
+    Parte destes clientes compraria mesmo sem receber a mensagem. Para separar as duas coisas
+    seria preciso deixar uma parte do público sem receber nada e comparar os dois grupos.</div>
+  </div>`;
+}
+
+function telaResultados(){
+  const s = S.segmentacoes.find(x=>x.id===S.resSeg);
+  const c = s && (s.campanhas||[]).find(x=>x.id===S.resCamp);
+  // Sem tabs() e sem "Painel CRM": esta página é só o resultado de UMA campanha.
+  // A navegação do painel não pertence aqui — o caminho de volta é o botão.
+  if(!s || !c){
+    return shell(`<div class="empty">${I.file}
+      <h2>Campanha não encontrada</h2>
+      <p>Ela pode ter sido removida. Volte para a lista de segmentações.</p>
+      <button class="btn btn-primary" style="margin-top:20px" data-act="voltarLista">Voltar</button></div>`);
   }
-  return `<div class="segcard">
-    <div class="segcard-top"><span class="badge blue">Público Criado</span>${pills}
-      <div style="margin-left:auto">${botaoMais(s)}</div></div>
-    <div class="segcard-main">
-      <div><h3>${esc(s.titulo)}</h3><p class="obj">${esc(s.objetivo)}</p>
-        <div class="per">${I.cal} Período da segmentação: ${s.periodo}</div></div>
-      <button class="btn btn-soft" data-act="iniciarCamp" data-v="${s.id}">Iniciar campanha ${I.play}</button>
-    </div></div>`;
+
+  const fase = faseCampanha(c);
+  const ant  = anterioresDe(s, c)[0] || null;
+  const conv = s.clientes ? c.clientesComp / s.clientes * 100 : 0;
+  const convAnt = ant && s.clientes ? ant.clientesComp / s.clientes * 100 : 0;
+  // ticket sempre recalculado da mesma forma nos dois lados da comparação:
+  // usar o campo guardado de um e a conta do outro daria seta errada
+  const tk = x => x && x.compras ? x.faturamento / x.compras : 0;
+  const ticket = tk(c), ticketAnt = tk(ant);
+
+  const SELOS = {
+    futura:    ['Ainda não começou','sf'],
+    andamento: ['Em andamento','sa'],
+    apurando:  ['Encerrada · ainda apurando','sp'],
+    encerrada: ['Encerrada','se']
+  };
+  const [seloRot, seloCls] = SELOS[fase];
+
+  // O aviso de parcial fica colado na identificação da campanha, não flutuando
+  // entre os blocos de número: é uma condição do cabeçalho, não uma métrica.
+  const parcial = (fase==='andamento' || fase==='apurando')
+    ? `<div class="res-parcial">${I.alert}
+        <div><b>Números parciais.</b> ${fase==='andamento'
+          ? `A campanha vai até ${c.fim} e as compras continuam entrando.`
+          : `A campanha terminou em ${c.fim}, mas ainda contamos as compras até ${fmtD(addDias(brDate(c.fim),JANELA_RABO).getTime())}.`}</div>
+      </div>` : '';
+
+  const cabecalho = `<div class="res-topo">
+    <button class="btn-voltar" data-act="voltarLista">${I.back} Voltar para as segmentações</button>
+    <div class="res-ident">
+      <div class="res-linha">${pillCanal(c.canal)}
+        <span class="res-per">${I.cal} ${c.ini} a ${c.fim}</span>
+        <span class="res-selo ${seloCls}">${seloRot}</span></div>
+      <h1 class="res-tit">${esc(s.titulo)}</h1>
+      <p class="res-sub">${nf.format(s.clientes)} clientes no público · campanha criada em ${c.criadaEm}</p>
+      ${parcial}
+    </div>
+  </div>`;
+
+  // Veredito com a mesma casca dos outros blocos da página: mesmo fundo, mesma
+  // borda, mesmo raio. O destaque vem do tamanho do texto, não de um traço azul
+  // que só ele tinha e que o fazia parecer um alerta.
+  const frase = `<div class="bloco res-veredito">${veredito(s, c, ant)}</div>`;
+
+  // Campanha sem resultado ainda: não existe herói para mostrar, e mostrar
+  // R$ 0,00 seria mentir. A tela para aqui, com o que fazer em seguida.
+  if(fase==='futura' || !c.compras){
+    return shell(`${cabecalho}${frase}
+      <div class="bloco bloco-vazio res-espera">
+        <h4 class="bloco-tit">O que aparece aqui depois</h4>
+        <p class="bloco-nota">Faturamento gerado, quantos clientes compraram, ticket médio, o funil
+        do público até a compra e a comparação com as campanhas anteriores deste mesmo público.</p>
+      </div>
+      ${blocoInvestimento(c)}`);
+  }
+
+  const herois = `<div class="herois">
+    ${heroi('Faturamento gerado', brl(c.faturamento),
+        `em ${nf.format(c.compras)} compras`,
+        selo(delta(c.faturamento, ant && ant.faturamento), 'campanha anterior'))}
+    ${heroi('Clientes que compraram', nf.format(c.clientesComp),
+        `${Math.round(conv)} de cada 100 que receberam`,
+        selo(delta(conv, convAnt), 'campanha anterior'))}
+    ${heroi('Ticket médio', brl(ticket),
+        'valor médio de cada compra',
+        selo(delta(ticket, ticketAnt), 'campanha anterior'))}
+  </div>`;
+
+  // Ordem: veredito → números → como esses números se formaram → contexto.
+  // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
+  // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
+  return shell(`${cabecalho}${frase}${herois}
+    ${funilCampanha(s, c)}
+    ${blocoTicket(s, c)}
+    ${barrasHistorico(s, c)}
+    ${blocoInvestimento(c)}
+    ${avisoIncremental()}`);
 }
 
 /* =========================================================================
@@ -1198,8 +1910,6 @@ function aside(){
       <div class="c">Clientes &nbsp;${sk(pct+'% da base')}</div></div>
       ${metric(I.money,'Faturamento total','faturamento', e?brl(e.faturamento):'—', load)}
       ${metric(I.money,'Ticket médio','ticket', e?brl(e.ticket):'—', load)}
-      ${metric(I.users,'LTV','ltv', e?brl(e.ltv):'—', load)}
-      ${metric(I.repeat,'Frequência de compras','freq', e?nf1.format(e.freq)+'x':'—', load)}
       ${metric(I.box,'Produtos selecionados','prodsel', String(S.produtos.length), load)}
       ${S.compraPeriodos.length ? metric(I.cal,'Período de compra','periodoCompra', resumoPeriodos(), load) : ''}`;
   }
@@ -1220,7 +1930,7 @@ function aside(){
   const travado = ultimo && S.stale;
 
   return `<div class="aside ${S.stale?'stale':''}">
-    <h3>Estimativa de impacto ${tip('estimativa')}</h3>
+    <h3>Total de clientes ${tip('estimativa')}</h3>
     ${flag}
     ${bloco}${funil}${avisoMed}
     <div class="aside-actions">
@@ -1501,73 +2211,104 @@ function painelComportamento(){
 }
 
 /* ---------- Etapa 6: DNA ---------- */
-/* Insights que mudam conforme o grau de aderência escolhido.
-   Abre ao clicar em Baixa / Média / Alta — o usuário vê na hora
-   com que tipo de cliente ele acabou de decidir falar. */
-function insightsGrau(d, grau){
+const GRAUS = ['Baixa','Média','Alta'];
+
+/* Quem é o cliente de cada faixa, em uma frase.
+   É a primeira coisa que o usuário lê — precisa dizer o comportamento,
+   não o número por trás dele. */
+const GRAU_QUEM = {
+  'Baixa':'compram de vez em quando; a maior parte do consumo está em outro lugar.',
+  'Média':'já compram com alguma regularidade, mas ainda dividem com outro canal.',
+  'Alta':'procuram muito esse tipo de produto e compram com mais frequência que a média.'
+};
+
+const lista = itens => itens.map(x=>`<div class="li">${x}</div>`).join('');
+
+/* As três faixas aparecem SEMPRE que o card está aberto, ligadas ou não.
+   Quem não foi escolhida fica apagada, mas legível: o usuário compara os três
+   comportamentos antes de decidir, em vez de escolher no escuro. */
+function secaoGrau(d, grau, dnaLigado){
+  const graus = S.dna[d.id] || [];
+  const on = graus.includes(grau);
   const ins = insightDna(d.id, grau);
-  const GTXT = {
-    'Baixa':'Clientes em que esse comportamento aparece pouco.',
-    'Média':'Clientes em que esse comportamento já é frequente.',
-    'Alta':'Clientes em que esse comportamento domina as compras.'
-  };
-  return `<div class="dna-ins">
-    <div class="dna-ins-head">
-      <span class="grau-pill g-${grau==='Média'?'media':grau.toLowerCase()}">Aderência ${grau}</span>
-      <span class="dna-ins-sub">${GTXT[grau]}</span>
-      <button class="linkbtn" data-act="fecharInsight">Fechar</button>
+  const chave = d.id+'|'+grau;
+
+  // sem o DNA ligado o switch existe mas não responde — mostra o que virá,
+  // sem deixar ligar uma faixa de um DNA que está fora do público
+  const sw = `<span class="switch ${on?'on':''} ${dnaLigado?'':'travado'}"
+    role="switch" aria-checked="${on}" ${dnaLigado?'':'aria-disabled="true"'}
+    ${dnaLigado?`data-act="toggleGrau" data-v="${chave}"`:''}></span>`;
+
+  return `<section class="${on?'gsec on':'gsec'}" ${dnaLigado?`data-act="toggleGrau" data-v="${chave}"`:''}>
+    <div class="gsec-head">${sw}<h5 class="gsec-tit">${grau} aderência</h5></div>
+    <p class="gsec-desc">${ins.perfil || GRAU_QUEM[grau]}</p>
+    <div class="dna-par">
+      <div class="dna-par-col">
+        <b class="dna-par-tit">O que costuma acontecer</b>
+        ${lista(ins.comport)}
+      </div>
+      <div class="dna-par-col">
+        <b class="dna-par-tit">Sugestões de ação</b>
+        ${lista(ins.oport)}
+      </div>
     </div>
-    ${ins.perfil?`<p class="dna-ins-perfil">${ins.perfil}</p>`:''}
-    <div class="dna-ins-cols">
-      <div><b>O que costuma acontecer</b>
-        ${ins.comport.map(x=>`<div class="li">${x}</div>`).join('')}</div>
-      <div><b>Sugestões de ação</b>
-        ${ins.oport.map(x=>`<div class="li li-op">${x}</div>`).join('')}</div>
-    </div>
+  </section>`;
+}
+
+/* Alta primeiro: é o grupo que o usuário quase sempre procura, e a leitura
+   de cima para baixo vai do mais engajado para o menos. */
+const GRAUS_UI = ['Alta','Média','Baixa'];
+
+function insightsGrau(d, graus){
+  const ligado = !!S.dna[d.id];
+  const n = (graus||[]).length;
+  const rodape = !ligado
+    ? `<p class="gsec-nota">${I.info} Ligue <b>${d.nome}</b> acima para poder escolher as faixas.</p>`
+    : n===0
+      ? `<p class="gsec-nota alerta">${I.alert} Nenhuma faixa ligada — do jeito que está, esse DNA não traz ninguém.</p>`
+      : n===3
+        ? `<p class="gsec-nota">${I.info} As três ligadas: esse DNA entra com o grupo inteiro.</p>`
+        : '';
+  return `<div class="gsecs">
+    ${GRAUS_UI.map(g=>secaoGrau(d,g,ligado)).join('')}
+    ${rodape}
+    <button class="gfechar" data-act="fecharInsight">Fechar <i class="gf-caret">${I.chev}</i></button>
   </div>`;
 }
 
 function painelDna(){
-  const grade = OPTS.dnaLayout==='grade';
   const cards = DNAS.map(d=>{
-    const on = !!S.dna[d.id];
-    const grau = S.dna[d.id] || '';
-    const insAberto = S.dnaExpandido===d.id && S.dnaGrauAberto;
-    const aberto = S.dnaExpandido===d.id && !S.dnaGrauAberto;
-    const segs = ['Baixa','Média','Alta'].map(g=>`<button class="${grau===g?'on':''}" data-act="setGrau" data-v="${d.id}|${g}" ${on?'':'disabled'}>${g}</button>`).join('');
-    const painelIns = insAberto ? insightsGrau(d, S.dnaGrauAberto) : '';
+    const ligado = !!S.dna[d.id];
+    const graus = S.dna[d.id] || [];
+    const aberto = S.dnaExpandido===d.id;
+    const resumo = ligado && graus.length && graus.length<3
+      ? `<span class="gcount">${GRAUS_UI.filter(g=>graus.includes(g)).join(' · ')}</span>` : '';
 
-    if(grade){
-      return `<div class="dna ${on?'on':''}" style="margin:0">
-        <div style="padding:15px 18px;display:flex;gap:13px;align-items:flex-start">
-          <span class="switch ${on?'on':''}" data-act="toggleDna" data-v="${d.id}"></span>
-          <div><h4 style="margin:0 0 3px;font-size:16px;font-weight:600">${d.nome}</h4>
-          <p style="margin:0;font-size:12.5px;color:var(--ink-3);line-height:1.45">${d.desc}</p></div></div>
-        <div style="border-top:1px solid var(--border);background:#FBFCFE;padding:14px 18px;display:flex;gap:16px;align-items:flex-end">
-          <div style="flex:1;font-size:12.5px;color:var(--ink-3);line-height:1.45"><b style="display:block;font-weight:500;color:var(--ink-2);margin-bottom:3px">Como usar:</b>${d.uso}</div>
-          <div><div class="k" style="font-size:12.5px;color:var(--ink-2);margin-bottom:8px;display:flex;gap:5px;align-items:center">Grau de aderência: ${tip('aderencia')}</div><div class="seg">${segs}</div></div>
-        </div>${painelIns}</div>`;
-    }
-    return `<div class="dna ${on?'on':''}">
-      <div class="dna-row">
-        <div class="dna-a"><span class="switch ${on?'on':''}" data-act="toggleDna" data-v="${d.id}"></span>
-          <div style="cursor:pointer" data-act="expandDna" data-v="${d.id}"><h4>${d.nome}</h4><p>${d.desc}</p></div></div>
+    // o cabeçalho inteiro abre o card; o switch para o clique antes de chegar lá
+    return `<div class="dna ${ligado?'on':''} ${aberto?'aberto':''}">
+      <div class="dna-row" data-act="expandDna" data-v="${d.id}">
+        <div class="dna-a">
+          <span class="switch ${ligado?'on':''}" role="switch" aria-checked="${ligado}"
+            data-act="toggleDna" data-v="${d.id}"></span>
+          <div><h4>${d.nome} ${resumo}</h4><p>${d.desc}</p></div>
+        </div>
         <div class="dna-b"><b>Como usar:</b>${d.uso}</div>
-        <div class="dna-c"><div class="k">Grau de aderência: ${tip('aderencia')}</div><div class="seg">${segs}</div></div>
+        ${aberto?'':`<div class="dna-c"><i class="dna-caret">${I.chev}</i></div>`}
       </div>
-      ${painelIns}
-      ${aberto?`<div style="border-top:1px solid var(--border);padding:16px 18px;display:flex;gap:40px;background:#FBFCFE">
-        <div style="flex:1"><b style="display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin-bottom:7px">Comportamento identificado:</b>
-          ${d.comport.map(x=>`<div style="font-size:12.5px;color:var(--ink-3);line-height:1.75">${x}</div>`).join('')}</div>
-        <div style="flex:1"><b style="display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin-bottom:7px">Oportunidade</b>
-          ${d.oport.map(x=>`<div style="font-size:12.5px;color:var(--ink-3);line-height:1.75">${x}</div>`).join('')}</div>
-      </div>`:''}
+      ${aberto ? insightsGrau(d, graus) : ''}
     </div>`;
   }).join('');
 
   return `<div class="infobox">Cada DNA representa o comportamento de compra dos clientes, agrupando perfis com interesses e necessidades semelhantes a partir dos produtos que costumam comprar. Assim, é possível entender melhor o perfil de consumo e quais produtos podem ser mais relevantes para cada cliente.</div>
-  <div ${grade?'class="grid2"':''}>${cards}</div>
-  ${Object.keys(S.dna).length>1?`<p class="hint" style="margin-top:16px;color:var(--ink-4)">Você escolheu ${Object.keys(S.dna).length} DNAs. O público inclui quem se encaixa em ${OPTS.dnaLogic==='AND'?'<b>todos</b> eles':'<b>qualquer um</b> deles'}.</p>`:''}`;
+  <div>${cards}</div>
+  ${(()=>{ const ligados = Object.keys(S.dna);
+    if(!ligados.length) return `<p class="hint" style="margin-top:16px;color:var(--ink-4)">Nenhum DNA ligado — o público não está sendo filtrado por comportamento de consumo.</p>`;
+    const resumo = ligados.map(k=>{ const n = (DNAS.find(x=>x.id===k)||{}).nome || k;
+      const g = GRAUS_UI.filter(x=>S.dna[k].includes(x));
+      return `<b>${n}</b> (${g.join(' + ')||'nenhuma faixa'})`; }).join(', ');
+    return `<p class="hint" style="margin-top:16px;color:var(--ink-4)">Escolhido: ${resumo}.${
+      ligados.length>1 ? ` O público inclui quem se encaixa em ${OPTS.dnaLogic==='AND'?'<b>todos</b> eles':'<b>qualquer um</b> deles'}.` : ''}</p>`;
+  })()}`;
 }
 
 /* ---------- helpers de UI ---------- */
@@ -1591,34 +2332,206 @@ function vazioTabela(t,p){
 }
 
 /* ---------- Modal ---------- */
-function modalSalvar(){
+
+/* Campos obrigatórios. Devolve a chave do problema de cada campo, para o erro
+   nascer colado no campo — mensagem só no topo obriga a pessoa a procurar. */
+function faltamNoModal(){
+  const f = {};
+  if(!S.modalTitulo.trim()) f.nome = 'Dê um nome para encontrar essa segmentação depois.';
+  if(!S.modalObjetivo.trim()) f.objetivo = 'Escreva o que você quer alcançar com esse público.';
+  if(!S.modalAte) f.ate = 'Escolha até quando a segmentação ficará disponível.';
+  else if(parseYmd(S.modalAte) <= HOJE) f.ate = 'Escolha uma data a partir de amanhã.';
+  return f;
+}
+const contaFaltas = () => Object.keys(faltamNoModal()).length;
+
+function resumoModal(){
   const e = S.estimativa;
-  return `<div class="overlay" data-act="fecharModalBg"><div class="modal" data-stop="1">
-    <h2>Salvar segmentação de público</h2>
-    <div class="field"><label>Título</label>
-      <input class="input ${S.modalErro&&!S.modalTitulo.trim()?'err':''}" data-k="mt" data-act="modalTitulo" placeholder="Escreva o nome que deseja salvar esse público" value="${esc(S.modalTitulo)}"></div>
-    <div class="field"><label>Objetivo estratégico</label>
-      <input class="input" data-k="mo" data-act="modalObjetivo" placeholder="Descreva o objetivo dessa segmentação..." value="${esc(S.modalObjetivo)}"></div>
-    <div class="togglebox">
-      <div class="togglebox-top"><div><h4>Iniciar uma nova campanha com esse público</h4>
-        <p>Crie uma campanha usando este público ao salvar.</p></div>
-        <span class="switch ${S.modalCampanha?'on':''}" data-act="modalCamp"></span></div>
-      ${S.modalCampanha?`<div class="togglebox-bot">
-        <p>Defina a duração da campanha e, se quiser, o investimento.</p>
-        <div style="display:flex;gap:16px">
-          <div class="field" style="flex:1;margin:0"><label>Início ${tip('campIni')}</label>
-            <input type="date" class="input" data-k="mi" data-act="modalIni" value="${S.modalIni}"></div>
-          <div class="field" style="flex:1;margin:0"><label>Término ${tip('campFim')}</label>
-            <input type="date" class="input" data-k="mf" data-act="modalFim" value="${S.modalFim}"></div>
-        </div></div>`:''}
+  const nada = '—';
+  const rfv = S.rfv.length ? S.rfv.map(id=>(RFVS.find(r=>r.id===id)||{}).nome||id).join(', ') : 'Todos os perfis';
+  const dnas = Object.keys(S.dna);
+  const dnaTxt = dnas.length
+    ? dnas.map(k=>(DNAS.find(x=>x.id===k)||{}).nome||k).join(', ')
+    : 'Nenhum';
+  const demo = [
+    S.genero.length ? S.genero.map(g=>(GENEROS.find(x=>x[0]===g)||[])[1]||g).join(', ') : '',
+    S.faixa.length ? S.faixa.join(', ')+' anos' : ''
+  ].filter(Boolean).join(' · ') || 'Todos';
+
+  // Todas as linhas com o mesmo peso — o resumo é conferência, não leitura em
+  // destaque. Em duas colunas o bloco encurta e cabe numa varredura só.
+  const item = (rot,val) => `<div class="rm-item">
+    <span class="rm-k">${rot}</span><span class="rm-v">${val}</span></div>`;
+
+  return `<section class="rm" aria-label="Resumo da segmentação">
+    <header class="rm-head">${I.users} Resumo da segmentação</header>
+    <div class="rm-grid">
+      ${item('Clientes', e&&!e.vazio?nf.format(e.clientes):nada)}
+      ${item('Lojas', `${S.lojas.length} de ${LOJAS.length}`)}
+      ${item('Faturamento total', e&&!e.vazio?brl(e.faturamento):nada)}
+      ${item('Ticket médio', e&&!e.vazio?brl(e.ticket):nada)}
+      ${item('Perfil', rfv)}
+      ${item('DNA', dnaTxt)}
+      ${item('Dados demográficos', demo)}
+      ${item('Período de compra', S.compraPeriodos.length?resumoPeriodos():`Últimos ${JANELA_MESES} meses`)}
     </div>
-    ${S.modalErro?`<div class="errmsg" style="margin-bottom:16px">${I.alert}<span>${esc(S.modalErro)}</span></div>`:''}
-    <div class="modal-actions">
-      <button class="btn btn-ghost" data-act="fecharModal">Cancelar</button>
-      <button class="btn btn-primary" data-act="salvar">Salvar</button>
-      <button class="btn btn-primary" data-act="salvarExportar">Salvar e exportar</button>
-    </div>
-  </div></div>`;
+  </section>`;
+}
+
+/* ---------- Modal: nova campanha a partir de uma segmentação ---------- */
+function faltamNaCampanha(){
+  const s = S.segmentacoes.find(x=>x.id===S.modalCamp);
+  const limite = s && s.disponivelAte ? brDate(s.disponivelAte) : null;
+  const f = {};
+  if(!S.campIni) f.ini = 'Escolha quando a campanha começa.';
+  else if(parseYmd(S.campIni) < HOJE) f.ini = 'A campanha não pode começar antes de hoje.';
+  else if(limite && parseYmd(S.campIni) > limite) f.ini = `A segmentação fica disponível só até ${s.disponivelAte}.`;
+  if(!S.campFim) f.fim = 'Escolha quando a campanha termina.';
+  else if(S.campIni && parseYmd(S.campFim) < parseYmd(S.campIni)) f.fim = 'O término não pode ser antes do início.';
+  else if(limite && parseYmd(S.campFim) > limite) f.fim = `A campanha precisa terminar até ${s.disponivelAte}, quando a segmentação vence.`;
+  if(!S.campCanal) f.canal = 'Escolha por onde falar com esses clientes.';
+  return f;
+}
+
+function modalNovaCampanha(){
+  const s = S.segmentacoes.find(x=>x.id===S.modalCamp);
+  if(!s) return '';
+  const faltam = faltamNaCampanha();
+  const err = k => (S.campErro==='campos' && faltam[k]) ? faltam[k] : '';
+  const hoje = ymd(HOJE);
+  const limite = s.disponivelAte ? ymd(brDate(s.disponivelAte)) : '';
+  const dias = (S.campIni && S.campFim && !faltam.ini && !faltam.fim)
+    ? Math.round((parseYmd(S.campFim)-parseYmd(S.campIni))/DIA)+1 : 0;
+
+  return `<div class="overlay" data-act="fecharModalCampBg">
+    <div class="modal modal-salvar" data-stop="1" role="dialog" aria-modal="true" aria-labelledby="mc-tit">
+      <header class="ms-head">
+        <h2 id="mc-tit">Criar campanha</h2>
+        <p>A campanha vai falar com o público de <b>${esc(s.titulo)}</b> — ${nf.format(s.clientes)} clientes.</p>
+      </header>
+
+      <div class="ms-corpo">
+        <div class="ms-form">
+          <p class="mc-secao">Período da campanha</p>
+          <div class="mc-datas">
+            <div class="field ${err('ini')?'com-erro':''}">
+              <label for="mc-ini">Data de início</label>
+              <input id="mc-ini" type="date" class="input ${err('ini')?'err':''}" data-k="ci" data-act="campIni"
+                value="${S.campIni}" min="${hoje}" ${limite?`max="${limite}"`:''} aria-invalid="${err('ini')?'true':'false'}">
+              ${err('ini')?`<p class="erro-campo" role="alert">${I.alert}<span>${err('ini')}</span></p>`:''}
+            </div>
+            <div class="field ${err('fim')?'com-erro':''}">
+              <label for="mc-fim">Data de término</label>
+              <input id="mc-fim" type="date" class="input ${err('fim')?'err':''}" data-k="cf" data-act="campFim"
+                value="${S.campFim}" min="${S.campIni||hoje}" ${limite?`max="${limite}"`:''} aria-invalid="${err('fim')?'true':'false'}">
+              ${err('fim')?`<p class="erro-campo" role="alert">${I.alert}<span>${err('fim')}</span></p>`:''}
+            </div>
+          </div>
+          <p class="ajuda">A campanha precisa acontecer entre hoje e <b>${s.disponivelAte}</b>, quando a segmentação deixa de ficar disponível.</p>
+          ${dias?`<p class="ok-data">${I.checkc} A campanha vai rodar por <b>${dias} ${dias===1?'dia':'dias'}</b>.</p>`:''}
+
+          <p class="mc-secao" style="margin-top:22px">Canal de comunicação</p>
+          <div class="mc-canais" role="radiogroup" aria-label="Canal de comunicação">
+            ${Object.keys(CANAIS).map(k=>`
+              <button class="mc-canal ${S.campCanal===k?'on':''}" role="radio" aria-checked="${S.campCanal===k}"
+                data-act="campCanal" data-v="${k}">${pillCanal(k)}</button>`).join('')}
+          </div>
+          ${err('canal')?`<p class="erro-campo" role="alert">${I.alert}<span>${err('canal')}</span></p>`:''}
+
+          <div class="field" style="margin-top:22px;margin-bottom:0">
+            <label for="mc-inv">Investimento <span class="opc">opcional</span></label>
+            <input id="mc-inv" class="input" data-k="cv" data-act="campInvest" inputmode="decimal"
+              placeholder="R$ 0,00" value="${esc(S.campInvest)}">
+            <p class="ajuda">Quanto você pretende gastar nessa campanha. Serve para comparar o retorno depois.</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="ms-acoes">
+        <button class="btn btn-ghost" data-act="fecharModalCamp">Cancelar</button>
+        <button class="btn btn-primary" data-act="criarCampanha">Salvar campanha</button>
+      </footer>
+    </div></div>`;
+}
+
+function modalSalvar(){
+  const faltam = faltamNoModal();
+  const salvando = S.modalSalvando;          // '' | 'salvar' | 'exportar'
+  // o erro por campo só aparece depois de a pessoa tentar salvar: campo em
+  // branco que ninguém tocou ainda não é erro, é campo em branco
+  const err = k => (S.modalErro==='campos' && faltam[k]) ? faltam[k] : '';
+  const minima = ymd(new Date(HOJE.getTime()+DIA));
+
+  const campo = (id,k,rot,ajuda,ctrl) => {
+    const e = err(k);
+    return `<div class="field ${e?'com-erro':''}">
+      <label for="${id}">${rot}</label>
+      ${ctrl(e)}
+      ${e?`<p class="erro-campo" id="${id}-err" role="alert">${I.alert}<span>${e}</span></p>`:''}
+      ${ajuda?`<p class="ajuda">${ajuda}</p>`:''}
+    </div>`;
+  };
+  const aria = (id,e) => `aria-required="true" aria-invalid="${e?'true':'false'}" ${e?`aria-describedby="${id}-err"`:''}`;
+
+  // erros gerais (estimativa desatualizada, público zerado) continuam no topo
+  const msgGeral = S.modalErro && S.modalErro!=='campos' ? S.modalErro : '';
+
+  return `<div class="overlay" data-act="fecharModalBg">
+    <div class="modal modal-salvar" data-stop="1" role="dialog" aria-modal="true" aria-labelledby="ms-tit">
+      <header class="ms-head">
+        <h2 id="ms-tit">Salvar segmentação</h2>
+        <p>Confira as informações, dê um nome para a segmentação e defina até quando ela ficará disponível.</p>
+      </header>
+
+      <div class="ms-corpo">
+        ${resumoModal()}
+        ${msgGeral?`<div class="errmsg ms-erro" role="alert">${I.alert}<span>${esc(msgGeral)}</span></div>`:''}
+
+        <div class="ms-form">
+          ${campo('ms-nome','nome','Nome da segmentação',
+            'É por esse nome que você vai encontrar a segmentação na lista.',
+            e=>`<input id="ms-nome" class="input ${e?'err':''}" data-k="mt" data-act="modalTitulo"
+              placeholder="Digite um nome para esta segmentação" value="${esc(S.modalTitulo)}"
+              ${salvando?'disabled':''} ${aria('ms-nome',e)}>`)}
+
+          ${campo('ms-obj','objetivo','Objetivo estratégico',
+            'Em uma frase, o que você espera conseguir com esse público.',
+            e=>`<input id="ms-obj" class="input ${e?'err':''}" data-k="mo" data-act="modalObjetivo"
+              placeholder="Ex.: trazer de volta quem parou de comprar" value="${esc(S.modalObjetivo)}"
+              ${salvando?'disabled':''} ${aria('ms-obj',e)}>`)}
+
+          ${campo('ms-ate','ate','Disponível até','',
+            e=>`<input id="ms-ate" type="date" class="input ${e?'err':''}"
+              data-k="ma" data-act="modalAte" value="${S.modalAte}" min="${minima}"
+              ${salvando?'disabled':''} ${aria('ms-ate',e)}>
+            ${S.modalAte && !faltam.ate
+              ? `<p class="ok-data">${I.checkc} Salva até <b>${fmtBr(S.modalAte)}</b> — ${diasAte(S.modalAte)}</p>` : ''}`)}
+          <p class="ajuda ajuda-ate">Escolha até quando esta segmentação ficará salva. Durante esse período, você poderá criar diferentes campanhas para esse público e comparar os resultados para entender quais estratégias tiveram melhor desempenho.</p>
+        </div>
+      </div>
+
+      <footer class="ms-acoes">
+        <button class="btn btn-ghost" data-act="fecharModal">Cancelar</button>
+        <div class="ms-primarias">
+          <button class="btn btn-soft" data-act="salvar" ${salvando?'disabled':''}>
+            ${salvando==='salvar'?`${I.spin} Salvando…`:'Salvar segmentação'}</button>
+          <button class="btn btn-primary" data-act="salvarExportar" ${salvando?'disabled':''}>
+            ${salvando==='exportar'
+              ? `${I.spin} ${S.modalFase==='exportando'?'Gerando o Excel…':'Salvando…'}`
+              : `${I.sheet} Salvar e exportar`}</button>
+        </div>
+      </footer>
+    </div></div>`;
+}
+
+/* "faltam 45 dias" comunica melhor que uma data solta para quem tem pouca
+   familiaridade com o produto. */
+function diasAte(s){
+  const d = Math.round((parseYmd(s) - HOJE)/DIA);
+  if(d <= 1) return 'amanhã';
+  if(d < 31) return `daqui a ${d} dias`;
+  const m = Math.round(d/30);
+  return m===1 ? 'daqui a cerca de 1 mês' : `daqui a cerca de ${m} meses`;
 }
 
 /* =========================================================================
@@ -1629,8 +2542,11 @@ function render(){
   const key = a && a.dataset ? a.dataset.k : null;
   let pos = null; try{ pos = a && a.selectionStart; }catch(e){}
 
-  let html = S.screen==='list' ? telaLista() : telaWizard();
+  let html = S.screen==='list' ? telaLista()
+           : S.screen==='resultados' ? telaResultados()
+           : telaWizard();
   if(S.modal) html += modalSalvar();
+  if(S.modalCamp) html += modalNovaCampanha();
   if(S.toast) html += `<div class="toast">${esc(S.toast)}</div>`;
   root.innerHTML = html;
 
@@ -1801,54 +2717,118 @@ function handle(act, v, el, isInput){
     case 'toggleFx':  S.faixa=arrToggle(S.faixa,v);   log('faixa',v);  marcarSujo('faixa etária'); return;
     case 'toggleRfv': S.rfv=arrToggle(S.rfv,v);       log('rfv',v);    marcarSujo('perfil RFV'); return;
 
+    /* Switch mestre. Ligar já abre as três faixas, com as três ativas:
+       é o estado que o switch mostra de verdade, sem seleção escondida. */
     case 'toggleDna':
-      if(S.dna[v]){ delete S.dna[v]; if(S.dnaExpandido===v) S.dnaGrauAberto=null; }
-      else { S.dna[v]='Média'; S.dnaExpandido=v; S.dnaGrauAberto='Média'; }
-      log('dna', v+' '+(S.dna[v]?'ligado (Média)':'desligado')); marcarSujo('DNA'); return;
+      if(S.dna[v]){ delete S.dna[v]; log('dna', v+' desligado'); }
+      else { S.dna[v] = ['Alta']; S.dnaExpandido = v; log('dna', v+' ligado (Alta)'); }
+      marcarSujo('DNA'); return;
 
-    // Clicar no grau já abre os insights daquele DNA naquele grau.
-    case 'setGrau': {
+    /* Faixa individual. Só responde com o DNA ligado (o switch nem carrega
+       a ação quando está travado). Pode ficar com 0, 1, 2 ou as 3 —
+       zero faixas é um estado válido e avisado, não um DNA meio ligado. */
+    case 'toggleGrau': {
       const [d,g] = v.split('|');
       if(!S.dna[d]) return;
-      const mesmo = S.dna[d]===g && S.dnaExpandido===d && S.dnaGrauAberto===g;
-      S.dna[d] = g;
-      S.dnaExpandido = mesmo ? null : d;
-      S.dnaGrauAberto = mesmo ? null : g;
-      log('aderencia', d+'='+g);
+      const novo = arrToggle(S.dna[d], g);
+      S.dna[d] = GRAUS.filter(x=>novo.includes(x));   // ordem canônica no estado
+      S.dnaExpandido = d;
+      log('aderencia', d+' = '+(S.dna[d].join(' + ')||'nenhuma'));
       marcarSujo('aderência'); return; }
 
-    case 'fecharInsight': S.dnaGrauAberto=null; S.dnaExpandido=null; log('insight-fechou'); render(); return;
+    case 'fecharInsight': S.dnaExpandido=null; log('insight-fechou'); render(); return;
 
     case 'expandDna':
-      if(S.dnaExpandido===v && !S.dnaGrauAberto){ S.dnaExpandido=null; }
-      else { S.dnaExpandido=v; S.dnaGrauAberto=null; }
+      S.dnaExpandido = S.dnaExpandido===v ? null : v;
       log('dna-detalhe', v); render(); return;
 
     case 'atualizar': recalcular('clique manual'); return;
     case 'toggleFunil': S.funilAberto = !S.funilAberto; log('funil', S.funilAberto?'abriu':'fechou'); render(); return;
 
     case 'abrirModal':
-      S.modal=true; S.modalErro=''; log('abriu-modal-salvar'); render(); return;
-    case 'fecharModal': case 'fecharModalBg': S.modal=false; log('fechou-modal'); render(); return;
-    case 'modalTitulo': S.modalTitulo=v; return;
-    case 'modalObjetivo': S.modalObjetivo=v; return;
-    case 'modalCamp': S.modalCampanha=!S.modalCampanha; render(); return;
-    case 'modalIni': S.modalIni=v; return;
-    case 'modalFim': S.modalFim=v; return;
+      S.modal=true; S.modalErro=''; S.modalSalvando=''; S.modalFase='';
+      log('abriu-modal-salvar'); render(); return;
+    case 'fecharModal': case 'fecharModalBg':
+      if(S.modalSalvando) return;              // não fecha no meio do salvamento
+      S.modal=false; log('fechou-modal'); render(); return;
+    /* Ao digitar, some com o erro na hora: manter a mensagem vermelha depois
+       que a pessoa já corrigiu é punir quem está consertando. Só redesenha
+       quando o estado de trava muda, para não perder o cursor a cada tecla. */
+    /* Enquanto o erro está na tela, cada tecla redesenha para o aviso do campo
+       sumir assim que a pessoa corrige. Sem erro na tela, digitar não redesenha
+       nada — não há botão travado para atualizar. */
+    case 'modalTitulo': case 'modalObjetivo': {
+      if(act==='modalTitulo') S.modalTitulo=v; else S.modalObjetivo=v;
+      if(S.modalErro==='campos') render();
+      return; }
+
+    case 'modalAte':
+      S.modalAte = v;
+      render(); return;
 
     case 'salvar': case 'salvarExportar': salvar(act==='salvarExportar'); return;
 
-    case 'iniciarCamp': {
-      const s = S.segmentacoes.find(x=>x.id===v); if(!s) return;
-      s.status='ativa'; s.campIni=s.campIni||fmtD(HOJE.getTime()); s.campFim=s.campFim||fmtD(HOJE.getTime()+30*DIA); s.progresso=42;
-      log('iniciou-campanha', s.titulo); render(); return; }
-
     case 'busca': S.busca=v; render(); return;
 
-    case 'filtroStatus':
-      if(S.filtroStatus===v) return;
-      S.filtroStatus=v; S.menuSeg=null;
-      log('filtro-status', v); render(); return;
+    /* ---- campanhas da segmentação ---- */
+    case 'abrirCampanhas':
+      S.campAberta = S.campAberta===v ? null : v;
+      S.menuSeg = null;
+      log('campanhas', S.campAberta?'abriu '+v:'fechou'); render(); return;
+
+    case 'verResultados': {
+      const [sid,cid] = v.split('|');
+      S.resSeg = sid; S.resCamp = cid; S.screen = 'resultados'; S.menuSeg = null;
+      const sg = S.segmentacoes.find(x=>x.id===sid);
+      const cp = sg && (sg.campanhas||[]).find(x=>x.id===cid);
+      log('ver-resultados', (sg?sg.titulo:sid)+' · '+(cp?faseCampanha(cp):'?'));
+      window.scrollTo(0,0); render(); return; }
+
+    case 'voltarLista':
+      // volta com o painel de campanhas daquela segmentação já aberto: sair da
+      // tela e cair numa lista fechada faria a pessoa reabrir tudo de novo
+      S.campAberta = S.resSeg; S.screen = 'list'; S.resSeg = null; S.resCamp = null;
+      log('voltou-da-tela-de-resultados'); render(); return;
+
+    case 'abrirModalCamp':
+      S.modalCamp = v; S.campIni=''; S.campFim=''; S.campCanal=''; S.campInvest=''; S.campErro='';
+      log('abriu-modal-campanha', v); render(); return;
+
+    case 'fecharModalCamp': case 'fecharModalCampBg':
+      S.modalCamp = null; log('fechou-modal-campanha'); render(); return;
+
+    case 'campIni':
+      S.campIni = v;
+      // término antes do início deixa de fazer sentido: reancora
+      if(S.campFim && parseYmd(S.campFim) < parseYmd(v)) S.campFim = '';
+      render(); return;
+    case 'campFim': S.campFim = v; render(); return;
+    case 'campInvest': S.campInvest = v; return;
+    case 'campCanal':
+      S.campCanal = S.campCanal===v ? '' : v;
+      if(S.campErro==='campos' && !Object.keys(faltamNaCampanha()).length) S.campErro='';
+      render(); return;
+
+    case 'criarCampanha': {
+      const s = S.segmentacoes.find(x=>x.id===S.modalCamp); if(!s) return;
+      if(Object.keys(faltamNaCampanha()).length){
+        S.campErro='campos'; log('campanha-bloqueada', Object.keys(faltamNaCampanha()).join(', '));
+        render(); return;
+      }
+      // campanha nova ainda não rendeu nada: faturamento e ticket ficam zerados
+      // até o desempenho chegar, e é isso que o card mestre vai somar
+      const nova = {
+        id:'c'+Date.now(),
+        ini: fmtBr(S.campIni), fim: fmtBr(S.campFim), criadaEm: fmtD(HOJE.getTime()),
+        canal: S.campCanal, faturamento: 0, ticket: 0, compras: 0, clientesComp: 0,
+        investimento: parseBrl(S.campInvest)
+      };
+      s.campanhas = [nova, ...(s.campanhas||[])];
+      log('criou-campanha', s.titulo+' · '+CANAIS[S.campCanal][0]+' · '+nova.ini+' a '+nova.fim);
+      S.modalCamp=null; S.campAberta=s.id;
+      render();
+      toast('Campanha criada para '+nf.format(s.clientes)+' clientes.');
+      return; }
 
     case 'abrirMenuSeg':
       S.menuSeg = S.menuSeg===v ? null : v;
@@ -1880,27 +2860,75 @@ function visiveisProdutos(){
 }
 
 function salvar(exportar){
+  if(S.modalSalvando) return;                       // trava contra clique duplo
   if(S.stale){ S.modalErro='A estimativa está desatualizada. Atualize antes de salvar para não guardar um público diferente do que você viu.'; render(); return; }
-  if(!S.modalTitulo.trim()){ S.modalErro='Dê um nome para essa segmentação antes de salvar.'; render(); return; }
-  if(S.modalCampanha && (!S.modalIni||!S.modalFim)){ S.modalErro='Preencha o início e o término da campanha, ou desligue a opção de campanha.'; render(); return; }
+  const faltam = faltamNoModal();
+  if(Object.keys(faltam).length){
+    // botão sempre clicável: quem aponta o que falta é o erro, não a trava
+    S.modalErro='campos';
+    log('salvar-bloqueado', Object.keys(faltam).join(', '));
+    render();
+    focarPrimeiroErro(faltam);
+    return;
+  }
   const e = S.estimativa && !S.estimativa.vazio ? S.estimativa : null;
   if(!e){ S.modalErro='Esse público está com 0 clientes. Ajuste os critérios antes de salvar.'; render(); return; }
 
+  S.modalErro='';
+  S.modalSalvando = exportar ? 'exportar' : 'salvar';
+  S.modalFase = 'salvando';
+  log('salvando', S.modalTitulo.trim() + (exportar?' + exportação':''));
+  render();
+
+  setTimeout(()=>{
+    if(exportar){
+      // duas etapas visíveis: salvar e depois gerar o arquivo
+      S.modalFase = 'exportando';
+      log('exportando', 'gerando Excel');
+      render();
+      setTimeout(()=>gravarSegmentacao(e, true), 900);
+    } else {
+      gravarSegmentacao(e, false);
+    }
+  }, 700);
+}
+
+/* Leva o cursor para o primeiro campo com problema: sem isso, em modal alto,
+   a pessoa clica em salvar e não vê o que mudou na tela. */
+function focarPrimeiroErro(faltam){
+  const ordem = ['nome','objetivo','ate'];
+  const id = {nome:'ms-nome', objetivo:'ms-obj', ate:'ms-ate'}[ordem.find(k=>faltam[k])];
+  if(!id) return;
+  const n = document.getElementById(id);
+  if(n && n.focus) n.focus();
+}
+
+function gravarSegmentacao(e, exportar){
+  const objetivo = S.modalObjetivo.trim();
   const seg = {
     id:'S'+Date.now(), titulo:S.modalTitulo.trim(),
-    objetivo:S.modalObjetivo.trim()||'Sem objetivo descrito.',
+    objetivo,
     periodo: S.compraPeriodos.length ? resumoPeriodos() : `Últimos ${JANELA_MESES} meses`,
-    clientes:e.clientes, prods:S.produtos.length, valor:e.faturamento, ticket:e.ticket, ltv:e.ltv,
-    faturamento:e.faturamento,
-    status: S.modalCampanha ? 'ativa' : 'criado',
-    campIni: S.modalIni?fmtD(new Date(S.modalIni+'T00:00:00')):'', campFim: S.modalFim?fmtD(new Date(S.modalFim+'T00:00:00')):'',
-    progresso: 38
+    clientes:e.clientes, prods:S.produtos.length,
+    disponivelAte: fmtBr(S.modalAte),
+    rfv: S.rfv.length ? S.rfv.map(id=>(RFVS.find(r=>r.id===id)||{}).nome||id).join(', ') : 'Todos os perfis',
+    dna: Object.keys(S.dna).length
+      ? Object.keys(S.dna).map(k=>{ const n=(DNAS.find(x=>x.id===k)||{}).nome||k;
+          const g=GRAUS_UI.filter(x=>S.dna[k].includes(x)); return n+(g.length?' ('+g.join(', ')+')':''); }).join(', ')
+      : 'Nenhum',
+    demo: [
+      S.genero.length ? S.genero.map(g=>(GENEROS.find(x=>x[0]===g)||[])[1]||g).join(', ') : 'Todos',
+      S.faixa.length ? S.faixa.join(', ')+' anos' : 'Todas as idades'
+    ].join(' · '),
+    campanhas: []
   };
   S.segmentacoes.unshift(seg);
-  log('salvou', seg.titulo + (exportar?' (com exportação)':''));
-  S.modal=false; S.screen='list';
+  log('salvou', seg.titulo + ' · disponível até '+seg.disponivelAte + (exportar?' (com exportação)':''));
+  S.modal=false; S.modalSalvando=''; S.modalFase=''; S.screen='list';
   render();
-  toast(exportar ? 'Público salvo. O arquivo foi enviado para download.' : 'Público salvo com sucesso.');
+  toast(exportar
+    ? 'Segmentação salva. O Excel foi enviado para download.'
+    : 'Segmentação salva. Ela fica disponível até '+fmtBr(S.modalAte)+'.');
 }
 
 /* =========================================================================
@@ -1910,7 +2938,7 @@ const TAREFAS = [
   ['1. Criar o primeiro público','Você quer falar com clientes que compram anticoncepcional e pararam de comprar nos últimos meses. Crie esse público.'],
   ['2. Lojas já marcadas','Olhando a primeira tela, o que você entende que está incluído no público agora? E se quisesse só as lojas de São Paulo, o que faria?'],
   ['3. Entender o número','Sem clicar em nada, me explique o que significa o número grande do lado direito e de onde ele vem.'],
-  ['4. Grau de aderência','O que você espera que aconteça se mudar o grau de aderência de Média para Alta? Diga antes de clicar. Agora clique e me diga o que apareceu.'],
+  ['4. Faixas de aderência','Ligue um DNA. O que você espera que aconteça se trocar de Média para Alta? Diga antes de clicar. Agora marque Média e Alta juntas — o público cresce ou diminui? Por quê?'],
   ['5. Insights do DNA','Você acabou de ver as sugestões de ação. Escolheria alguma delas para uma campanha? Por quê?'],
   ['6. Estimativa desatualizada','Marque dois perfis de RFV e, sem clicar em mais nada, me diga se o número da direita já considera essas escolhas.'],
   ['7. Período de compra','Você quer só quem comprou no mês passado. Onde faria isso? O que acha que muda no público?'],
@@ -1950,7 +2978,7 @@ function pintarSeed(){ btnSeed.textContent = S.segmentacoes.length ? 'Esvaziar l
 btnSeed.onclick = ()=>{
   const cheia = S.segmentacoes.length > 0;
   S.segmentacoes = cheia ? [] : segmentacoesDemo();
-  S.busca = ''; S.screen='list'; S.filtroStatus='todos'; S.menuSeg=null;
+  S.busca = ''; S.screen='list'; S.menuSeg=null; S.campAberta=null;
   log(cheia ? 'esvaziou-lista' : 'carregou-exemplos');
   render(); pintarSeed();
 };
