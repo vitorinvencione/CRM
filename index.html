@@ -676,23 +676,9 @@ tbody tr.sel{background:#F3F8FF}
    A barra de 100% é o único elemento que carrega cor de verdade neste bloco:
    azul para o que é do DNA, cinza para o resto. Tudo ao redor fica quieto para
    ela não competir com nada. */
-.mix-topo{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
-  flex-wrap:wrap;margin-bottom:14px}
-.mix-num b{display:block;font-size:34px;font-weight:700;color:var(--ink);line-height:1.05;
-  letter-spacing:-.015em;font-variant-numeric:tabular-nums}
-.mix-num b.pos{color:var(--green)}
-.mix-num b.neg{color:var(--danger)}
-.mix-num span{display:block;font-size:13px;color:var(--ink-3);margin-top:5px}
-.mix-base{text-align:right;max-width:300px}
-.mix-base i{font-style:normal;font-size:13.5px;color:var(--ink-3);line-height:1.45}
-.mix-base i b{font-weight:700;color:var(--ink)}
-
-/* A barra precisa de espaço em cima para a etiqueta do marcador não colidir
-   com a linha de números. */
-.mixbar{position:relative;display:flex;height:34px;border-radius:9px;overflow:visible;
-  background:#EFF4F9;margin-top:22px}
-.mixbar>.mixseg:first-of-type{border-radius:9px 0 0 9px}
-.mixbar>.mixseg:nth-of-type(2){border-radius:0 9px 9px 0}
+.mixbar{position:relative;display:flex;height:24px;border-radius:7px;overflow:visible;background:#EFF4F9}
+.mixbar>.mixseg:first-of-type{border-radius:7px 0 0 7px}
+.mixbar>.mixseg:nth-of-type(2){border-radius:0 7px 7px 0}
 .mixseg{display:block;height:100%;transition:filter .12s}
 .mixseg:hover{filter:brightness(.93)}
 
@@ -705,27 +691,40 @@ tbody tr.sel{background:#F3F8FF}
   background:#fff;padding:0 5px}
 
 /* Legenda: duas faixas mais o marcador. */
-.mixduo{display:flex;gap:24px;flex-wrap:wrap;margin-top:13px}
+.mixduo{display:flex;gap:24px;flex-wrap:wrap;margin-top:15px}
 .mixduo-i{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
 .mixduo-i i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
 .mixduo-i b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .mixduo-mk{width:2px!important;height:14px!important;border-radius:1px!important;
   background:var(--ink);margin:0 4px}
 
-.mix-sep{height:1px;background:var(--border);margin:22px 0 18px}
-.mix-sub{margin:0 0 13px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
 .mixcmp{display:flex;flex-direction:column;gap:9px}
 .mixlin{display:grid;grid-template-columns:180px minmax(0,1fr) 62px;gap:16px;align-items:center}
 .mixlin-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mixlin.atual .mixlin-rot{color:var(--ink);font-weight:600}
 .mixlin-rot i{font-style:normal;color:var(--primary);font-weight:600}
-.mixlin .mixbar{height:24px;border-radius:7px;margin-top:0}
-.mixlin .mixbar>.mixseg:first-of-type{border-radius:7px 0 0 7px}
-.mixlin .mixbar>.mixseg:nth-of-type(2){border-radius:0 7px 7px 0}
 .mixlin .mixmk{top:-4px;bottom:-4px}
 .mixlin-val{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .mixlin-val.pos{color:var(--green)}
 .mixlin-val.neg{color:var(--danger)}
+
+/* ---------- Card de faturamento da campanha ---------- */
+.fatcard{max-width:430px;background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;box-shadow:var(--shadow);margin-bottom:14px}
+.fat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.fat-top h4{margin:0;font-size:14.5px;font-weight:600;color:var(--ink)}
+.fat-per{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3);margin-bottom:13px}
+.fat-per span{background:var(--primary-soft);color:#0B6FD0;font-weight:600;border-radius:7px;
+  padding:3px 10px;white-space:nowrap}
+.fat-val{display:flex;align-items:baseline;gap:10px;padding-bottom:15px;
+  border-bottom:1px solid var(--border)}
+.fat-val svg{flex-shrink:0;color:var(--ink-3);align-self:center}
+.fat-val b{font-size:26px;font-weight:700;color:var(--ink);line-height:1.1;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums}
+.fat-pct{font-size:14px;font-weight:700;color:var(--primary);background:var(--primary-soft);
+  border-radius:7px;padding:3px 9px;align-self:center}
+.fat-rod{margin-top:13px;font-size:13px;color:var(--ink-3)}
+.fat-rod b{font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
 
 /* ---------- Funil ----------
    Duas decisões de alinhamento que estavam quebradas antes:
@@ -791,7 +790,6 @@ tbody tr.sel{background:#F3F8FF}
   .tkcmp{grid-template-columns:1fr}
   .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
-  .mix-base{text-align:left;max-width:none}
   .mixlin{grid-template-columns:120px minmax(0,1fr) 54px;gap:10px}
 }
 
@@ -1297,9 +1295,9 @@ function segmentacoesDemo(){
      clientes:8420, mixHist:[['Anti-hipertensivos',49.0],['Banho',12.6],['Minerais',12.0],['Analgésicos',9.6],['Multivitamínicos',9.4],['Bucal',7.4]], ticketHist:96.00, pctAcimaHist:38, prods:14, disponivelAte:'30/11/2026',
      rfv:'Fiel, Valioso', dna:'Hipertensão', demo:'Feminino · 36 - 45 anos',
      campanhas:[
-       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, ticket:118.40, compras:814, clientesComp:733, clientesAcima:337, clientesRecompra:69, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], investimento:4200},
-       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, ticket:96.10,  compras:741, clientesComp:667, clientesAcima:253, clientesRecompra:63, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], investimento:1800},
-       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, ticket:88.75,  compras:664, clientesComp:598, clientesAcima:191, clientesRecompra:56, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], investimento:0}
+       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, ticket:118.40, compras:814, clientesComp:733, clientesAcima:337, clientesRecompra:69, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], sellout:787604, investimento:4200},
+       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, ticket:96.10,  compras:741, clientesComp:667, clientesAcima:253, clientesRecompra:63, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], sellout:742180, investimento:1800},
+       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, ticket:88.75,  compras:664, clientesComp:598, clientesAcima:191, clientesRecompra:56, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], sellout:801350, investimento:0}
      ]},
 
     {id:'s2', titulo:'Mães de bebês — recompra de fraldas',
@@ -1307,8 +1305,8 @@ function segmentacoesDemo(){
      clientes:3175, mixHist:[['Higiene infantil',23.5],['Leites infantis',20.7],['Bucal',11.9],['Fraldas',10.8],['Multivitamínicos',10.0],['Analgésicos',8.4],['Banho',8.3],['Minerais',6.4]], ticketHist:118.00, pctAcimaHist:36, prods:22, disponivelAte:'31/12/2026',
      rfv:'Fiel', dna:'Mãe', demo:'Feminino · 26 - 35 anos',
      campanhas:[
-       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, ticket:132.20, compras:320, clientesComp:288, clientesAcima:127, clientesRecompra:27, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], investimento:2600},
-       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, ticket:110.60, compras:344, clientesComp:310, clientesAcima:102, clientesRecompra:29, mix:[['Fraldas',11601],['Higiene infantil',5275],['Leites infantis',4841],['Minerais',4536],['Banho',3298],['Analgésicos',3293],['Multivitamínicos',2888],['Bucal',2368]], investimento:0}
+       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, ticket:132.20, compras:320, clientesComp:288, clientesAcima:127, clientesRecompra:27, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], sellout:615900, investimento:2600},
+       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, ticket:110.60, compras:344, clientesComp:310, clientesAcima:102, clientesRecompra:29, mix:[['Fraldas',11601],['Higiene infantil',5275],['Leites infantis',4841],['Minerais',4536],['Banho',3298],['Analgésicos',3293],['Multivitamínicos',2888],['Bucal',2368]], sellout:598220, investimento:0}
      ]},
 
     {id:'s3', titulo:'Diabéticos com alta aderência em cuidado diário',
@@ -1316,7 +1314,7 @@ function segmentacoesDemo(){
      clientes:2640, mixHist:[['Antidiabéticos',43.8],['Suplementos',17.2],['Analgésicos',10.8],['Bucal',9.0],['Multivitamínicos',8.1],['Banho',6.4],['Minerais',4.7]], ticketHist:131.00, pctAcimaHist:39, prods:9, disponivelAte:'30/11/2026',
      rfv:'Fiel', dna:'Diabetes', demo:'Todos · +65 anos',
      campanhas:[
-       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, ticket:142.90, compras:362, clientesComp:326, clientesAcima:143, clientesRecompra:31, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], investimento:3100}
+       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, ticket:142.90, compras:362, clientesComp:326, clientesAcima:143, clientesRecompra:31, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], sellout:704480, investimento:3100}
      ]},
 
     {id:'s4', titulo:'Dermocosméticos — ticket alto, baixa frequência',
@@ -1336,8 +1334,8 @@ function segmentacoesDemo(){
      clientes:12480, mixHist:[['Corporal',21.9],['Banho',15.0],['Minerais',11.7],['Proteção solar',11.1],['Cabelo',9.6],['Facial',9.4],['Bucal',7.5],['Analgésicos',7.3],['Multivitamínicos',6.5]], ticketHist:71.00, pctAcimaHist:37, prods:18, disponivelAte:'28/02/2026',
      rfv:'Ocasional, Potencial', dna:'Beleza', demo:'Todos · 26 - 35 anos',
      campanhas:[
-       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, ticket:74.20, compras:2484, clientesComp:2236, clientesAcima:939, clientesRecompra:211, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], investimento:8900},
-       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, ticket:66.50, compras:1907, clientesComp:1716, clientesAcima:549, clientesRecompra:162, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], investimento:5400}
+       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, ticket:74.20, compras:2484, clientesComp:2236, clientesAcima:939, clientesRecompra:211, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], sellout:962140, investimento:8900},
+       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, ticket:66.50, compras:1907, clientesComp:1716, clientesAcima:549, clientesRecompra:162, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], sellout:1043700, investimento:5400}
      ]},
 
     {id:'s7', titulo:'Gripe e resfriado — inverno 2026',
@@ -1345,8 +1343,8 @@ function segmentacoesDemo(){
      clientes:21050, ticketHist:58.00, pctAcimaHist:40, prods:27, disponivelAte:'30/06/2026',
      rfv:'Todos os perfis', dna:'Nenhum', demo:'Todos · Todas as idades',
      campanhas:[
-       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, ticket:52.80, compras:4581, clientesComp:4123, clientesAcima:1278, clientesRecompra:389, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], investimento:12000},
-       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, ticket:61.30, compras:2581, clientesComp:2323, clientesAcima:999, clientesRecompra:219, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], investimento:7500}
+       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, ticket:52.80, compras:4581, clientesComp:4123, clientesAcima:1278, clientesRecompra:389, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], sellout:1128560, investimento:12000},
+       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, ticket:61.30, compras:2581, clientesComp:2323, clientesAcima:999, clientesRecompra:219, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], sellout:986330, investimento:7500}
      ]}
   ];
 }
@@ -1440,6 +1438,7 @@ const TIPS = {
   ticketGeral:'Faturamento dividido pelo número de transações.',
   perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
   faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
+  fatCampanha:'Quanto do faturamento das lojas no período veio dos clientes desta segmentação.',
   perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
   partDna:'Quantos clientes têm aderência a cada DNA de consumo. O mesmo cliente pode aparecer em mais de um.',
 };
@@ -2314,6 +2313,28 @@ function mixDna(s, mix, total){
 
 const COR_DNA = '#0B7BFB', COR_RESTO = '#D5DDE8';
 
+/* ---------- Card: faturamento da campanha dentro do sellout ----------
+   Dá escala ao número. R$ 96.400 sozinho não diz se é muito ou pouco; ao lado
+   dos R$ 787.604 que a loja faturou no mesmo período, diz.
+
+   O DESTAQUE É O MESMO NÚMERO DO HERÓI no topo da tela — tudo que o público
+   segmentado comprou na janela. Um valor só chamado "faturamento" na página
+   inteira. O recorte por DNA continua existindo, mas com outro nome e em
+   outro bloco, justamente para não virar um segundo "faturamento". */
+function cardFaturamento(s, c){
+  if(!c.sellout || !c.compras) return '';
+  const pct = c.faturamento / c.sellout * 100;
+  return `<div class="fatcard">
+    <div class="fat-top"><h4>Faturamento</h4>${tip('fatCampanha')}</div>
+    <div class="fat-per">Período: <span>${c.ini} - ${c.fim}</span></div>
+    <div class="fat-val">${I.users}
+      <b>${brl(c.faturamento)}</b>
+      <span class="fat-pct">${nf1.format(pct)}%</span>
+    </div>
+    <div class="fat-rod">Faturamento das lojas: <b>${brl(c.sellout)}</b></div>
+  </div>`;
+}
+
 /* Duas faixas, duas cores. A versão anterior pintava cada categoria com uma
    rampa e listava as seis embaixo — informação demais para a pergunta, que é
    binária: veio do DNA ou não veio. As categorias continuam no dado e voltam
@@ -2335,66 +2356,40 @@ function barraDna(pctAlvo, marcador, rotulo){
   </div>`;
 }
 
+/* Comparativo do DNA entre campanhas. Perdeu a barra grande da campanha atual
+   (virou o card de faturamento acima) e por isso a campanha atual VOLTOU para
+   a lista — sem ela não haveria onde ler a participação desta campanha. */
 function blocoDnaVendas(s, c){
   const {nomes, subs} = subsDoDna(s);
-  if(!nomes.length) return '';                 // segmentação sem DNA: bloco não existe
-  if(!c.mix || !c.compras) return '';
+  if(!nomes.length) return '';
+  const camps = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix)
+    .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
+  if(!camps.length) return '';
 
-  const {linhas, pctAlvo} = mixDna(s, c.mix, c.faturamento);
-  const vAlvo = linhas.filter(l=>l.alvo).reduce((a,l)=>a+l.val, 0);
+  const hist = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
   const rotDna = nomes.join(' e ');
 
-  // linha de base: quanto o DNA já representa num mês normal deste público
-  const hist = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
-  const dif  = pctAlvo - hist;
-  const sobe = dif > 1.5, desce = dif < -1.5;
-
-  // OUTRAS campanhas: a atual já está desenhada acima em tamanho grande, então
-  // repeti-la aqui era a mesma informação duas vezes na mesma tela. Entram as
-  // demais, cada uma com o mesmo marcador de normal — a referência é a mesma
-  // para todas, então dá para varrer a coluna e ver quais passaram da linha.
-  const outras = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix && x.id!==c.id)
-    .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
-  const comparativo = outras.length ? `
-    <div class="mix-sep"></div>
-    <h5 class="mix-sub">Desempenho nas outras campanhas</h5>
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Participação do DNA ${esc(rotDna)} nas vendas</h4>
     <div class="mixcmp">
-      ${outras.map(x=>{
+      ${camps.map(x=>{
         const m = mixDna(s, x.mix, x.faturamento);
-        return `<div class="mixlin">
-          <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}</div>
-          ${barraDna(m.pctAlvo, hist)}
+        const atual = x.id===c.id;
+        return `<div class="mixlin ${atual?'atual':''}">
+          <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
+          ${barraDna(m.pctAlvo, hist, atual)}
           <div class="mixlin-val ${m.pctAlvo>=hist?'pos':'neg'}">${nf1.format(m.pctAlvo)}%</div>
         </div>`;
       }).join('')}
-    </div>` : '';
-
-  return `<div class="bloco">
-    <h4 class="bloco-tit">Quanto das vendas veio do DNA ${esc(rotDna)}</h4>
-
-    <div class="mix-topo">
-      <div class="mix-num">
-        <b class="${sobe?'pos':(desce?'neg':'')}">${nf1.format(pctAlvo)}%</b>
-        <span>${brl(vAlvo)} de ${brl(c.faturamento)}</span>
-      </div>
-      <div class="mix-base">
-        <i>${sobe ? `<b>${nf1.format(dif)} pontos acima</b> do que este público já compra normalmente`
-           : desce ? `<b>${nf1.format(Math.abs(dif))} pontos abaixo</b> do que este público já compra normalmente`
-           : 'em linha com o que este público já compra normalmente'}</i>
-      </div>
     </div>
-
-    ${barraDna(pctAlvo, hist, true)}
-
     <div class="mixduo">
-      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}
-        <b>${brl(vAlvo)}</b></span>
-      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas
-        <b>${brl(c.faturamento - vAlvo)}</b></span>
+      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}</span>
+      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas</span>
       <span class="mixduo-i mk"><i class="mixduo-mk"></i>Normal do público
         <b>${nf1.format(hist)}%</b></span>
     </div>
-    ${comparativo}
+    <p class="bloco-nota">A régua marca o quanto este público já compra deste DNA num mês normal.
+    Campanha à direita da régua puxou a participação para cima.</p>
   </div>`;
 }
 
@@ -2608,9 +2603,10 @@ function telaResultados(){
   // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
   // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
   return shell(`${cabecalho}${frase}${herois}
-    ${blocoDnaVendas(s, c)}
+    ${cardFaturamento(s, c)}
     ${funilCampanha(s, c)}
     ${blocoTicket(s, c)}
+    ${blocoDnaVendas(s, c)}
     ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
 }
