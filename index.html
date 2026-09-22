@@ -53,6 +53,22 @@ input,select{font-family:inherit;font-size:14px}
 .brand{font-weight:800;letter-spacing:.02em;color:var(--ink);font-size:13px}
 
 h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:center;gap:8px}
+/* Título à esquerda, ação à direita, na mesma linha de base. */
+.pagetopo{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.btn-topo{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;
+  border-radius:9px;font-size:13.5px;font-weight:600;color:var(--primary);
+  background:var(--primary-soft);border:1px solid #BFD9F5;transition:.12s;flex-shrink:0}
+.btn-topo:hover{background:#D6E7FD;border-color:var(--primary)}
+.btn-topo:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.btn-topo svg{flex-shrink:0}
+
+.branco{display:flex;flex-direction:column;flex:1}
+.branco-tit{margin:14px 0 0;font-size:24px;font-weight:700;color:var(--ink)}
+.branco-vazio{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;text-align:center;padding:80px 20px;color:var(--ink-3)}
+.branco-vazio p{margin:0;font-size:15px}
+.branco-sub{font-size:13.5px!important;color:var(--ink-4)}
+
 .tabs{display:flex;gap:26px;border-bottom:1px solid var(--border);margin-bottom:22px}
 .tab{padding:8px 2px 12px;font-size:14px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab.active{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
@@ -1258,7 +1274,8 @@ function estadoInicial(){
        real, olha os números e só então decide criar um público. Sair pelo
        fluxo, salvar ou cancelar continua devolvendo para a lista de
        segmentações, que é o contexto daquelas ações. */
-    screen:'geral',           // geral | list | wizard | resultados
+    screen:'geral',           // geral | list | wizard | resultados | branco
+    voltaDoBranco:'geral',    // para onde o botão de voltar devolve
     gView:{faixas:'grafico', dnas:'grafico'},
     gAnalise:null,            // grupo de indicador com a análise aberta  // gráfico ou tabela, por painel da Visão geral
     step:0,
@@ -1640,11 +1657,35 @@ function shell(inner){
 /* Duas abas navegam de verdade; as outras três continuam avisando que não
    existem aqui. A ativa vem da tela, não de um estado separado — assim não dá
    para a aba marcada divergir do que está na tela. */
+/* Botão do canto superior direito. A tela de destino ainda não foi definida —
+   rótulo, ícone e título da página saem todos daqui, então renomear é uma
+   linha. Fica junto do título do painel, e por isso aparece na Visão geral e
+   na Segmentação, que são as duas telas com esse cabeçalho. Não aparece no
+   fluxo de criação nem no resultado da campanha: lá a pessoa está numa tarefa
+   e um atalho para outro lugar só atrapalha. */
+const BOTAO_TOPO = { rot:'Nova página', ic:'spark', titulo:'Nova página' };
+
 function tabs(){
   const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Segmentação'];
   const ativa = S.screen==='geral' ? 'Visão geral' : 'Segmentação';
-  return `<h1 class="page">Painel CRM ${tip('painel')}</h1>
+  return `<div class="pagetopo">
+    <h1 class="page">Painel CRM ${tip('painel')}</h1>
+    <button class="btn-topo" data-act="irBranco">${I[BOTAO_TOPO.ic]} ${esc(BOTAO_TOPO.rot)}</button>
+  </div>
   <div class="tabs">${t.map(x=>`<div class="tab${x===ativa?' active':''}" data-act="irAba" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
+}
+
+/* Página em branco à espera de direção. O estado vazio diz o que ela é, para
+   ninguém no teste achar que a tela quebrou. */
+function telaBranco(){
+  return shell(`<div class="branco">
+    <button class="btn-voltar" data-act="voltarDoBranco">${I.back} Voltar para o painel</button>
+    <h1 class="branco-tit">${esc(BOTAO_TOPO.titulo)}</h1>
+    <div class="branco-vazio">
+      <p>Esta página ainda não tem conteúdo.</p>
+      <p class="branco-sub">O que vai aparecer aqui será definido em seguida.</p>
+    </div>
+  </div>`);
 }
 
 /* =========================================================================
@@ -3377,6 +3418,7 @@ function render(){
   let pos = null; try{ pos = a && a.selectionStart; }catch(e){}
 
   let html = S.screen==='list' ? telaLista()
+           : S.screen==='branco' ? telaBranco()
            : S.screen==='geral' ? telaGeral()
            : S.screen==='resultados' ? telaResultados()
            : telaWizard();
@@ -3435,6 +3477,15 @@ document.addEventListener('keydown', ev=>{
 
 function handle(act, v, el, isInput){
   switch(act){
+    case 'irBranco':
+      // guarda de onde veio: voltar tem que devolver para a tela certa
+      S.voltaDoBranco = S.screen; S.screen = 'branco';
+      log('abriu-pagina-branca', 'de ' + S.voltaDoBranco); window.scrollTo(0,0); render(); return;
+
+    case 'voltarDoBranco':
+      S.screen = S.voltaDoBranco || 'geral';
+      log('voltou-da-pagina-branca'); window.scrollTo(0,0); render(); return;
+
     case 'irAba':
       if(v==='Visão geral' || v==='Segmentação'){
         S.screen = v==='Visão geral' ? 'geral' : 'list';
