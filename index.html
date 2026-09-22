@@ -633,6 +633,134 @@ tbody tr.sel{background:#F3F8FF}
    A referência usava faixa laranja com texto branco e uma faixa preta abaixo.
    Aqui o cabeçalho segue o padrão do produto: fundo claro, texto escuro. O
    destaque vem do grupo selecionado, não de uma cor que grita em todos. */
+/* ---------- Aba Sugestões ----------
+   A tela abre COM conteúdo, ao contrário de Segmentação, que abre com um
+   formulário vazio. É o sinal visual mais forte da diferença entre as duas:
+   uma o usuário comanda, a outra chega falando. */
+.sug-filtro{margin-bottom:16px}
+.sug-flabel{display:block;font-size:12px;font-weight:600;color:var(--ink-3);
+  margin-bottom:9px;text-transform:none}
+.sug-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sug-chip{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;
+  border-radius:99px;border:1px solid var(--border);background:#fff;font-size:13px;
+  font-weight:600;color:var(--ink-2);transition:.12s;cursor:pointer}
+.sug-chip:hover{border-color:#BFD9F5;background:var(--primary-soft)}
+.sug-chip:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.sug-chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.sug-chip i{font-style:normal;font-size:11.5px;font-weight:600;opacity:.62;
+  font-variant-numeric:tabular-nums}
+/* "morto" = incluir este DNA derrubaria a base abaixo do piso. Fica
+   clicável de propósito: o estado vazio explica melhor do que um bloqueio. */
+.sug-chip.morto{opacity:.45}
+.sug-chip.morto i{color:var(--danger);opacity:1}
+.sug-temp{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.02em;
+  text-transform:uppercase;padding:2px 6px;border-radius:5px;background:#FFF4E0;color:#9A6400}
+.sug-chip.on .sug-temp{background:rgba(255,255,255,.22);color:#fff}
+
+.sug-base{margin-bottom:18px;padding:12px 15px;border-radius:10px;background:#F8FAFC;
+  border:1px solid var(--border)}
+.sug-base-n{margin:0;font-size:13.5px;color:var(--ink-2)}
+.sug-base-n b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sug-cautela,.sug-aviso{margin:8px 0 0;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+.sug-aviso svg{vertical-align:-2px;margin-right:4px}
+
+.sug-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:900px){.sug-grid{grid-template-columns:1fr}}
+.sug-card{border:1px solid var(--border);border-radius:12px;padding:16px 17px;background:#fff}
+.sug-card.sem-estoque{background:#FCFCFD}
+.sug-card-top{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.sug-card-top h4{margin:0;font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+.sug-sub{margin-left:auto;flex-shrink:0;font-size:11px;color:var(--ink-4)}
+.sug-dnatag{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.03em;
+  text-transform:uppercase;color:var(--primary)}
+.sug-manchete{margin:0 0 9px;font-size:13.5px;color:var(--ink-2)}
+.sug-manchete b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+/* Duas barras sobrepostas: a clara é a base inteira, a escura é o DNA. A
+   diferença entre elas É a recomendação — sem a de baixo, o número de cima
+   pode ser só um produto popular. */
+.sug-barra{position:relative;height:9px;border-radius:99px;background:#EEF2F7;overflow:hidden}
+.sug-barra span{position:absolute;top:0;left:0;height:100%;border-radius:99px}
+.sug-barra-base{background:#C9D6E6}
+.sug-barra-dna{background:var(--primary)}
+.sug-taxa{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}
+.sug-taxa b{color:var(--ink)}
+.sug-pot{margin:10px 0 0;font-size:13px;color:var(--ink-2)}
+.sug-pot b{color:var(--ink);font-weight:700}
+.sug-selo{display:flex;align-items:center;gap:6px;margin:9px 0 0;font-size:12px;
+  color:var(--danger)}
+.sug-receita{margin:11px 0 0;padding-top:10px;border-top:1px solid #F1F5F9;
+  font-size:12px;color:var(--ink-4);line-height:1.5}
+.sug-acoes{display:flex;gap:8px;margin-top:12px}
+.sug-porque,.sug-camp{height:32px;padding:0 13px;border-radius:8px;font-size:12.5px;
+  font-weight:600;cursor:pointer;transition:.12s}
+.sug-porque{background:#F3F6FA;color:var(--ink-2);border:1px solid var(--border)}
+.sug-porque:hover{background:var(--primary-soft);border-color:#BFD9F5;color:var(--primary)}
+.sug-camp{background:var(--primary);color:#fff;border:1px solid var(--primary)}
+.sug-camp:hover{filter:brightness(1.06)}
+.sug-porque:focus-visible,.sug-camp:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+.sug-porque-box{margin-top:13px;padding:14px 15px;border-radius:10px;background:#F8FBFF;
+  border:1px solid #D8E7F8}
+.sug-item{padding:9px 0;border-bottom:1px solid #E7F0FA}
+.sug-item:first-child{padding-top:0}
+.sug-item:last-of-type{border-bottom:0}
+.sug-item-rot{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:3px}
+.sug-porque-box p{margin:0;font-size:13px;line-height:1.6;color:var(--ink-2)}
+.sug-disc{display:flex;gap:7px;align-items:flex-start;margin-top:10px!important;
+  padding-top:10px;border-top:1px solid #E7F0FA;font-size:12px!important;color:var(--ink-4)!important}
+.sug-disc svg{flex-shrink:0;margin-top:2px}
+
+/* Nível 2. Forma deliberadamente diferente dos cards do Nível 1: são
+   naturezas diferentes e o verbo de ação é outro. Sem valor de campanha
+   e sem botão de disparo — o conjunto vira regra de balcão, não público. */
+.sug-sec{margin-top:26px;padding-top:22px;border-top:1px solid var(--border)}
+.sug-sec h3{margin:0;font-size:15px;font-weight:700;color:var(--ink)}
+.sug-sec-p{margin:5px 0 14px;font-size:13px;color:var(--ink-3);line-height:1.5}
+.sug-conj{border:1px solid var(--border);border-left:3px solid var(--border-strong);
+  border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff;transition:.12s}
+.sug-conj.ligado{border-left-color:var(--green);background:#FAFEFB}
+.sug-conj-itens{margin:0 0 7px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.4}
+.sug-conj-ev,.sug-conj-gap{margin:0 0 5px;font-size:12.5px;color:var(--ink-3)}
+.sug-conj-ev b,.sug-conj-gap b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sug-gap{margin:4px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink-3)}
+.sug-gap li{margin:2px 0}
+.sug-gap li.forte{color:var(--ink-2);font-weight:600}
+.sug-conj-ganho{margin:9px 0 0;font-size:12.5px;color:var(--ink-3)}
+.sug-conj-ganho b{color:var(--ink)}
+.sug-conj-bloq{display:flex;gap:6px;align-items:flex-start;margin:8px 0 0;font-size:12px;
+  color:var(--ink-4);line-height:1.5}
+.sug-conj-bloq svg{flex-shrink:0;margin-top:2px}
+.sug-conj-acoes{display:flex;gap:8px;align-items:center;margin-top:12px}
+.sug-toggle{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 13px 0 10px;
+  border-radius:99px;border:1px solid var(--border);background:#fff;font-size:12.5px;
+  font-weight:600;color:var(--ink-3);cursor:pointer;transition:.12s}
+.sug-toggle span{width:26px;height:15px;border-radius:99px;background:#D5DDE8;position:relative;
+  transition:.15s;flex-shrink:0}
+.sug-toggle span::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;
+  border-radius:50%;background:#fff;transition:.15s}
+.sug-toggle.on{border-color:var(--green);color:var(--green)}
+.sug-toggle.on span{background:var(--green)}
+.sug-toggle.on span::after{left:13px}
+.sug-toggle:focus-visible,.sug-ver:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.sug-ver{height:32px;padding:0 12px;border-radius:8px;font-size:12.5px;font-weight:600;
+  color:var(--ink-3);background:transparent;border:1px solid transparent;cursor:pointer}
+.sug-ver:hover{background:#F3F6FA;color:var(--primary)}
+
+.sug-def{margin-top:20px;font-size:13px}
+.sug-def summary{cursor:pointer;font-weight:600;color:var(--ink-2);padding:8px 0}
+.sug-def summary:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.sug-def p{margin:4px 0 0;color:var(--ink-3);line-height:1.6}
+.sug-def-nota{font-size:12.5px;color:var(--ink-4)!important}
+
+.sug-vazio{padding:34px 20px;text-align:center;border:1px dashed var(--border-strong);
+  border-radius:12px;background:#FBFCFE}
+.sug-vazio h4{margin:0 0 7px;font-size:15px;font-weight:700;color:var(--ink)}
+.sug-vazio p{margin:0 auto 15px;max-width:430px;font-size:13px;line-height:1.6;color:var(--ink-3)}
+
+.sug-rodape{display:flex;gap:7px;align-items:flex-start;margin:12px 0 0;font-size:12px;
+  color:var(--ink-4);line-height:1.5}
+.sug-rodape svg{flex-shrink:0;margin-top:2px}
+
 /* Rolagem horizontal com as duas coisas que ela precisa para não confundir:
    a coluna de Fidelidade fica presa à esquerda, e a sombra na borda direita
    avisa que ainda há tabela fora da tela. A sombra é o truque de dois planos
@@ -1387,11 +1515,17 @@ function estadoInicial(){
        real, olha os números e só então decide criar um público. Sair pelo
        fluxo, salvar ou cancelar continua devolvendo para a lista de
        segmentações, que é o contexto daquelas ações. */
-    screen:'geral',           // geral | list | wizard | resultados | branco
+    screen:'geral',           // geral | sugestoes | list | wizard | resultados | branco
     voltaDoBranco:'geral',    // para onde o botão de voltar devolve
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
     gView:{faixas:'grafico', dnas:'grafico'},
+    // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
+    // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
+    // abre com um formulário esperando input.
+    sugDnas:[],               // DNAs selecionados; [] = todos
+    sugAberto:null,           // produto com o "por quê" aberto
+    sugBalcao:{},             // conjuntos ligados no balcão
     gAnalise:null,            // grupo de indicador com a análise aberta  // gráfico ou tabela, por painel da Visão geral
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
@@ -1790,8 +1924,9 @@ function shell(inner){
 const BOTAO_TOPO = { rot:'Motor de sugestões', ic:'spark', titulo:'Motor de sugestões' };
 
 function tabs(){
-  const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Segmentação'];
-  const ativa = S.screen==='geral' ? 'Visão geral' : 'Segmentação';
+  const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Sugestões','Segmentação'];
+  const ativa = S.screen==='geral' ? 'Visão geral'
+              : S.screen==='sugestoes' ? 'Sugestões' : 'Segmentação';
   return `<div class="pagetopo">
     <h1 class="page">Painel CRM ${tip('painel')}</h1>
     <button class="btn-topo" data-act="irBranco">${I[BOTAO_TOPO.ic]} ${esc(BOTAO_TOPO.rot)}</button>
@@ -2394,6 +2529,420 @@ function telaGeral(){
   </div>
 
   ${blocoRfv()}</div>`);
+}
+
+/* =========================================================================
+   ABA SUGESTÕES
+   Ver spec-aba-oportunidades.md. Os três princípios que a implementação
+   inteira obedece:
+
+   1. CIRCULARIDADE. O DNA é DEFINIDO por subcategoria (DNA_SUB). Sugerir
+      um produto da subcategoria definidora é tautologia — "quem tem DNA
+      Diabetes compra antidiabético" é verdade por construção. Então as
+      subcategorias definidoras saem do Nível 1 e ganham um bloco menor,
+      só de referência. No Nível 2 elas ficam: lá a pergunta não é quem
+      são essas pessoas, é o que costuma vir junto.
+   2. PRESCRIÇÃO. Medicamento que exige receita nunca vira sugestão —
+      decisão fechada com o produto. O cálculo do conjunto acontece sobre
+      o catálogo inteiro e o filtro é na SAÍDA, para que o dia em que o
+      jurídico responder seja um parâmetro e não uma reescrita.
+   3. RUÍDO. 8 DNAs sozinhos + 28 pares × ~200 produtos dá ~7.200
+      comparações; o acaso sozinho produz centenas de "padrões". Duas
+      travas: piso de 30 compradores observados e destaque mínimo de
+      1,5× a taxa da base. A segunda é a que mais trabalha — sem ela a
+      lista devolveria os campeões de venda da loja.
+   ========================================================================= */
+
+/* Prescrição: dentro de Medicamentos, só Analgésicos é isento de receita.
+   Anti-hipertensivo, antidiabético, hormonal e psicotrópico exigem. Isso
+   tem uma consequência que aparece na tela: em Hipertensão, Diabetes,
+   Tireoide e Sistema Nervoso o produto que DEFINE o DNA é justamente o
+   que não pode ser sugerido. O conjunto desses DNAs nasce com um item
+   bloqueado, e a tela diz isso. */
+const SUB_PRESCRICAO = ['Anti-hipertensivos','Antidiabéticos','Hormonais','Psicotrópicos'];
+const exigeReceita = sub => SUB_PRESCRICAO.includes(sub);
+
+/* Catálogo da aba. preco = ticket do item; vezes = compras por ano de
+   quem já compra; base = % da base inteira que compra, que é o
+   denominador do destaque. */
+const SUG_CAT = {
+  'Vitamina D 2000UI':         {sub:'Multivitamínicos', preco:38.90, vezes:5, base:12.0},
+  'Ômega 3 1000mg':            {sub:'Suplementos',      preco:54.00, vezes:4, base: 8.5},
+  'Magnésio Quelato 60cp':     {sub:'Minerais',         preco:42.50, vezes:4, base: 7.0},
+  'Cálcio + D3 60cp':          {sub:'Minerais',         preco:36.00, vezes:5, base: 9.0},
+  'Polivitamínico A-Z 60cp':   {sub:'Multivitamínicos', preco:44.90, vezes:4, base:11.0},
+  'Whey Protein 900g':         {sub:'Suplementos',      preco:149.00,vezes:3, base: 4.5},
+  'Dipirona 500mg':            {sub:'Analgésicos',      preco:12.50, vezes:6, base:31.0},
+  'Simeticona Gotas 15ml':     {sub:'Analgésicos',      preco:16.50, vezes:5, base: 6.0},
+  'Creme Dental Sensitive':    {sub:'Bucal',            preco:18.90, vezes:6, base:14.0},
+  'Enxaguante Bucal 500ml':    {sub:'Bucal',            preco:22.50, vezes:5, base:10.0},
+  'Sabonete Líquido 250ml':    {sub:'Banho',            preco:19.90, vezes:7, base:16.0},
+  'Hidratante Corporal 400ml': {sub:'Corporal',         preco:45.90, vezes:5, base:13.0},
+  'Creme Hidratante para Pés': {sub:'Corporal',         preco:39.90, vezes:4, base: 6.5},
+  'Creme Facial Antissinais':  {sub:'Facial',           preco:89.90, vezes:3, base: 7.5},
+  'Água Micelar 200ml':        {sub:'Facial',           preco:42.00, vezes:4, base: 9.5},
+  'Protetor Solar FPS 50':     {sub:'Proteção solar',   preco:72.00, vezes:3, base:11.0},
+  'Shampoo Anticaspa':         {sub:'Cabelo',           preco:38.00, vezes:5, base:10.5},
+  'Sabonete Íntimo 200ml':     {sub:'Higiene íntima',   preco:28.90, vezes:6, base: 9.0},
+  'Absorvente 8un':            {sub:'Higiene íntima',   preco:11.90, vezes:9, base:15.0},
+  'Fralda G 40un':             {sub:'Fraldas',          preco:79.90, vezes:12,base: 6.0},
+  'Fórmula Infantil 800g':     {sub:'Leites infantis',  preco:89.90, vezes:10,base: 4.0},
+  'Lenço Umedecido 96un':      {sub:'Higiene infantil', preco:16.90, vezes:10,base: 5.5},
+  'Pomada para Assadura 45g':  {sub:'Higiene infantil', preco:34.90, vezes:6, base: 4.8},
+  'Soro Fisiológico 500ml':    {sub:'Higiene infantil', preco:14.90, vezes:6, base: 5.0},
+  // os quatro abaixo exigem receita: entram na conta e saem na exibição
+  'Metformina 850mg':          {sub:'Antidiabéticos',   preco:18.90, vezes:12,base: 8.0},
+  'Losartana 50mg':            {sub:'Anti-hipertensivos',preco:22.00,vezes:12,base:13.0},
+  'Levotiroxina 25mcg':        {sub:'Hormonais',        preco:24.90, vezes:12,base: 6.5},
+  'Sertralina 50mg':           {sub:'Psicotrópicos',    preco:42.00, vezes:12,base: 5.5},
+  'Anticoncepcional 21cp':     {sub:'Hormonais',        preco:29.90, vezes:12,base: 9.5}
+};
+
+/* Destaque de cada produto dentro de cada DNA: quantas vezes a taxa do
+   DNA supera a taxa da base. Abaixo de 1,5 não entra — não é padrão do
+   DNA, é produto popular. */
+const SUG_AFIN = {
+  'Diabetes':              {'Vitamina D 2000UI':3.1,'Creme Hidratante para Pés':2.9,'Cálcio + D3 60cp':2.4,'Ômega 3 1000mg':2.2,'Magnésio Quelato 60cp':1.9,'Enxaguante Bucal 500ml':1.8},
+  'Hipertensão':           {'Ômega 3 1000mg':2.7,'Magnésio Quelato 60cp':2.3,'Vitamina D 2000UI':1.9,'Dipirona 500mg':1.6,'Creme Dental Sensitive':1.5},
+  'Doenças Cardíacas':     {'Ômega 3 1000mg':2.9,'Magnésio Quelato 60cp':2.1,'Cálcio + D3 60cp':1.8,'Vitamina D 2000UI':1.7},
+  'Hormônios Tireoidianos':{'Cálcio + D3 60cp':2.6,'Vitamina D 2000UI':2.4,'Shampoo Anticaspa':2.0,'Polivitamínico A-Z 60cp':1.8},
+  'Mães':                  {'Soro Fisiológico 500ml':3.4,'Simeticona Gotas 15ml':3.0,'Lenço Umedecido 96un':2.8,'Sabonete Líquido 250ml':1.9,'Polivitamínico A-Z 60cp':1.7},
+  'Beleza':                {'Polivitamínico A-Z 60cp':2.2,'Whey Protein 900g':1.9,'Creme Dental Sensitive':1.7,'Magnésio Quelato 60cp':1.6},
+  'Anticoncepcionais':     {'Dipirona 500mg':2.3,'Polivitamínico A-Z 60cp':2.0,'Água Micelar 200ml':1.8,'Shampoo Anticaspa':1.6},
+  'Sistema Nervoso':       {'Magnésio Quelato 60cp':2.8,'Ômega 3 1000mg':2.1,'Vitamina D 2000UI':1.8,'Enxaguante Bucal 500ml':1.6}
+};
+
+/* Conjunto típico de cada DNA: produtos que os clientes costumam comprar
+   em conjunto ao longo de 12 meses. NÃO é mesma nota fiscal — é compra
+   conjunta no período, que é como a farmácia funciona de verdade: a mãe
+   compra fralda hoje e pomada na semana que vem. */
+const SUG_CONJ = {
+  'Mães':                  {itens:['Fralda G 40un','Pomada para Assadura 45g','Simeticona Gotas 15ml'], pct:71},
+  'Beleza':                {itens:['Protetor Solar FPS 50','Água Micelar 200ml','Creme Facial Antissinais'], pct:54},
+  'Diabetes':              {itens:['Metformina 850mg','Vitamina D 2000UI','Creme Hidratante para Pés'], pct:63},
+  'Hipertensão':           {itens:['Losartana 50mg','Ômega 3 1000mg','Dipirona 500mg'], pct:66},
+  'Doenças Cardíacas':     {itens:['Losartana 50mg','Ômega 3 1000mg','Magnésio Quelato 60cp'], pct:57},
+  'Anticoncepcionais':     {itens:['Anticoncepcional 21cp','Absorvente 8un','Sabonete Íntimo 200ml'], pct:69},
+  'Sistema Nervoso':       {itens:['Sertralina 50mg','Magnésio Quelato 60cp','Enxaguante Bucal 500ml'], pct:51},
+  'Hormônios Tireoidianos':{itens:['Levotiroxina 25mcg','Cálcio + D3 60cp','Vitamina D 2000UI'], pct:60}
+};
+
+/* Ruptura por loja: o protótipo marca dois itens sem estoque em parte da
+   rede. Sugerir o que a loja não tem é o jeito mais rápido de o gestor
+   parar de olhar a tela. */
+const SUG_RUPTURA = {'Whey Protein 900g':9, 'Creme Facial Antissinais':7};
+
+/* DNA que expira. Hipertenso é crônico e o conjunto vale por anos; Mãe
+   acaba em dois ou três anos e nada no sistema avisa. */
+const DNA_TRANSITORIO = ['Mães'];
+
+const clientesDna = n => (GERAL.dnas.find(d=>d[0]===n)||[,0])[1];
+
+/* Correlação entre DNAs. Independência subestima par clínico (hipertenso
+   e diabético andam juntos) e superestima par improvável. Hipertensão e
+   Doenças Cardíacas são definidos pela MESMA subcategoria, então quase
+   se sobrepõem — por isso 4,2. */
+const SUG_CORR = {
+  'Doenças Cardíacas|Hipertensão':4.2, 'Diabetes|Hipertensão':2.1,
+  'Diabetes|Doenças Cardíacas':1.9, 'Anticoncepcionais|Hormônios Tireoidianos':1.6,
+  'Hipertensão|Sistema Nervoso':1.4, 'Diabetes|Sistema Nervoso':1.3,
+  'Anticoncepcionais|Mães':0.5, 'Beleza|Mães':1.2, 'Anticoncepcionais|Beleza':1.3
+};
+const corrPar = (a,b) => SUG_CORR[[a,b].sort().join('|')] || 1;
+
+/* Par que seleciona quase a mesma gente: avisar antes, não deixar o
+   usuário descobrir que a lista não mudou. */
+function paresDegenerados(sel){
+  const out = [];
+  for(let i=0;i<sel.length;i++) for(let j=i+1;j<sel.length;j++){
+    const a = DNA_SUB[sel[i]]||[], b = DNA_SUB[sel[j]]||[];
+    if(a.length && b.length && a.every(x=>b.includes(x)) && b.every(x=>a.includes(x)))
+      out.push([sel[i], sel[j]]);
+  }
+  return out;
+}
+
+/* Interseção esperada. Aproximação encadeada, suficiente para protótipo:
+   em produção sai da matriz real. */
+function baseSugestao(sel){
+  if(!sel.length) return clientesGeral();
+  let n = clientesDna(sel[0]);
+  for(let i=1;i<sel.length;i++){
+    n = n * clientesDna(sel[i]) / clientesGeral() * corrPar(sel[i-1], sel[i]);
+  }
+  return Math.max(1, Math.round(n));
+}
+
+/* Subcategorias que DEFINEM os DNAs selecionados. União, nunca soma:
+   Hipertensão e Doenças Cardíacas compartilham Anti-hipertensivos. */
+function subsDefinidoras(sel){
+  const set = new Set();
+  (sel.length ? sel : Object.keys(SUG_AFIN)).forEach(n =>
+    (DNA_SUB[n] || DNA_SUB[n.replace(/s$/,'')] || []).forEach(s => set.add(s)));
+  return set;
+}
+
+const PISO_COMPRADORES = 30;   // abaixo disso o padrão não é confiável
+const PISO_DESTAQUE    = 1.5;  // abaixo disso não é padrão do DNA, é produto popular
+const PISO_BASE        = 30;   // interseção mínima para mostrar qualquer coisa
+const ADESAO           = 0.10; // 1 em cada 10 passa a comprar — hipótese do potencial
+const TETO_NIVEL1      = 8;
+
+/* Nível 1: o que este DNA compra que a base não compra.
+
+   "Todos os DNAs" NÃO é um DNA gigante. Se fosse, a conta compararia a
+   base com ela mesma e devolveria "37 de cada 100 aqui, 12 de cada 100 na
+   base" sobre a MESMA população — número que se contradiz. Então em
+   "todos" cada produto é atribuído ao DNA em que ele mais se destaca, e
+   a população do card é a daquele DNA. A tela vira um ranking entre DNAs,
+   que é a leitura honesta de "me mostre onde estão as oportunidades". */
+function sugestoesNivel1(sel){
+  const alvos = sel.length ? sel : Object.keys(SUG_AFIN);
+  const cand  = {};
+  alvos.forEach(dna => Object.entries(SUG_AFIN[dna]||{}).forEach(([nome,lift])=>{
+    if(!cand[nome] || lift > cand[nome].lift) cand[nome] = {lift, melhorDna:dna, dnas:[]};
+    cand[nome].dnas.push(dna);
+  }));
+  return Object.entries(cand).map(([nome,c])=>{
+    const p = SUG_CAT[nome];
+    const dnaTexto = sel.length ? sel.join(' + ') : c.melhorDna;
+    const defs = subsDefinidoras(sel.length ? sel : [c.melhorDna]);
+    const base = sel.length ? baseSugestao(sel) : clientesDna(c.melhorDna);
+    // produto forte em mais de um DNA selecionado ganha um empurrão: é
+    // padrão do grupo combinado, não de um DNA só
+    const lift = c.dnas.length>1 && sel.length>1 ? c.lift*1.1 : c.lift;
+    const taxa = Math.min(p.base*lift, 78);
+    const jaCompram  = Math.round(base*taxa/100);
+    const naoCompram = base - jaCompram;
+    return {
+      nome, sub:p.sub, dnaTexto, base, lift, taxa, taxaBase:p.base, jaCompram, naoCompram,
+      potencial: Math.round(naoCompram*ADESAO*p.preco*p.vezes),
+      ruptura: SUG_RUPTURA[nome] || 0,
+      definidora: defs.has(p.sub),
+      receita: exigeReceita(p.sub)
+    };
+  }).filter(o =>
+    !o.definidora &&                    // circularidade
+    !o.receita &&                       // prescrição
+    o.lift >= PISO_DESTAQUE &&          // destaque
+    o.jaCompram >= PISO_COMPRADORES     // piso amostral
+  ).sort((a,b)=>
+    (a.ruptura?1:0)-(b.ruptura?1:0) || b.potencial-a.potencial
+  ).slice(0, TETO_NIVEL1);
+}
+
+/* Nível 2: conjunto típico e o que falta em cada cliente. A lacuna forte
+   é "comprava e parou": já houve prova de que a pessoa compra aqui. */
+function conjuntosNivel2(sel){
+  const alvos = (sel.length ? sel : Object.keys(SUG_CONJ)).filter(n=>SUG_CONJ[n]);
+  const base  = baseSugestao(sel);
+  return alvos.map(dna=>{
+    const c = SUG_CONJ[dna];
+    const visiveis  = c.itens.filter(n=>!exigeReceita(SUG_CAT[n].sub));
+    const bloqueados= c.itens.filter(n=> exigeReceita(SUG_CAT[n].sub));
+    const comFalta  = Math.round(base*0.56);
+    const parou     = Math.round(comFalta*0.33);
+    const ticket    = visiveis.reduce((a,n)=>a+SUG_CAT[n].preco, 0)/(visiveis.length||1);
+    return {
+      id:'cj-'+dna, dna, itens:visiveis, bloqueados, pct:c.pct,
+      base, comFalta, parou, nunca:comFalta-parou,
+      // se 3 em cada 10 sugestões virarem venda, quanto é no mês?
+      ganhoMes: comFalta/12*0.3*ticket,
+      transitorio: DNA_TRANSITORIO.includes(dna)
+    };
+  }).filter(c => c.itens.length >= 2 && c.comFalta >= PISO_COMPRADORES);
+}
+
+/* ---------- Tela: Sugestões ---------- */
+
+function chipsDna(){
+  const sel = S.sugDnas;
+  const base = baseSugestao(sel);
+  const chips = GERAL.dnas.map(([nome, qtd])=>{
+    const on = sel.includes(nome);
+    // quanto sobraria SE este DNA entrasse: o usuário vê a consequência
+    // antes do clique, em vez de descobrir que a lista sumiu
+    const futura = on ? base : baseSugestao(sel.concat([nome]));
+    const morre  = !on && sel.length && futura < PISO_BASE;
+    const tit = on ? 'Tirar '+nome
+      : sel.length ? `Somando ${nome}: ${nf.format(futura)} clientes`
+      : `${nf.format(qtd)} clientes com DNA ${nome}`;
+    return `<button class="sug-chip${on?' on':''}${morre?' morto':''}" data-act="sugDna"
+      data-v="${esc(nome)}" title="${esc(tit)}" aria-pressed="${on}">
+      ${esc(nome)} <i>${on || !sel.length ? nf.format(qtd) : nf.format(futura)}</i>
+      ${DNA_TRANSITORIO.includes(nome) ? '<em class="sug-temp" title="Vale enquanto a criança é pequena. Revisamos todo mês.">temporário</em>' : ''}
+    </button>`;
+  }).join('');
+  return `<div class="sug-filtro">
+    <span class="sug-flabel">DNA do cliente</span>
+    <div class="sug-chips">
+      <button class="sug-chip todos${sel.length?'':' on'}" data-act="sugTodos"
+        aria-pressed="${!sel.length}">Todos os DNAs</button>
+      ${chips}
+    </div>
+  </div>`;
+}
+
+function faixaBase(){
+  const sel = S.sugDnas, base = baseSugestao(sel);
+  const pct = base/clientesGeral()*100;
+  const rot = !sel.length ? 'clientes na base'
+    : sel.length===1 ? `clientes com DNA ${sel[0]}`
+    : `clientes têm os ${sel.length===2?'dois':nf.format(sel.length)} DNAs ao mesmo tempo`;
+  const deg = paresDegenerados(sel);
+  const aviso = deg.length ? `<p class="sug-aviso">${I.info}
+    ${esc(deg[0][0])} e ${esc(deg[0][1])} são quase o mesmo grupo de clientes — os dois
+    são definidos pelas mesmas categorias. A lista vai mudar pouco.</p>` : '';
+  const cautela = base>=PISO_BASE && base<200 ? `<p class="sug-cautela">
+    Grupo pequeno. Os números dão a direção, mas não sirva de base para uma compra
+    grande de estoque.</p>` : '';
+  return `<div class="sug-base">
+    <p class="sug-base-n"><b>${nf.format(base)}</b> ${esc(rot)}
+      · ${nf1.format(pct)}% da sua base · últimos 12 meses</p>
+    ${cautela}${aviso}</div>`;
+}
+
+function cardSugestao(o){
+  const aberto = S.sugAberto === o.nome;
+  const larg = Math.min(100, o.taxa);
+  const largBase = Math.min(100, o.taxaBase);
+  return `<article class="sug-card${o.ruptura?' sem-estoque':''}">
+    <div class="sug-card-top">
+      <h4>${esc(o.nome)}</h4><span class="sug-sub">${esc(o.sub)}</span>
+    </div>
+    ${S.sugDnas.length ? '' : `<p class="sug-dnatag">DNA ${esc(o.dnaTexto)}</p>`}
+    <p class="sug-manchete"><b>${nf.format(o.naoCompram)}</b> de ${nf.format(o.base)} clientes ${S.sugDnas.length?'deste DNA':'deste DNA'} ainda não compram</p>
+    <div class="sug-barra"><span style="width:${largBase}%" class="sug-barra-base"></span>
+      <span style="width:${larg}%" class="sug-barra-dna"></span></div>
+    <p class="sug-taxa"><b>${Math.round(o.taxa)} de cada 100</b> já compram
+      · na sua base inteira são ${Math.round(o.taxaBase)} de cada 100</p>
+    <p class="sug-pot">Potencial estimado <b>${brl(o.potencial)}</b> no ano
+      ${tipTexto('Quantos ainda não compram × 10% de adesão × o preço do produto × quantas vezes por ano quem já compra costuma comprar. É estimativa, não previsão.')}</p>
+    ${o.ruptura ? `<p class="sug-selo">${I.alert} Sem estoque em ${o.ruptura} das ${LOJAS.length} lojas</p>` : ''}
+    <p class="sug-receita">Para a campanha: DNA ${esc(o.dnaTexto)}
+      · não comprou ${esc(o.nome)} nos últimos 12 meses</p>
+    <div class="sug-acoes">
+      <button class="sug-porque" data-act="sugPorque" data-v="${esc(o.nome)}"
+        aria-expanded="${aberto}">${aberto?'Fechar':'Ver por quê'}</button>
+      <button class="sug-camp" data-act="sugCampanha" data-v="${esc(o.nome)}">Criar campanha</button>
+    </div>
+    ${aberto ? porqueSugestao(o) : ''}
+  </article>`;
+}
+
+function porqueSugestao(o){
+  const vezes = nf1.format(o.lift).replace(',0','');
+  const itens = [
+    ['Por que este produto apareceu',
+     `Quem tem DNA ${esc(o.dnaTexto)} compra
+      <b>${esc(o.nome)}</b> ${vezes} vezes mais que a média dos seus clientes.`],
+    ['O que acompanha a compra',
+     `Dos clientes deste DNA que compram ${esc(o.nome)}, a maior parte também leva
+      outros itens de ${esc(o.sub.toLowerCase())} ao longo do ano.`],
+    ['O que sustenta o número',
+     `${nf.format(o.jaCompram)} compradores observados neste DNA · 12 meses de histórico
+      · mínimo de ${PISO_COMPRADORES} para entrar na lista.`]
+  ];
+  return `<div class="sug-porque-box">
+    ${itens.map(([r,t])=>`<div class="sug-item"><div class="sug-item-rot">${esc(r)}</div>
+      <p>${t}</p></div>`).join('')}
+    <p class="sug-disc">${I.info} Padrão de compra observado, não indicação de saúde.
+      Confira com o farmacêutico antes de usar em campanha.</p>
+  </div>`;
+}
+
+function blocoConjuntos(){
+  const cjs = conjuntosNivel2(S.sugDnas);
+  if(!cjs.length) return '';
+  return `<div class="sug-sec">
+    <h3>O que costuma vir junto ${tipTexto('Produtos que os clientes deste DNA costumam comprar em conjunto ao longo do ano. Olhamos os 12 meses de compra, não a mesma nota.')}</h3>
+    <p class="sug-sec-p">Serve para o balconista lembrar de oferecer o que está faltando.
+      Ligue no balcão e a sugestão aparece no atendimento.</p>
+    ${cjs.map(c=>{
+      const on = !!S.sugBalcao[c.id];
+      return `<div class="sug-conj${on?' ligado':''}">
+        <p class="sug-conj-itens">${c.itens.map(esc).join(' · ')}</p>
+        <p class="sug-conj-ev"><b>${c.pct} de cada 100</b> clientes com DNA ${esc(c.dna)}
+          compram ao menos dois destes em 12 meses</p>
+        <p class="sug-conj-gap"><b>${nf.format(c.comFalta)}</b> clientes têm ao menos um faltando</p>
+        <ul class="sug-gap">
+          <li class="forte">${nf.format(c.parou)} compravam e pararam
+            ${tipTexto('Lacuna mais fácil de recuperar: a pessoa já comprou com você uma vez.')}</li>
+          <li>${nf.format(c.nunca)} nunca compraram aqui</li>
+        </ul>
+        <p class="sug-conj-ganho">Se 3 de cada 10 sugestões virarem venda,
+          é cerca de <b>${brl(c.ganhoMes)}</b> a mais por mês nesta rede.</p>
+        ${c.bloqueados.length ? `<p class="sug-conj-bloq">${I.info}
+          ${c.bloqueados.length===1?'Um produto deste conjunto não aparece':'Produtos deste conjunto não aparecem'}
+          no balcão por exigir receita.</p>` : ''}
+        ${c.transitorio ? `<p class="sug-conj-bloq">${I.info} DNA temporário: vale
+          enquanto a criança é pequena. Revisamos todo mês.</p>` : ''}
+        <div class="sug-conj-acoes">
+          <button class="sug-toggle${on?' on':''}" data-act="sugBalcao" data-v="${c.id}"
+            aria-pressed="${on}"><span></span>${on?'No balcão':'Fora do balcão'}</button>
+          <button class="sug-ver" data-act="sugVerComo" data-v="${c.id}">Ver como aparece</button>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function blocoDefinidoras(){
+  const subs = [...subsDefinidoras(S.sugDnas)];
+  if(!S.sugDnas.length || !subs.length) return '';
+  const presc = subs.filter(exigeReceita);
+  return `<details class="sug-def"><summary>O que este DNA já compra por definição (${subs.length})</summary>
+    <p>${subs.map(esc).join(' · ')}</p>
+    <p class="sug-def-nota">Estes produtos definem o DNA selecionado. Ficam aqui só para
+      referência: sugerir ${esc(subs[0].toLowerCase())} para quem já compra
+      ${esc(subs[0].toLowerCase())} não é oportunidade, é o óbvio.
+      ${presc.length ? ' '+presc.map(esc).join(' e ')+' ainda exige receita, então nunca vira sugestão.' : ''}</p>
+  </details>`;
+}
+
+function telaSugestoes(){
+  const base = baseSugestao(S.sugDnas);
+  const lista = base >= PISO_BASE ? sugestoesNivel1(S.sugDnas) : [];
+  const bloqueados = Object.keys(SUG_CAT).filter(n=>exigeReceita(SUG_CAT[n].sub)).length;
+
+  let corpo;
+  if(base < PISO_BASE){
+    corpo = `<div class="sug-vazio">
+      <h4>Só ${nf.format(base)} clientes têm estes DNAs ao mesmo tempo</h4>
+      <p>É pouco para a conta ser confiável, então preferimos não sugerir nada
+        a sugerir algo frágil.</p>
+      <button class="btn-sec" data-act="sugTirarUltimo">Tirar o último DNA</button></div>`;
+  } else if(!lista.length){
+    corpo = `<div class="sug-vazio">
+      <h4>Não encontramos sugestão clara ${S.sugDnas.length>1?'para esta combinação':'para este DNA'}</h4>
+      <p>${S.sugDnas.length>1
+        ? `Com ${nf.format(base)} clientes na combinação, nenhum produto chegou aos
+           ${PISO_COMPRADORES} compradores que precisamos para confiar no padrão.`
+        : `Os clientes deste DNA compram pouco fora dos produtos que definem o perfil,
+           e nada passou do mínimo de ${PISO_COMPRADORES} compradores com destaque de
+           ${nf1.format(PISO_DESTAQUE)}× a base.`}</p>
+      <button class="btn-sec" data-act="sugTodos">Ver os DNAs com mais sugestão</button></div>`;
+  } else {
+    corpo = `<div class="sug-grid">${lista.map(cardSugestao).join('')}</div>`;
+  }
+
+  return shell(`<div class="geral">${tabs()}
+    <div class="gpanel">
+      <div class="gpanel-cab">
+        <h3>Sugestões ${tipTexto('Comparamos o que os clientes de cada DNA compram com o que a sua base inteira compra. Quando um produto se destaca num DNA, ele aparece aqui. É padrão de compra observado, não previsão de quem vai comprar.')}</h3>
+        <p>Produtos que os clientes de cada DNA ainda não compram com você.
+          Baseado nos últimos 12 meses de venda.</p>
+      </div>
+      ${chipsDna()}
+      ${faixaBase()}
+      ${corpo}
+      ${base >= PISO_BASE ? blocoConjuntos() : ''}
+      ${blocoDefinidoras()}
+      <p class="sug-rodape">${I.info} ${bloqueados} produtos não entram nestas sugestões
+        por exigirem receita médica.</p>
+      <p class="sug-rodape">${I.info} São padrões de compra observados na sua base.
+        Não indicam condição de saúde de ninguém, e não substituem a orientação do farmacêutico.</p>
+    </div></div>`);
 }
 
 /* ---------- Tela: lista de segmentações ---------- */
@@ -3701,6 +4250,7 @@ function render(){
   let html = S.screen==='list' ? telaLista()
            : S.screen==='branco' ? telaBranco()
            : S.screen==='geral' ? telaGeral()
+           : S.screen==='sugestoes' ? telaSugestoes()
            : S.screen==='resultados' ? telaResultados()
            : telaWizard();
   if(S.modal) html += modalSalvar();
@@ -3797,12 +4347,57 @@ function handle(act, v, el, isInput){
     case 'motorCopiar':
       toast('Código copiado: ' + v); log('motor-copiou', v); return;
 
-    case 'irAba':
-      if(v==='Visão geral' || v==='Segmentação'){
-        S.screen = v==='Visão geral' ? 'geral' : 'list';
+    case 'irAba': {
+      const destino = {'Visão geral':'geral','Sugestões':'sugestoes','Segmentação':'list'}[v];
+      if(destino){
+        S.screen = destino;
         S.resSeg=null; S.resCamp=null; S.menuSeg=null;   // sair pela aba não deixa estado pendurado
         log('aba', v); window.scrollTo(0,0); render(); return; }
-      toast('“'+v+'” ainda não existe neste protótipo.'); log('aba-indisponivel', v); return;
+      toast('“'+v+'” ainda não existe neste protótipo.'); log('aba-indisponivel', v); return; }
+
+    /* ---- Aba Sugestões ---- */
+    case 'sugDna': {
+      const i = S.sugDnas.indexOf(v);
+      if(i>=0){ S.sugDnas.splice(i,1); }
+      else {
+        // não bloqueio por número de DNAs: três grandes podem sobrar mais
+        // gente que dois pequenos. Quem trava é o tamanho da interseção,
+        // e o estado vazio explica o que aconteceu.
+        S.sugDnas = S.sugDnas.concat([v]);
+      }
+      S.sugAberto = null;
+      log('sugestoes-dna', S.sugDnas.join(' + ') || 'todos');
+      render(); return; }
+
+    case 'sugTodos':
+      S.sugDnas = []; S.sugAberto = null;
+      log('sugestoes-dna', 'todos'); render(); return;
+
+    case 'sugTirarUltimo':
+      S.sugDnas = S.sugDnas.slice(0,-1); S.sugAberto = null;
+      log('sugestoes-tirou-ultimo', S.sugDnas.join(' + ') || 'todos'); render(); return;
+
+    case 'sugPorque':
+      S.sugAberto = S.sugAberto===v ? null : v;
+      log('sugestoes-porque', S.sugAberto ? 'abriu '+v : 'fechou'); render(); return;
+
+    case 'sugBalcao':
+      S.sugBalcao[v] = !S.sugBalcao[v];
+      log('sugestoes-balcao', v+' → '+(S.sugBalcao[v]?'ligado':'desligado'));
+      toast(S.sugBalcao[v]
+        ? 'Conjunto ligado. No produto real ele passa a aparecer no balcão.'
+        : 'Conjunto desligado. Some do balcão.');
+      render(); return;
+
+    case 'sugVerComo':
+      toast('No produto real, abre a prévia de como a sugestão aparece na filipeta do balcão.');
+      log('sugestoes-preview', v); return;
+
+    case 'sugCampanha':
+      // a ponte é a receita em texto: o fluxo de Segmentação não é tocado
+      S.screen='list'; S.sugAberto=null;
+      toast('Copie o filtro do card na criação da segmentação: “'+v+'”.');
+      log('sugestoes-campanha', v); window.scrollTo(0,0); render(); return;
 
     case 'gAnalise':
       S.gAnalise = S.gAnalise===v ? null : v;
