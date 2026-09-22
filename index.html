@@ -494,22 +494,34 @@ tbody tr.sel{background:#F3F8FF}
 .mix-num b.pos{color:var(--green)}
 .mix-num b.neg{color:var(--danger)}
 .mix-num span{display:block;font-size:13px;color:var(--ink-3);margin-top:5px}
-.mix-base{text-align:right;max-width:290px}
-.mix-base span{font-size:12.5px;color:var(--ink-3)}
-.mix-base b{font-size:17px;font-weight:700;color:var(--ink-2);margin-left:6px;
-  font-variant-numeric:tabular-nums}
-.mix-base i{display:block;font-style:normal;font-size:12.5px;color:var(--ink-4);
-  margin-top:3px;line-height:1.4}
+.mix-base{text-align:right;max-width:300px}
+.mix-base i{font-style:normal;font-size:13.5px;color:var(--ink-3);line-height:1.45}
+.mix-base i b{font-weight:700;color:var(--ink)}
 
-.mixbar{display:flex;height:34px;border-radius:9px;overflow:hidden;background:#EFF4F9}
+/* A barra precisa de espaço em cima para a etiqueta do marcador não colidir
+   com a linha de números. */
+.mixbar{position:relative;display:flex;height:34px;border-radius:9px;overflow:visible;
+  background:#EFF4F9;margin-top:22px}
+.mixbar>.mixseg:first-of-type{border-radius:9px 0 0 9px}
+.mixbar>.mixseg:nth-of-type(2){border-radius:0 9px 9px 0}
 .mixseg{display:block;height:100%;transition:filter .12s}
 .mixseg:hover{filter:brightness(.93)}
 
-/* Legenda de dois itens, na mesma linha da barra. Duas faixas não pedem tabela. */
-.mixduo{display:flex;gap:26px;flex-wrap:wrap;margin-top:11px}
+/* Marcador do normal: uma régua sobre a barra, não uma segunda barra. A
+   distância entre o fim do azul e a régua é a leitura. */
+.mixmk{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);
+  border-radius:1px;transform:translateX(-1px);pointer-events:auto}
+.mixmk-rot{position:absolute;bottom:calc(100% + 8px);transform:translateX(-50%);
+  white-space:nowrap;font-size:11.5px;font-weight:600;color:var(--ink-2);
+  background:#fff;padding:0 5px}
+
+/* Legenda: duas faixas mais o marcador. */
+.mixduo{display:flex;gap:24px;flex-wrap:wrap;margin-top:13px}
 .mixduo-i{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
 .mixduo-i i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
 .mixduo-i b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.mixduo-mk{width:2px!important;height:14px!important;border-radius:1px!important;
+  background:var(--ink);margin:0 4px}
 
 .mix-sep{height:1px;background:var(--border);margin:22px 0 18px}
 .mix-sub{margin:0 0 13px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
@@ -518,11 +530,13 @@ tbody tr.sel{background:#F3F8FF}
 .mixlin-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mixlin.atual .mixlin-rot{color:var(--ink);font-weight:600}
 .mixlin-rot i{font-style:normal;color:var(--primary);font-weight:600}
-.mixlin .mixbar{height:24px;border-radius:7px}
-.mixlin-val{font-size:13.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
-.mixlin.atual .mixlin-val{font-weight:700;color:var(--ink)}
-.mixlin.base .mixlin-rot{color:var(--ink-4)}
-.mixlin.base .mixbar{height:16px;border-radius:5px;background:#F4F7FB}
+.mixlin .mixbar{height:24px;border-radius:7px;margin-top:0}
+.mixlin .mixbar>.mixseg:first-of-type{border-radius:7px 0 0 7px}
+.mixlin .mixbar>.mixseg:nth-of-type(2){border-radius:0 7px 7px 0}
+.mixlin .mixmk{top:-4px;bottom:-4px}
+.mixlin-val{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.mixlin-val.pos{color:var(--green)}
+.mixlin-val.neg{color:var(--danger)}
 
 /* ---------- Funil ----------
    Duas decisões de alinhamento que estavam quebradas antes:
@@ -1722,11 +1736,21 @@ const COR_DNA = '#0B7BFB', COR_RESTO = '#D5DDE8';
 /* Duas faixas, duas cores. A versão anterior pintava cada categoria com uma
    rampa e listava as seis embaixo — informação demais para a pergunta, que é
    binária: veio do DNA ou não veio. As categorias continuam no dado e voltam
-   depois, num bloco próprio de mix de produto. */
-function barraDna(pctAlvo){
+   depois, num bloco próprio de mix de produto.
+
+   O normal do público entra como MARCADOR na própria barra, não como uma
+   segunda barra. Assim a comparação vira uma distância que o olho mede sozinho,
+   sem precisar guardar um número e procurar o outro embaixo. Toda barra do
+   bloco usa o mesmo marcador, então a referência é sempre a mesma. */
+function barraDna(pctAlvo, marcador, rotulo){
+  const mk = (typeof marcador === 'number') ? `
+    <span class="mixmk" style="left:${marcador.toFixed(2)}%"
+      title="Normal do público: ${nf1.format(marcador)}%"></span>
+    ${rotulo ? `<span class="mixmk-rot" style="left:${marcador.toFixed(2)}%">normal ${nf1.format(marcador)}%</span>` : ''}` : '';
   return `<div class="mixbar">
     <span class="mixseg" style="width:${pctAlvo.toFixed(2)}%;background:${COR_DNA}"></span>
     <span class="mixseg" style="width:${(100-pctAlvo).toFixed(2)}%;background:${COR_RESTO}"></span>
+    ${mk}
   </div>`;
 }
 
@@ -1744,29 +1768,24 @@ function blocoDnaVendas(s, c){
   const dif  = pctAlvo - hist;
   const sobe = dif > 1.5, desce = dif < -1.5;
 
-  // comparativo: a mesma barra de duas faixas para cada campanha, mais a linha
-  // do normal. Alinhadas à esquerda, a leitura vertical responde "a
-  // participação do DNA está subindo?" sem nenhuma conta.
-  const camps = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix)
+  // OUTRAS campanhas: a atual já está desenhada acima em tamanho grande, então
+  // repeti-la aqui era a mesma informação duas vezes na mesma tela. Entram as
+  // demais, cada uma com o mesmo marcador de normal — a referência é a mesma
+  // para todas, então dá para varrer a coluna e ver quais passaram da linha.
+  const outras = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix && x.id!==c.id)
     .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
-  const comparativo = camps.length >= 2 ? `
+  const comparativo = outras.length ? `
     <div class="mix-sep"></div>
-    <h5 class="mix-sub">Como isso variou entre as campanhas deste público</h5>
+    <h5 class="mix-sub">Desempenho nas outras campanhas</h5>
     <div class="mixcmp">
-      ${camps.map(x=>{
+      ${outras.map(x=>{
         const m = mixDna(s, x.mix, x.faturamento);
-        const atual = x.id===c.id;
-        return `<div class="mixlin ${atual?'atual':''}">
-          <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
-          ${barraDna(m.pctAlvo)}
-          <div class="mixlin-val">${nf1.format(m.pctAlvo)}%</div>
+        return `<div class="mixlin">
+          <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}</div>
+          ${barraDna(m.pctAlvo, hist)}
+          <div class="mixlin-val ${m.pctAlvo>=hist?'pos':'neg'}">${nf1.format(m.pctAlvo)}%</div>
         </div>`;
       }).join('')}
-      <div class="mixlin base">
-        <div class="mixlin-rot">Normal do público · 12 meses</div>
-        ${barraDna(hist)}
-        <div class="mixlin-val">${nf1.format(hist)}%</div>
-      </div>
     </div>` : '';
 
   return `<div class="bloco">
@@ -1778,21 +1797,21 @@ function blocoDnaVendas(s, c){
         <span>${brl(vAlvo)} de ${brl(c.faturamento)}</span>
       </div>
       <div class="mix-base">
-        <span>Num mês normal este público já compra</span>
-        <b>${nf1.format(hist)}%</b>
-        <i>${sobe ? `a campanha puxou ${nf1.format(dif)} pontos para cima`
-           : desce ? `a campanha ficou ${nf1.format(Math.abs(dif))} pontos abaixo do normal`
-           : 'a campanha ficou em linha com o normal'}</i>
+        <i>${sobe ? `<b>${nf1.format(dif)} pontos acima</b> do que este público já compra normalmente`
+           : desce ? `<b>${nf1.format(Math.abs(dif))} pontos abaixo</b> do que este público já compra normalmente`
+           : 'em linha com o que este público já compra normalmente'}</i>
       </div>
     </div>
 
-    ${barraDna(pctAlvo)}
+    ${barraDna(pctAlvo, hist, true)}
 
     <div class="mixduo">
       <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}
         <b>${brl(vAlvo)}</b></span>
       <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas
         <b>${brl(c.faturamento - vAlvo)}</b></span>
+      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Normal do público
+        <b>${nf1.format(hist)}%</b></span>
     </div>
     ${comparativo}
   </div>`;
