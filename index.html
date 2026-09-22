@@ -740,6 +740,11 @@ tbody tr.sel{background:#F3F8FF}
 .dc-vs b{font-size:17px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .dc-vs i{font-style:normal}
 
+/* Cabeçalho das colunas: sem ele os dois números da direita são ambíguos. */
+.mixcab{display:grid;grid-template-columns:180px minmax(0,1fr) 62px 66px;gap:14px;
+  margin-bottom:8px;font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--ink-4)}
+.mixcab span:nth-child(3),.mixcab span:nth-child(4){text-align:right}
+
 .mixcmp{display:flex;flex-direction:column;gap:9px}
 .mixlin{display:grid;grid-template-columns:180px minmax(0,1fr) 62px 66px;gap:14px;align-items:center}
 .mixlin-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -820,7 +825,7 @@ tbody tr.sel{background:#F3F8FF}
   .tkcmp{grid-template-columns:1fr}
   .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
-  .mixlin{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
+  .mixlin,.mixcab{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
   .dnacmp-topo{gap:18px}
 }
 
@@ -1473,7 +1478,10 @@ const TIPS = {
   perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
   partDna:'Quantos clientes têm aderência a cada DNA de consumo. O mesmo cliente pode aparecer em mais de um.',
 };
-const tip = k => `<span class="ttip">${I.info}<span class="bubble">${esc(TIPS[k])}</span></span>`;
+const tip = k => tipTexto(TIPS[k]);
+/* Alguns tooltips dependem do dado da tela (o nome do DNA, as categorias que
+   ele reúne) e por isso não cabem num dicionário fixo. */
+const tipTexto = t => `<span class="ttip">${I.info}<span class="bubble">${esc(String(t).replace(/\s+/g,' ').trim())}</span></span>`;
 
 /* =========================================================================
    4. MOTOR DE CÁLCULO
@@ -2429,7 +2437,7 @@ function cardFaturamento(s, c){
 function barraDna(pctAlvo, marcador, rotulo){
   const mk = (typeof marcador === 'number') ? `
     <span class="mixmk" style="left:${marcador.toFixed(2)}%"
-      title="Média do DNA no público: ${nf1.format(marcador)}%"></span>
+      title="Média dos últimos 12 meses: ${nf1.format(marcador)}%"></span>
     ${rotulo ? `<span class="mixmk-rot" style="left:${marcador.toFixed(2)}%">média ${nf1.format(marcador)}%</span>` : ''}` : '';
   return `<div class="mixbar">
     <span class="mixseg" style="width:${pctAlvo.toFixed(2)}%;background:${COR_DNA}"></span>
@@ -2458,28 +2466,35 @@ function blocoDnaVendas(s, c){
   const sobe = rel > 1, desce = rel < -1;
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">Participação do DNA ${esc(rotDna)} nas vendas</h4>
+    <h4 class="bloco-tit">Quanto das vendas foi de produtos de ${esc(rotDna)}
+      ${tipTexto(`${esc(rotDna)} é o DNA que você escolheu nesta segmentação. Cada DNA reúne
+      categorias de produto: ${esc([...subs].join(', '))}. A média é o quanto este mesmo público
+      comprou dessas categorias nos últimos 12 meses.`)}</h4>
 
     <div class="dnacmp-topo">
       <div class="dc-par">
-        <span>Esta campanha</span>
+        <span>Nesta campanha</span>
         <b class="${sobe?'pos':(desce?'neg':'')}">${nf1.format(desta)}%</b>
       </div>
       <div class="dc-vs">${sobe?'↑':(desce?'↓':'=')}
         <b>${nf1.format(Math.abs(rel))}%</b>
         <i>${sobe?'acima':(desce?'abaixo':'em linha com')} da média</i></div>
       <div class="dc-par">
-        <span>Média do DNA no público</span>
+        <span>Média dos últimos 12 meses</span>
         <b class="neutro">${nf1.format(media)}%</b>
       </div>
     </div>
 
+    <div class="mixcab">
+      <span>Campanha</span><span></span>
+      <span>Foi de ${esc(rotDna)}</span><span>Contra a média</span>
+    </div>
     <div class="mixcmp">
       ${camps.map(x=>{
         const m = mixDna(s, x.mix, x.faturamento);
         const atual = x.id===c.id;
         const r = media ? (m.pctAlvo - media) / media * 100 : 0;
-        return `<div class="mixlin ${atual?'atual':''}">
+        return `<div class="mixlin${atual?' atual':''}">
           <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
           ${barraDna(m.pctAlvo, media, atual)}
           <div class="mixlin-val">${nf1.format(m.pctAlvo)}%</div>
@@ -2489,13 +2504,14 @@ function blocoDnaVendas(s, c){
     </div>
 
     <div class="mixduo">
-      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}</span>
-      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas</span>
-      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Média do DNA
+      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>Produtos de ${esc(rotDna)}</span>
+      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Outros produtos</span>
+      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Média dos 12 meses
         <b>${nf1.format(media)}%</b></span>
     </div>
-    <p class="bloco-nota">A régua marca a média deste DNA no público. A coluna da direita mostra
-    quanto cada campanha ficou acima ou abaixo dessa média.</p>
+    <p class="bloco-nota">A linha escura em cada barra é a média. Quando o azul passa dela, a
+    campanha vendeu mais desses produtos do que este público costuma comprar. A última coluna
+    diz quanto passou.</p>
   </div>`;
 }
 
