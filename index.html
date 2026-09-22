@@ -592,8 +592,15 @@ tbody tr.sel{background:#F3F8FF}
 .rv-painel-top h4{flex:1;margin:0;font-size:14px;font-weight:700;color:var(--ink)}
 .rv-fechar{font-size:12.5px;font-weight:600;color:var(--ink-3);padding:5px 9px;border-radius:7px}
 .rv-fechar:hover{background:#E7F1FE;color:var(--primary)}
-.rv-painel p{margin:0 0 10px;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
-.rv-painel p:last-of-type{margin-bottom:0}
+/* Rótulo curto à esquerda, texto à direita: a estrutura fixa deixa a pessoa
+   pular direto para "O que fazer" na segunda vez que lê. */
+.rv-item{display:grid;grid-template-columns:148px 1fr;gap:16px;padding:11px 0;
+  border-bottom:1px solid #E4EEF9}
+.rv-item:last-of-type{border-bottom:0;padding-bottom:4px}
+.rv-item:first-of-type{padding-top:0}
+.rv-item-rot{font-size:12.5px;font-weight:700;color:var(--primary);line-height:1.5}
+.rv-painel p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+@media(max-width:820px){.rv-item{grid-template-columns:1fr;gap:3px}}
 .rv-painel b{color:var(--ink);font-weight:700}
 .rv-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:14px!important;
   padding-top:12px;border-top:1px solid #DCEAF9;font-size:12px!important;color:var(--ink-4)!important}
@@ -646,13 +653,18 @@ tbody tr.sel{background:#F3F8FF}
 .res-parcial b{font-weight:700}
 
 /* Três heróis, todos com o mesmo peso. O valor é o maior texto da tela. */
-.herois{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.herois{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
 .hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
   box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px}
 .hero-rot{font-size:13px;font-weight:600;color:var(--ink-2)}
 .hero-val{font-size:31px;font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
 .hero-ap{font-size:13px;color:var(--ink-3)}
 .dlt{margin-top:5px;font-size:12.5px;font-weight:600}
+/* Quarta linha do cartão: mesma posição do selo de variação, outro papel —
+   aqui não há campanha anterior para comparar, há o recorte do número. */
+.hero-nota{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:12.5px;
+  font-weight:600;color:var(--ink-2)}
+.hero-nota svg{color:var(--ink-4);flex-shrink:0}
 .dlt.up{color:var(--green)}
 .dlt.down{color:var(--danger)}
 .dlt.flat{color:var(--ink-4)}
@@ -698,33 +710,34 @@ tbody tr.sel{background:#F3F8FF}
 .mixduo-mk{width:2px!important;height:14px!important;border-radius:1px!important;
   background:var(--ink);margin:0 4px}
 
+/* Resumo do bloco: esta campanha, a distância, a média. Lê-se numa linha. */
+.dnacmp-topo{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:20px;
+  padding-bottom:18px;border-bottom:1px solid var(--border)}
+.dc-par span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
+.dc-par b{font-size:28px;font-weight:700;line-height:1.1;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.dc-par b.pos{color:var(--green)}
+.dc-par b.neg{color:var(--danger)}
+.dc-par b.neutro{color:var(--ink-3)}
+.dc-vs{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--ink-3);
+  padding:0 4px}
+.dc-vs b{font-size:17px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.dc-vs i{font-style:normal}
+
 .mixcmp{display:flex;flex-direction:column;gap:9px}
-.mixlin{display:grid;grid-template-columns:180px minmax(0,1fr) 62px;gap:16px;align-items:center}
+.mixlin{display:grid;grid-template-columns:180px minmax(0,1fr) 62px 66px;gap:14px;align-items:center}
 .mixlin-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mixlin.atual .mixlin-rot{color:var(--ink);font-weight:600}
 .mixlin-rot i{font-style:normal;color:var(--primary);font-weight:600}
 .mixlin .mixmk{top:-4px;bottom:-4px}
-.mixlin-val{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-.mixlin-val.pos{color:var(--green)}
-.mixlin-val.neg{color:var(--danger)}
-
-/* ---------- Card de faturamento da campanha ---------- */
-.fatcard{max-width:430px;background:#fff;border:1px solid var(--border);border-radius:12px;
-  padding:18px 20px;box-shadow:var(--shadow);margin-bottom:14px}
-.fat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
-.fat-top h4{margin:0;font-size:14.5px;font-weight:600;color:var(--ink)}
-.fat-per{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3);margin-bottom:13px}
-.fat-per span{background:var(--primary-soft);color:#0B6FD0;font-weight:600;border-radius:7px;
-  padding:3px 10px;white-space:nowrap}
-.fat-val{display:flex;align-items:baseline;gap:10px;padding-bottom:15px;
-  border-bottom:1px solid var(--border)}
-.fat-val svg{flex-shrink:0;color:var(--ink-3);align-self:center}
-.fat-val b{font-size:26px;font-weight:700;color:var(--ink);line-height:1.1;letter-spacing:-.01em;
+.mixlin-val{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;
+  color:var(--ink-2)}
+.mixlin.atual .mixlin-val{color:var(--ink)}
+/* Distância para a média, em percentual relativo — nunca em "pontos". */
+.mixlin-rel{font-size:12.5px;font-weight:700;text-align:right;color:var(--ink-4);
   font-variant-numeric:tabular-nums}
-.fat-pct{font-size:14px;font-weight:700;color:var(--primary);background:var(--primary-soft);
-  border-radius:7px;padding:3px 9px;align-self:center}
-.fat-rod{margin-top:13px;font-size:13px;color:var(--ink-3)}
-.fat-rod b{font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.mixlin-rel.pos{color:var(--green)}
+.mixlin-rel.neg{color:var(--danger)}
 
 /* ---------- Funil ----------
    Duas decisões de alinhamento que estavam quebradas antes:
@@ -785,12 +798,14 @@ tbody tr.sel{background:#F3F8FF}
 .ret-lado span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
 .ret-lado b{display:block;font-size:17px;font-weight:700;color:var(--ink-2)}
 
+@media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:1080px){
-  .herois{grid-template-columns:1fr}
+  .herois{grid-template-columns:repeat(2,1fr)}
   .tkcmp{grid-template-columns:1fr}
   .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
-  .mixlin{grid-template-columns:120px minmax(0,1fr) 54px;gap:10px}
+  .mixlin{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
+  .dnacmp-topo{gap:18px}
 }
 
 .maiswrap{position:relative;z-index:20;flex-shrink:0}
@@ -1438,7 +1453,6 @@ const TIPS = {
   ticketGeral:'Faturamento dividido pelo número de transações.',
   perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
   faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
-  fatCampanha:'Quanto do faturamento das lojas no período veio dos clientes desta segmentação.',
   perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
   partDna:'Quantos clientes têm aderência a cada DNA de consumo. O mesmo cliente pode aparecer em mais de um.',
 };
@@ -1856,6 +1870,15 @@ function sinalRfv(g, perfil, ant, at){
 /* Análise por grupo. Num produto de verdade isto sai de um modelo; aqui o
    texto é fixo, mas TODO número dentro dele é calculado da tabela — assim a
    análise não pode divergir do que está na tela ao lado. */
+/* Análise por grupo.
+
+   LINGUAGEM. Quem lê é dono de farmácia, não analista. Então: frase curta,
+   verbo direto, zero jargão. Nada de "sobre-indexa", "régua de corte" ou
+   "ponto a validar". Cada análise tem três partes fixas — o que aconteceu,
+   por que acontece, o que fazer — porque estrutura repetida se aprende na
+   segunda leitura e some do caminho.
+
+   Os números continuam calculados da tabela. Muda a forma, não o fato. */
 function analiseRfv(id){
   const p = n => PERFIS_RFV.find(x=>x[0]===n);
   const v = (n,i) => varPct(p(n)[i], p(n)[i+1]);
@@ -1865,37 +1888,66 @@ function analiseRfv(id){
 
   const T = {
     geral: [
-      `A base perdeu <b>${nf.format(cliAnt-cliAt)} clientes</b> no período, ${pc(varPct(cliAnt,cliAt))} a menos. Mas o dinheiro por compra ficou parado: o ticket variou menos de 10% em quatro dos seis perfis.`,
-      `<b>A base não empobreceu, ela rareou.</b> Quem ficou continua gastando o mesmo por compra — só vem menos vezes. <b>Valioso</b> caiu de ${p('Valioso')[7]} para ${p('Valioso')[8]} compras e <b>Fiel</b> de ${p('Fiel')[7]} para ${p('Fiel')[8]}. É isso que derruba o LTV em todos os perfis, sem exceção.`,
-      `A perda também não foi por igual. <b>Fiel</b> e <b>Valioso</b> cresceram, <b>Potencial</b> caiu ${pc(v('Potencial',1))} e <b>Ocasional</b> ${pc(v('Ocasional',1))}. O topo secou pela base: quem estava em formação saiu, e <b>Novos</b> (${pc(v('Novos',1))}) não repôs.`,
-      `<b>Dos cinco indicadores, só recência melhorou</b> — e melhorou de um jeito que pede conferência: ela sobe sozinha quando quem sumiu deixa de contar, e a base encolheu ${pc(varPct(cliAnt,cliAt))}.`,
-      `<b>Onde agir:</b> aquisição e recompra. <b>O que não fazer:</b> campanha de ticket — esse número não é o problema.`
+      ['O que aconteceu',
+       `Você tinha <b>${nf.format(cliAnt)} clientes</b>. Agora tem <b>${nf.format(cliAt)}</b>. São ${nf.format(cliAnt-cliAt)} a menos, ${pc(varPct(cliAnt,cliAt))} da base.`],
+      ['Por que acontece',
+       `Não é que estejam gastando menos. O ticket quase não mudou. O que mudou foi a <b>quantidade de vezes que vêm à loja</b>. Um cliente Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]}. Um Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
+      ['Quem saiu',
+       `Os melhores ficaram: Fiel e Valioso até cresceram. Quem sumiu foi quem estava começando — Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))}. E entrou pouca gente nova para repor.`],
+      ['Cuidado com um número',
+       `Os clientes parecem estar voltando mais cedo. Mas isso pode ser ilusão: quando alguém some da base, ele para de contar, e a conta melhora sozinha. Confirme com o time de dados antes de comemorar.`],
+      ['O que fazer',
+       `<b>Trazer gente nova e fazer quem já compra voltar mais vezes.</b> Não vale investir em aumentar o valor da compra — esse número já está bom.`]
     ],
     clientes: [
-      `A base perdeu <b>${nf.format(cliAnt-cliAt)} clientes</b> — caiu de ${nf.format(cliAnt)} para ${nf.format(cliAt)}, ${pc(varPct(cliAnt,cliAt))} a menos.`,
-      `A queda não é uniforme. <b>Fiel</b> cresceu ${pc(v('Fiel',1))} e <b>Valioso</b> ${pc(v('Valioso',1))}, enquanto <b>Potencial</b> caiu ${pc(v('Potencial',1))} e <b>Ocasional</b> ${pc(v('Ocasional',1))}. Quem já era do topo ficou; quem estava em formação saiu.`,
-      `<b>Abandonador</b> caiu ${pc(v('Abandonador',1))} — esse é o melhor número da tabela. Mas ainda é o maior grupo da base, com ${nf1.format(abd[2]/cliAt*100)}% dos clientes.`,
-      `<b>O gargalo é entrada, não retenção.</b> Com Novos em ${pc(v('Novos',1))} e Potencial despencando, o topo do funil secou. Campanha de fidelização teria pouco a ganhar aqui.`
+      ['O que aconteceu',
+       `A base caiu de ${nf.format(cliAnt)} para <b>${nf.format(cliAt)} clientes</b>, ${pc(varPct(cliAnt,cliAt))} a menos.`],
+      ['Quem cresceu, quem sumiu',
+       `Fiel subiu ${pc(v('Fiel',1))} e Valioso ${pc(v('Valioso',1))} — seus melhores clientes continuam aí. Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))}. A perda foi toda de quem comprava pouco.`],
+      ['A boa notícia escondida',
+       `Abandonador caiu ${pc(v('Abandonador',1))}. É o melhor número da tabela. Mas ainda é o maior grupo: <b>${nf1.format(abd[2]/cliAt*100)}% dos seus clientes</b> estão nele.`],
+      ['O que fazer',
+       `<b>O problema é entrada, não saída.</b> Com poucos clientes novos, não tem de onde sair o próximo Fiel. Campanha para fidelizar quem já é fiel resolve pouco aqui.`]
     ],
     ltv: [
-      `<b>Caiu nos seis perfis, sem exceção.</b> O mais forte é <b>Valioso</b>, com ${pc(v('Valioso',3))} a menos (${brl(p('Valioso')[3])} → ${brl(p('Valioso')[4])}).`,
-      `Como o ticket quase não se moveu no mesmo período, a queda de LTV vem inteira de <b>frequência</b>: o cliente não gasta menos por compra, ele compra menos vezes.`,
-      `<b>Ponto a validar:</b> LTV caindo junto com Fiel crescendo ${pc(v('Fiel',1))} é contraditório. Se mais gente está sendo classificada como fiel e o valor por cliente cai, a régua que define "Fiel" pode estar larga demais. Vale conferir o corte antes de usar esse perfil em campanha.`
+      ['O que aconteceu',
+       `Cada cliente está gerando menos dinheiro. <b>Caiu em todos os seis perfis.</b> O tombo maior foi no Valioso: de ${brl(p('Valioso')[3])} para ${brl(p('Valioso')[4])}, ${pc(v('Valioso',3))} a menos.`],
+      ['Por que acontece',
+       `Não é o valor da compra. Esse ficou quase igual. É a <b>quantidade de compras</b> que caiu. Menos idas à loja, menos dinheiro por cliente no fim do ano.`],
+      ['Uma coisa estranha',
+       `Tem mais gente classificada como Fiel (${pc(v('Fiel',1))} a mais), mas cada Fiel vale menos. Pode ser que a regra que define quem é Fiel esteja deixando entrar cliente que compra pouco. Vale conferir com o time de dados antes de usar esse grupo numa campanha.`],
+      ['O que fazer',
+       `<b>Trazer o cliente de volta mais vezes.</b> É a única alavanca que mexe neste número.`]
     ],
     ticket: [
-      `<b>O único grupo estável da tabela.</b> Quatro dos seis perfis variaram menos de 10%, e <b>Ocasional</b> ficou parado em ${brl(p('Ocasional')[6])}.`,
-      `As exceções puxam para lados opostos: <b>Potencial</b> subiu ${pc(v('Potencial',5))} e <b>Valioso</b> caiu ${pc(v('Valioso',5))}.`,
-      `<b>O problema da base não é quanto se gasta por compra.</b> Com ticket estável e frequência em queda livre, uma campanha de aumento de ticket estaria atacando o sintoma errado.`
+      ['O que aconteceu',
+       `Quase nada. <b>É o número mais estável da tabela.</b> Quatro dos seis perfis variaram menos de 10%, e o Ocasional ficou parado em ${brl(p('Ocasional')[6])}.`],
+      ['As duas exceções',
+       `Potencial subiu ${pc(v('Potencial',5))} — está gastando mais por compra. Valioso caiu ${pc(v('Valioso',5))}.`],
+      ['O que isso significa',
+       `Seu cliente não empobreceu. Quando ele vem, gasta o mesmo de antes. <b>O problema é que ele vem menos vezes.</b>`],
+      ['O que fazer',
+       `<b>Nada aqui.</b> Promoção para aumentar o valor da compra ia gastar dinheiro no lugar errado.`]
     ],
     freq: [
-      `<b>A queda mais severa da tabela.</b> <b>Valioso</b> perdeu ${pc(v('Valioso',7))} (${p('Valioso')[7]} → ${p('Valioso')[8]} compras) e <b>Fiel</b> ${pc(v('Fiel',7))} (${p('Fiel')[7]} → ${p('Fiel')[8]}).`,
-      `Todos os perfis compram menos vezes. Junto com ticket estável, é isto que explica o LTV: a base não empobreceu, ela rareou.`,
-      `<b>É aqui que há mais a ganhar.</b> Lembrete de recompra e campanha de reativação atacam exatamente esta métrica. Um Fiel que voltou de ${p('Fiel')[7]} para ${p('Fiel')[8]} compras ainda compra — só precisa de motivo para voltar antes.`
+      ['O que aconteceu',
+       `<b>A maior queda da tabela.</b> Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]} — ${pc(v('Valioso',7))} a menos. Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
+      ['Todos caíram',
+       `Nenhum perfil escapou. Todo mundo está indo menos vezes à farmácia.`],
+      ['O que isso explica',
+       `Este é o número que derruba os outros. Ticket parado + menos visitas = menos dinheiro por cliente. <b>Resolvendo aqui, o LTV sobe junto.</b>`],
+      ['O que fazer',
+       `<b>Lembrete de recompra e campanha de reativação.</b> Um Fiel que caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]} compras não foi embora — só precisa de um motivo para voltar antes.`]
     ],
     rec: [
-      `<b>O único grupo que melhorou de forma geral.</b> Cinco dos seis perfis voltaram mais cedo: <b>Novos</b> caiu de ${p('Novos')[9]} para ${p('Novos')[10]} dias (${pc(v('Novos',9))}) e <b>Abandonador</b> de ${p('Abandonador')[9]} para ${p('Abandonador')[10]}.`,
-      `Só <b>Potencial</b> piorou, demorando ${pc(v('Potencial',9))} mais para voltar.`,
-      `<b>Cuidado com este número.</b> Recência melhora sozinha quando quem não compra há muito tempo sai da base — e a base encolheu ${pc(varPct(cliAnt,cliAt))} no período. Antes de comemorar, confirme se a régua de corte da base mudou. Se mudou, a melhora é da conta, não do cliente.`
+      ['O que aconteceu',
+       `<b>O único grupo que melhorou.</b> Cinco dos seis perfis estão voltando mais cedo. Cliente novo voltava em ${p('Novos')[9]} dias e agora volta em ${p('Novos')[10]}. Abandonador caiu de ${p('Abandonador')[9]} para ${p('Abandonador')[10]} dias.`],
+      ['A exceção',
+       `Só o Potencial piorou: demora ${pc(v('Potencial',9))} mais para voltar do que antes.`],
+      ['Antes de comemorar',
+       `Este número melhora sozinho quando a base encolhe. Quem não compra há muito tempo sai da conta, e a média dos que sobraram fica melhor — sem ninguém ter voltado mais cedo de verdade. <b>E sua base encolheu ${pc(varPct(cliAnt,cliAt))} no período.</b>`],
+      ['O que fazer',
+       `<b>Pergunte ao time de dados se a regra de quem entra na base mudou.</b> Se mudou, a melhora é da conta, não do cliente.`]
     ]
   };
   return T[id] || [];
@@ -1934,7 +1986,9 @@ function blocoRfv(){
     <div class="rv-painel-top">${I.spark}
       <h4>${c.id==='geral' ? 'Análise geral da base' : 'Análise de '+esc(c.rot.toLowerCase())}</h4>
       <button class="rv-fechar" data-act="gAnalise" data-v="${c.id}">Fechar</button></div>
-    ${analiseRfv(c.id).map(t=>`<p>${t}</p>`).join('')}
+    ${analiseRfv(c.id).map(([rot,txt])=>`<div class="rv-item">
+      <div class="rv-item-rot">${esc(rot)}</div>
+      <p>${txt}</p></div>`).join('')}
     <p class="rv-disclaimer">${I.info} Texto gerado a partir dos números desta tabela.
     Confira antes de levar a decisão adiante.</p>
   </div>` : '';
@@ -2324,31 +2378,18 @@ const COR_DNA = '#0B7BFB', COR_RESTO = '#D5DDE8';
 function cardFaturamento(s, c){
   if(!c.sellout || !c.compras) return '';
   const pct = c.faturamento / c.sellout * 100;
-  return `<div class="fatcard">
-    <div class="fat-top"><h4>Faturamento</h4>${tip('fatCampanha')}</div>
-    <div class="fat-per">Período: <span>${c.ini} - ${c.fim}</span></div>
-    <div class="fat-val">${I.users}
-      <b>${brl(c.faturamento)}</b>
-      <span class="fat-pct">${nf1.format(pct)}%</span>
-    </div>
-    <div class="fat-rod">Faturamento das lojas: <b>${brl(c.sellout)}</b></div>
-  </div>`;
+  return heroi('Participação nas lojas', nf1.format(pct)+'%',
+    `de ${brl(c.sellout)} faturados no período`,
+    `<span class="hero-nota">${I.users} ${brl(c.faturamento)} vieram deste público</span>`);
 }
 
-/* Duas faixas, duas cores. A versão anterior pintava cada categoria com uma
-   rampa e listava as seis embaixo — informação demais para a pergunta, que é
-   binária: veio do DNA ou não veio. As categorias continuam no dado e voltam
-   depois, num bloco próprio de mix de produto.
-
-   O normal do público entra como MARCADOR na própria barra, não como uma
-   segunda barra. Assim a comparação vira uma distância que o olho mede sozinho,
-   sem precisar guardar um número e procurar o outro embaixo. Toda barra do
-   bloco usa o mesmo marcador, então a referência é sempre a mesma. */
+/* Barra de duas faixas com a média do DNA marcada por uma régua. A régua é o
+   que transforma o percentual numa distância que o olho mede sozinho. */
 function barraDna(pctAlvo, marcador, rotulo){
   const mk = (typeof marcador === 'number') ? `
     <span class="mixmk" style="left:${marcador.toFixed(2)}%"
-      title="Normal do público: ${nf1.format(marcador)}%"></span>
-    ${rotulo ? `<span class="mixmk-rot" style="left:${marcador.toFixed(2)}%">normal ${nf1.format(marcador)}%</span>` : ''}` : '';
+      title="Média do DNA no público: ${nf1.format(marcador)}%"></span>
+    ${rotulo ? `<span class="mixmk-rot" style="left:${marcador.toFixed(2)}%">média ${nf1.format(marcador)}%</span>` : ''}` : '';
   return `<div class="mixbar">
     <span class="mixseg" style="width:${pctAlvo.toFixed(2)}%;background:${COR_DNA}"></span>
     <span class="mixseg" style="width:${(100-pctAlvo).toFixed(2)}%;background:${COR_RESTO}"></span>
@@ -2356,9 +2397,12 @@ function barraDna(pctAlvo, marcador, rotulo){
   </div>`;
 }
 
-/* Comparativo do DNA entre campanhas. Perdeu a barra grande da campanha atual
-   (virou o card de faturamento acima) e por isso a campanha atual VOLTOU para
-   a lista — sem ela não haveria onde ler a participação desta campanha. */
+/* Comparativo do DNA entre campanhas, com a média do DNA como referência.
+
+   A DIFERENÇA SEMPRE EM PERCENTUAL, NUNCA EM "PONTOS". 58% contra uma média
+   de 49% dá 9 pontos percentuais, mas "9 pontos" é vocabulário de analista.
+   Para quem lê no balcão, o número que significa alguma coisa é o relativo:
+   58 ÷ 49 = 1,18, ou seja, 18% acima da média. */
 function blocoDnaVendas(s, c){
   const {nomes, subs} = subsDoDna(s);
   if(!nomes.length) return '';
@@ -2366,30 +2410,51 @@ function blocoDnaVendas(s, c){
     .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
   if(!camps.length) return '';
 
-  const hist = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
+  const media = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
   const rotDna = nomes.join(' e ');
+  const desta = mixDna(s, c.mix, c.faturamento).pctAlvo;
+  const rel = media ? (desta - media) / media * 100 : 0;
+  const sobe = rel > 1, desce = rel < -1;
 
   return `<div class="bloco">
     <h4 class="bloco-tit">Participação do DNA ${esc(rotDna)} nas vendas</h4>
+
+    <div class="dnacmp-topo">
+      <div class="dc-par">
+        <span>Esta campanha</span>
+        <b class="${sobe?'pos':(desce?'neg':'')}">${nf1.format(desta)}%</b>
+      </div>
+      <div class="dc-vs">${sobe?'↑':(desce?'↓':'=')}
+        <b>${nf1.format(Math.abs(rel))}%</b>
+        <i>${sobe?'acima':(desce?'abaixo':'em linha com')} da média</i></div>
+      <div class="dc-par">
+        <span>Média do DNA no público</span>
+        <b class="neutro">${nf1.format(media)}%</b>
+      </div>
+    </div>
+
     <div class="mixcmp">
       ${camps.map(x=>{
         const m = mixDna(s, x.mix, x.faturamento);
         const atual = x.id===c.id;
+        const r = media ? (m.pctAlvo - media) / media * 100 : 0;
         return `<div class="mixlin ${atual?'atual':''}">
           <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
-          ${barraDna(m.pctAlvo, hist, atual)}
-          <div class="mixlin-val ${m.pctAlvo>=hist?'pos':'neg'}">${nf1.format(m.pctAlvo)}%</div>
+          ${barraDna(m.pctAlvo, media, atual)}
+          <div class="mixlin-val">${nf1.format(m.pctAlvo)}%</div>
+          <div class="mixlin-rel ${r>1?'pos':(r<-1?'neg':'')}">${r>1?'↑':(r<-1?'↓':'=')} ${nf1.format(Math.abs(r))}%</div>
         </div>`;
       }).join('')}
     </div>
+
     <div class="mixduo">
       <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}</span>
       <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas</span>
-      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Normal do público
-        <b>${nf1.format(hist)}%</b></span>
+      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Média do DNA
+        <b>${nf1.format(media)}%</b></span>
     </div>
-    <p class="bloco-nota">A régua marca o quanto este público já compra deste DNA num mês normal.
-    Campanha à direita da régua puxou a participação para cima.</p>
+    <p class="bloco-nota">A régua marca a média deste DNA no público. A coluna da direita mostra
+    quanto cada campanha ficou acima ou abaixo dessa média.</p>
   </div>`;
 }
 
@@ -2597,13 +2662,13 @@ function telaResultados(){
     ${heroi('Ticket médio', brl(ticket),
         'valor médio de cada compra',
         selo(delta(ticket, ticketAnt), 'campanha anterior'))}
+    ${cardFaturamento(s, c)}
   </div>`;
 
   // Ordem: veredito → números → como esses números se formaram → contexto.
   // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
   // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
   return shell(`${cabecalho}${frase}${herois}
-    ${cardFaturamento(s, c)}
     ${funilCampanha(s, c)}
     ${blocoTicket(s, c)}
     ${blocoDnaVendas(s, c)}
