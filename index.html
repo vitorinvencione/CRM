@@ -505,18 +505,11 @@ tbody tr.sel{background:#F3F8FF}
 .mixseg{display:block;height:100%;transition:filter .12s}
 .mixseg:hover{filter:brightness(.93)}
 
-/* Legenda em grade: nome à esquerda, percentual e valor alinhados à direita —
-   mesma estrutura do tooltip que vocês já usam no produto. */
-.mixleg{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 26px;margin-top:14px}
-.mixleg-li{display:grid;grid-template-columns:11px 1fr auto auto;gap:9px;align-items:center;
-  padding:6px 2px;font-size:13px;color:var(--ink-3);border-bottom:1px solid #F1F5F9}
-.mixleg-li.alvo{color:var(--ink)}
-.mixleg-cor{width:11px;height:11px;border-radius:3px}
-.mixleg-nome{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mixleg-nome i{font-style:normal;font-size:11px;font-weight:600;color:var(--primary)}
-.mixleg-pct{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
-.mixleg-li.alvo .mixleg-pct{color:var(--ink)}
-.mixleg-val{color:var(--ink-4);font-variant-numeric:tabular-nums;min-width:96px;text-align:right}
+/* Legenda de dois itens, na mesma linha da barra. Duas faixas não pedem tabela. */
+.mixduo{display:flex;gap:26px;flex-wrap:wrap;margin-top:11px}
+.mixduo-i{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
+.mixduo-i i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.mixduo-i b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
 
 .mix-sep{height:1px;background:var(--border);margin:22px 0 18px}
 .mix-sub{margin:0 0 13px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
@@ -596,7 +589,6 @@ tbody tr.sel{background:#F3F8FF}
   .bar-lin{grid-template-columns:120px 1fr 100px;gap:10px}
   .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
-  .mixleg{grid-template-columns:1fr}
   .mix-base{text-align:left;max-width:none}
   .mixlin{grid-template-columns:120px minmax(0,1fr) 54px;gap:10px}
 }
@@ -1725,20 +1717,17 @@ function mixDna(s, mix, total){
   return {linhas, pctAlvo};
 }
 
-const TOM_ALVO = ['#0B7BFB','#3C97FC','#6DB2FD','#9ECDFE'];
-const TOM_RESTO = ['#C9D3E0','#D5DDE8','#E0E6EE','#E8ECF2','#EEF1F5'];
+const COR_DNA = '#0B7BFB', COR_RESTO = '#D5DDE8';
 
-/* Uma barra 100%. Serve tanto para a campanha atual quanto para cada linha do
-   comparativo, então escala e cores são idênticas nos dois — comparar barras
-   com paletas diferentes seria enganoso. */
-function barraMix(linhas){
-  let ia = -1, ir = -1;
-  return `<div class="mixbar">${linhas.map(l=>{
-    const cor = l.alvo ? TOM_ALVO[Math.min(++ia, TOM_ALVO.length-1)]
-                       : TOM_RESTO[Math.min(++ir, TOM_RESTO.length-1)];
-    return `<span class="mixseg" style="width:${l.pct.toFixed(2)}%;background:${cor}"
-      title="${esc(l.cat)} — ${nf1.format(l.pct)}%"></span>`;
-  }).join('')}</div>`;
+/* Duas faixas, duas cores. A versão anterior pintava cada categoria com uma
+   rampa e listava as seis embaixo — informação demais para a pergunta, que é
+   binária: veio do DNA ou não veio. As categorias continuam no dado e voltam
+   depois, num bloco próprio de mix de produto. */
+function barraDna(pctAlvo){
+  return `<div class="mixbar">
+    <span class="mixseg" style="width:${pctAlvo.toFixed(2)}%;background:${COR_DNA}"></span>
+    <span class="mixseg" style="width:${(100-pctAlvo).toFixed(2)}%;background:${COR_RESTO}"></span>
+  </div>`;
 }
 
 function blocoDnaVendas(s, c){
@@ -1748,15 +1737,16 @@ function blocoDnaVendas(s, c){
 
   const {linhas, pctAlvo} = mixDna(s, c.mix, c.faturamento);
   const vAlvo = linhas.filter(l=>l.alvo).reduce((a,l)=>a+l.val, 0);
+  const rotDna = nomes.join(' e ');
 
-  // linha de base: quanto essas subcategorias já representam num mês normal
+  // linha de base: quanto o DNA já representa num mês normal deste público
   const hist = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
   const dif  = pctAlvo - hist;
   const sobe = dif > 1.5, desce = dif < -1.5;
 
-  // comparativo: a mesma barra para cada campanha do público, mais a linha do
-  // normal. Empilhadas e alinhadas à esquerda, a leitura vertical responde
-  // "a participação do DNA está subindo?" sem nenhuma conta.
+  // comparativo: a mesma barra de duas faixas para cada campanha, mais a linha
+  // do normal. Alinhadas à esquerda, a leitura vertical responde "a
+  // participação do DNA está subindo?" sem nenhuma conta.
   const camps = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix)
     .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
   const comparativo = camps.length >= 2 ? `
@@ -1768,19 +1758,19 @@ function blocoDnaVendas(s, c){
         const atual = x.id===c.id;
         return `<div class="mixlin ${atual?'atual':''}">
           <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
-          ${barraMix(m.linhas)}
+          ${barraDna(m.pctAlvo)}
           <div class="mixlin-val">${nf1.format(m.pctAlvo)}%</div>
         </div>`;
       }).join('')}
       <div class="mixlin base">
         <div class="mixlin-rot">Normal do público · 12 meses</div>
-        <div class="mixbar"><span class="mixseg" style="width:${hist.toFixed(2)}%;background:#9AA6B4"></span></div>
+        ${barraDna(hist)}
         <div class="mixlin-val">${nf1.format(hist)}%</div>
       </div>
     </div>` : '';
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">Quanto das vendas veio do DNA ${esc(nomes.join(' e '))}</h4>
+    <h4 class="bloco-tit">Quanto das vendas veio do DNA ${esc(rotDna)}</h4>
 
     <div class="mix-topo">
       <div class="mix-num">
@@ -1796,20 +1786,15 @@ function blocoDnaVendas(s, c){
       </div>
     </div>
 
-    ${barraMix(linhas)}
+    ${barraDna(pctAlvo)}
 
-    <div class="mixleg">
-      ${linhas.map(l=>`<div class="mixleg-li${l.alvo?' alvo':''}">
-        <span class="mixleg-cor" style="background:${l.alvo?TOM_ALVO[0]:'#D5DDE8'}"></span>
-        <span class="mixleg-nome">${esc(l.cat)}${l.alvo?' <i>· DNA</i>':''}</span>
-        <span class="mixleg-pct">${nf1.format(l.pct)}%</span>
-        <span class="mixleg-val">${brl(l.val)}</span>
-      </div>`).join('')}
+    <div class="mixduo">
+      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>${esc(rotDna)}
+        <b>${brl(vAlvo)}</b></span>
+      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Demais vendas
+        <b>${brl(c.faturamento - vAlvo)}</b></span>
     </div>
     ${comparativo}
-    <p class="bloco-nota">A divisão é por <b>categoria de produto</b>, que fecha 100% das vendas.
-    Não dá para fatiar por DNA: <b>Hormonais</b> pertence a Anticoncepcionais e a Tireoide ao mesmo
-    tempo, e categorias como Analgésicos não pertencem a DNA nenhum.</p>
   </div>`;
 }
 
