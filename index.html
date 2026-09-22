@@ -472,16 +472,6 @@ tbody tr.sel{background:#F3F8FF}
 .bloco-vazio .bloco-nota{margin-top:0;font-size:13.5px;color:var(--ink-3)}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
-.barras{display:flex;flex-direction:column;gap:9px}
-.bar-lin{display:grid;grid-template-columns:170px 1fr 120px;gap:14px;align-items:center}
-.bar-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar-lin.atual .bar-rot{color:var(--ink);font-weight:600}
-.bar-rot i{font-style:normal;color:var(--primary);font-weight:600}
-.bar-trilho{height:22px;background:#F1F5F9;border-radius:5px;overflow:hidden}
-.bar-fill{height:100%;background:#CBDCF0;border-radius:5px}
-.bar-lin.atual .bar-fill{background:var(--primary)}
-.bar-val{font-size:13.5px;color:var(--ink-2);text-align:right}
-.bar-lin.atual .bar-val{font-weight:700;color:var(--ink)}
 
 /* ---------- Vendas do DNA ----------
    A barra de 100% é o único elemento que carrega cor de verdade neste bloco:
@@ -600,7 +590,6 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1080px){
   .herois{grid-template-columns:1fr}
   .tkcmp{grid-template-columns:1fr}
-  .bar-lin{grid-template-columns:120px 1fr 100px;gap:10px}
   .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
   .mix-base{text-align:left;max-width:none}
@@ -1659,29 +1648,6 @@ function heroi(rot, valor, apoio, dlt){
   </div>`;
 }
 
-/* Barra horizontal: comparação de categorias com rótulo longo. Escala única
-   para todas as barras — escala por barra mentiria sobre o tamanho relativo. */
-function barrasHistorico(s, c){
-  const todas = (s.campanhas||[]).filter(x=>x.compras>0)
-    .sort((a,b)=>brDate(b.ini)-brDate(a.ini)).slice(0,5);
-  if(todas.length < 2) return '';
-  const teto = Math.max(...todas.map(x=>x.faturamento));
-  return `<div class="bloco">
-    <h4 class="bloco-tit">Comparado às outras campanhas deste público</h4>
-    <div class="barras">
-      ${todas.map(x=>{
-        const atual = x.id===c.id;
-        return `<div class="bar-lin ${atual?'atual':''}">
-          <div class="bar-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
-          <div class="bar-trilho"><div class="bar-fill" style="width:${(x.faturamento/teto*100).toFixed(1)}%"></div></div>
-          <div class="bar-val">${brl(x.faturamento)}</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <p class="bloco-nota">Mesma escala em todas as barras. Só campanhas que já tiveram resultado aparecem aqui.</p>
-  </div>`;
-}
-
 /* ---------- Vendas do DNA ----------
    POR QUE A BARRA É POR SUBCATEGORIA E NÃO POR DNA.
 
@@ -2030,7 +1996,6 @@ function telaResultados(){
     ${blocoDnaVendas(s, c)}
     ${funilCampanha(s, c)}
     ${blocoTicket(s, c)}
-    ${barrasHistorico(s, c)}
     ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
 }
