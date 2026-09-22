@@ -48,7 +48,7 @@ input,select{font-family:inherit;font-size:14px}
 .shell{display:flex;min-height:calc(100vh - 56px)}
 .sidebar{width:88px;background:#fff;border-right:1px solid var(--border);flex:0 0 88px}
 .main{flex:1;padding:34px 44px 0;display:flex;flex-direction:column}
-.footer{margin-top:auto;padding:26px 0 22px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-4)}
+.geral+.footer,.footer{margin-top:auto;padding:26px 0 22px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-4)}
 .footer strong{color:var(--ink-3)}
 .brand{font-weight:800;letter-spacing:.02em;color:var(--ink);font-size:13px}
 
@@ -422,8 +422,12 @@ tbody tr.sel{background:#F3F8FF}
 /* =========================================================================
    VISÃO GERAL
    ========================================================================= */
+/* Ritmo da tela: um valor só entre blocos e um só entre título e conteúdo.
+   Antes cada bloco trazia a própria margem — 18px aqui, 16px ali, e a
+   .rv-intro corrigia a diferença com margem negativa. */
+.geral{--bloco:20px; --tit:16px}
 .gfiltros{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
-  flex-wrap:wrap;margin:18px 0 16px}
+  flex-wrap:wrap;margin:20px 0 var(--bloco)}
 .gf-esq{display:flex;gap:14px;flex-wrap:wrap}
 .gf-campo label{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:5px}
 .gf-campo select{height:38px;padding:0 30px 0 12px;font-size:13.5px;font-weight:600;
@@ -432,7 +436,7 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Seis cartões de número. Grade fixa para os rótulos de duas linhas não
    empurrarem o valor para baixo e desalinharem a fileira. */
-.gcards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.gcards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:var(--bloco)}
 .gcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;
   box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;gap:12px}
 .gcard-top{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.3}
@@ -442,10 +446,16 @@ tbody tr.sel{background:#F3F8FF}
   font-variant-numeric:tabular-nums}
 
 .gpanel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
-  box-shadow:var(--shadow);margin-bottom:16px}
-.gpanel-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+  box-shadow:var(--shadow);margin-bottom:var(--bloco)}
+.gpanel-top{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin-bottom:var(--tit)}
 .gpanel h3,.gperfil-tit{margin:0;font-size:15px;font-weight:600;color:var(--ink)}
-.gperfil-tit{margin-bottom:18px}
+.gperfil-tit{margin-bottom:var(--tit)}
+/* Título com linha de apoio: o par fica junto e o respiro vai depois dos dois. */
+.gpanel-cab{margin-bottom:var(--tit)}
+.gpanel-cab p{margin:5px 0 0;font-size:13px;color:var(--ink-3);line-height:1.5}
+/* Último bloco da tela: respiro maior antes do rodapé. */
+.gpanel-fim{margin-bottom:28px}
 
 .gtoggle{display:flex;gap:4px;background:#F1F5F9;border-radius:9px;padding:3px}
 .gtoggle button{width:34px;height:30px;border-radius:7px;display:flex;align-items:center;
@@ -469,7 +479,8 @@ tbody tr.sel{background:#F3F8FF}
 .p-ocasional{background:#EDA412}
 .p-abandonador{background:#E0134E}
 
-.gdupla{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gdupla{display:grid;grid-template-columns:1fr 1fr;gap:var(--bloco);margin-bottom:var(--bloco)}
+.gdupla>.gpanel{margin-bottom:0}
 
 /* Gráfico de colunas em CSS: eixo à esquerda, plot em flex, cada barra com
    altura em % do topo da escala. */
@@ -503,13 +514,32 @@ tbody tr.sel{background:#F3F8FF}
    A referência usava faixa laranja com texto branco e uma faixa preta abaixo.
    Aqui o cabeçalho segue o padrão do produto: fundo claro, texto escuro. O
    destaque vem do grupo selecionado, não de uma cor que grita em todos. */
-.rv-intro{margin:-10px 0 16px;font-size:13px;color:var(--ink-3)}
-.rv-wrap{overflow-x:auto;margin:0 -2px}
-.rvtab{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+/* Rolagem horizontal com as duas coisas que ela precisa para não confundir:
+   a coluna de Fidelidade fica presa à esquerda, e a sombra na borda direita
+   avisa que ainda há tabela fora da tela. A sombra é o truque de dois planos
+   de fundo — um preso no conteúdo, outro na caixa — então ela some sozinha ao
+   chegar no fim, sem uma linha de JavaScript. */
+.rv-wrap{overflow-x:auto;overscroll-behavior-x:contain;
+  background:
+    linear-gradient(to right, #fff 30%, rgba(255,255,255,0)) left center,
+    linear-gradient(to left,  #fff 30%, rgba(255,255,255,0)) right center,
+    radial-gradient(farthest-side at 0 50%, rgba(15,40,70,.13), transparent) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(15,40,70,.13), transparent) right center;
+  background-repeat:no-repeat;
+  background-size:38px 100%, 38px 100%, 13px 100%, 13px 100%;
+  background-attachment:local, local, scroll, scroll}
+.rv-wrap::-webkit-scrollbar{height:8px}
+.rv-wrap::-webkit-scrollbar-thumb{background:#D5DDE8;border-radius:99px}
+.rv-wrap::-webkit-scrollbar-thumb:hover{background:#C2CDDC}
+.rv-wrap::-webkit-scrollbar-track{background:transparent}
+
+/* separate em vez de collapse: com collapse a borda da coluna presa some. */
+.rvtab{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:880px}
 .rvtab th{font-weight:600;color:var(--ink-3);font-size:12px;padding:0;
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 .rvtab thead tr:first-child th{border-bottom:0}
-.rv-cantoA{text-align:left!important;padding:0 12px 10px 4px!important;
+.rv-cantoA,.rv-perfil{position:sticky;left:0;z-index:2;background:#fff}
+.rv-cantoA{text-align:left!important;padding:0 14px 10px 0!important;
   font-size:12.5px;color:var(--ink-2);vertical-align:bottom;border-bottom:1px solid var(--border)!important}
 .rv-grupo{text-align:center!important;padding:0 4px 8px!important}
 .rv-grupo button{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;
@@ -528,8 +558,12 @@ tbody tr.sel{background:#F3F8FF}
   color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
 .rvtab tbody tr:last-child td{border-bottom:0}
 .rvtab tbody tr:hover td{background:#FAFCFE}
+/* A coluna presa precisa repintar o fundo em cada estado, senão o conteúdo
+   rolando por baixo aparece através dela. */
+.rvtab tbody tr:hover .rv-perfil{background:#FAFCFE}
 .rv-perfil{text-align:left!important;font-weight:600;color:var(--ink)!important;
-  display:flex;align-items:center;gap:9px}
+  padding-right:18px!important;white-space:nowrap}
+.rv-perfil span.rv-dot{display:inline-block;margin-right:9px;vertical-align:1px}
 .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .p-novos{background:#7C89A0}
 .rv-num.forte{color:var(--ink);font-weight:600}
@@ -542,8 +576,10 @@ tbody tr.sel{background:#F3F8FF}
 .rv-nulo{color:var(--ink-4)}
 
 /* Painel da análise: mesma casca dos demais blocos, com o azul só no ícone. */
-.rv-painel{margin-top:18px;background:#F8FBFF;border:1px solid #D8E7F8;border-radius:12px;
-  padding:18px 20px}
+.rv-painel{margin-top:var(--tit);background:#F8FBFF;border:1px solid #D8E7F8;border-radius:12px;
+  padding:18px 20px;animation:rvAbre .18s ease}
+@keyframes rvAbre{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.rv-painel{animation:none}}
 .rv-painel-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .rv-painel-top svg{color:var(--primary);flex-shrink:0}
 .rv-painel-top h4{flex:1;margin:0;font-size:14px;font-weight:700;color:var(--ink)}
@@ -624,7 +660,7 @@ tbody tr.sel{background:#F3F8FF}
   box-shadow:var(--shadow);margin-bottom:14px}
 .bloco-vazio{background:#FAFCFE;box-shadow:none}
 .bloco-tit{margin:0 0 14px;font-size:14px;font-weight:600;color:var(--ink-2)}
-.bloco-nota{margin:14px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-4)}
+.bloco-nota{margin:var(--tit,14px) 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-4)}
 .bloco-vazio .bloco-nota{margin-top:0;font-size:13.5px;color:var(--ink-3)}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
@@ -1873,9 +1909,11 @@ function blocoRfv(){
     Confira antes de levar a decisão adiante.</p>
   </div>` : '';
 
-  return `<div class="gpanel">
-    <h3 class="gperfil-tit">Perfil da base: volume, valor e comportamento ${tip('perfilBase')}</h3>
-    <p class="rv-intro">Compara o período anterior com o atual. Clique em um grupo para ver a análise.</p>
+  return `<div class="gpanel gpanel-fim">
+    <div class="gpanel-cab">
+      <h3>Perfil da base: volume, valor e comportamento ${tip('perfilBase')}</h3>
+      <p>Compara o período anterior com o atual. Clique em um grupo de indicadores para ver a análise.</p>
+    </div>
     <div class="rv-wrap">
       <table class="rvtab">
         <thead>
@@ -1914,7 +1952,7 @@ function telaGeral(){
   const maxPct = Math.max(...perfis.map(p=>p[1]));
   const maxFat = Math.max(...perfis.map(p=>p[2]));
 
-  return shell(`${tabs()}
+  return shell(`<div class="geral">${tabs()}
   <div class="gfiltros">
     <div class="gf-esq">
       ${selGeral('G.E','ge',['12','07','19','23'],GERAL.ge)}
@@ -1952,12 +1990,12 @@ function telaGeral(){
     valores é o faturamento identificado (${brl(fatIdent())}), não o total.</p>
   </div>
 
-  ${blocoRfv()}
-
   <div class="gdupla">
     ${painelGrafico('faixas','Faixa etária e gênero','faixaGenero', graficoFaixas, tabelaFaixas)}
     ${painelGrafico('dnas','Participação por DNA','partDna', graficoDnas, tabelaDnas)}
-  </div>`);
+  </div>
+
+  ${blocoRfv()}</div>`);
 }
 
 /* ---------- Tela: lista de segmentações ---------- */
