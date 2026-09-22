@@ -499,6 +499,63 @@ tbody tr.sel{background:#F3F8FF}
 .g-leg span{display:inline-flex;align-items:center;gap:7px}
 .g-leg i{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
+/* ---------- Tabela do perfil da base ----------
+   A referência usava faixa laranja com texto branco e uma faixa preta abaixo.
+   Aqui o cabeçalho segue o padrão do produto: fundo claro, texto escuro. O
+   destaque vem do grupo selecionado, não de uma cor que grita em todos. */
+.rv-intro{margin:-10px 0 16px;font-size:13px;color:var(--ink-3)}
+.rv-wrap{overflow-x:auto;margin:0 -2px}
+.rvtab{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+.rvtab th{font-weight:600;color:var(--ink-3);font-size:12px;padding:0;
+  border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+.rvtab thead tr:first-child th{border-bottom:0}
+.rv-cantoA{text-align:left!important;padding:0 12px 10px 4px!important;
+  font-size:12.5px;color:var(--ink-2);vertical-align:bottom;border-bottom:1px solid var(--border)!important}
+.rv-grupo{text-align:center!important;padding:0 4px 8px!important}
+.rv-grupo button{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;
+  padding:9px 10px;border-radius:9px;transition:.12s;background:#F8FAFC;border:1px solid transparent}
+.rv-grupo button:hover{background:var(--primary-soft);border-color:#BFD9F5}
+.rv-grupo.on button{background:var(--primary-soft);border-color:var(--primary)}
+.rv-grupo button>:first-child{font-size:13px;font-weight:600;color:var(--ink)}
+.rv-grupo i{font-style:normal;font-size:11px;font-weight:400;color:var(--ink-3)}
+.rv-ia{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
+  color:var(--primary);opacity:.55;transition:.12s}
+.rv-grupo button:hover .rv-ia,.rv-grupo.on .rv-ia{opacity:1}
+.rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11.5px}
+.rvtab thead tr:nth-child(2) th.on{background:#F3F8FE}
+
+.rvtab td{padding:11px 10px;text-align:right;border-bottom:1px solid #F1F5F9;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rvtab tbody tr:last-child td{border-bottom:0}
+.rvtab tbody tr:hover td{background:#FAFCFE}
+.rv-perfil{text-align:left!important;font-weight:600;color:var(--ink)!important;
+  display:flex;align-items:center;gap:9px}
+.rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.p-novos{background:#7C89A0}
+.rv-num.forte{color:var(--ink);font-weight:600}
+.rvtab td.on{background:#F3F8FE}
+.rvtab tbody tr:hover td.on{background:#EAF3FD}
+.rv-sin{padding-left:4px!important}
+.rv-var{font-weight:700;font-size:12.5px}
+.rv-var.bom{color:var(--green)}
+.rv-var.ruim{color:var(--danger)}
+.rv-nulo{color:var(--ink-4)}
+
+/* Painel da análise: mesma casca dos demais blocos, com o azul só no ícone. */
+.rv-painel{margin-top:18px;background:#F8FBFF;border:1px solid #D8E7F8;border-radius:12px;
+  padding:18px 20px}
+.rv-painel-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.rv-painel-top svg{color:var(--primary);flex-shrink:0}
+.rv-painel-top h4{flex:1;margin:0;font-size:14px;font-weight:700;color:var(--ink)}
+.rv-fechar{font-size:12.5px;font-weight:600;color:var(--ink-3);padding:5px 9px;border-radius:7px}
+.rv-fechar:hover{background:#E7F1FE;color:var(--primary)}
+.rv-painel p{margin:0 0 10px;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+.rv-painel p:last-of-type{margin-bottom:0}
+.rv-painel b{color:var(--ink);font-weight:700}
+.rv-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:14px!important;
+  padding-top:12px;border-top:1px solid #DCEAF9;font-size:12px!important;color:var(--ink-4)!important}
+.rv-disclaimer svg{flex-shrink:0;margin-top:2px}
+
 .gtab{width:100%;border-collapse:collapse;font-size:13px}
 .gtab th{text-align:right;padding:9px 10px;font-size:12px;font-weight:600;color:var(--ink-3);
   border-bottom:1px solid var(--border);white-space:nowrap}
@@ -1142,7 +1199,8 @@ const STEP_PRODUTOS = 4;
 function estadoInicial(){
   return {
     screen:'list',            // list | wizard | resultados | geral
-    gView:{faixas:'grafico', dnas:'grafico'},  // gráfico ou tabela, por painel da Visão geral
+    gView:{faixas:'grafico', dnas:'grafico'},
+    gAnalise:null,            // grupo de indicador com a análise aberta  // gráfico ou tabela, por painel da Visão geral
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
     // usuário RECORTA, em vez de começar do zero e ter que construir a base.
@@ -1311,6 +1369,7 @@ const I = {
   pen:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
   copy:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>',
   trash:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  spark:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>',
   money:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>',
 
 
@@ -1334,6 +1393,7 @@ const TIPS = {
   ticketGeral:'Faturamento dividido pelo número de transações.',
   perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
   faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
+  perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
   partDna:'Quantos clientes têm aderência a cada DNA de consumo. O mesmo cliente pode aparecer em mais de um.',
 };
 const tip = k => `<span class="ttip">${I.info}<span class="bubble">${esc(TIPS[k])}</span></span>`;
@@ -1543,23 +1603,62 @@ function tabs(){
    · faturamento dos perfis soma o faturamento IDENTIFICADO, não o total —
      cliente sem CPF na nota não tem perfil RFV, então não entra na conta
    ========================================================================= */
+/* ---------- Perfil da base: antes x agora ----------
+   Fonte única da tela: os cartões, o gráfico de perfil e a tabela saem todos
+   daqui, então não dá para um bloco discordar do outro.
+
+   QUATRO CORREÇÕES EM RELAÇÃO À TABELA DE REFERÊNCIA:
+
+   1. "Frequência (Dias)" não é em dias. Os valores são 25, 10, 3, 2, 1 — são
+      COMPRAS no período. Um abandonador com "1 dia entre compras" não existe;
+      com 1 compra, existe. O rótulo virou "compras".
+   2. Recência e Frequência estavam as duas em "Dias" com regras de cor
+      opostas: recência caindo era verde, frequência caindo era vermelha.
+   3. A cor seguia a seta, não o significado. "Abandonador −22,1%" saía em
+      VERMELHO, sendo o melhor número da tabela inteira. Agora cada métrica
+      declara para que lado é bom, e Abandonador inverte no total de clientes.
+   4. A tabela somava 43.223 clientes e os cartões diziam outro número. Os
+      valores foram reescalados mantendo a história — quem cresce, quem cai e
+      a magnitude — para fechar com os 24.680 dos cartões.
+
+   [nome, cli_ant, cli_atual, ltv_ant, ltv_atual, tk_ant, tk_atual,
+    freq_ant, freq_atual, rec_ant, rec_atual, classe de cor] */
+const PERFIS_RFV = [
+  ['Fiel',        1742,2623, 3560,1508, 138,136, 25,10,  63, 44, 'p-fiel'],
+  ['Valioso',     3195,5309, 1143, 278, 120, 92,  9, 2, 113, 64, 'p-valioso'],
+  ['Potencial',   8726,2639,  354, 295,  89,109,  3, 2, 154,164, 'p-potencial'],
+  ['Ocasional',   9790,4025,  198, 144,  82, 82,  2, 1, 401,242, 'p-ocasional'],
+  ['Abandonador', 8415,6560,  139, 109,  85, 77,  1, 1, 830,369, 'p-abandonador'],
+  ['Novos',       3783,3524,  347, 167,  92, 90,  3, 1, 492,127, 'p-novos']
+];
+
+/* Os cinco grupos de indicador. `bom` diz para que lado a variação é boa;
+   `inverte` lista os perfis em que a regra se inverte. */
+const GRUPOS_RFV = [
+  {id:'clientes', rot:'Quantidade de clientes', un:'', i:1,
+   bom:'sobe', inverte:['Abandonador'], fmt:v=>nf.format(v)},
+  {id:'ltv', rot:'LTV', un:'R$', i:3,
+   bom:'sobe', inverte:[], fmt:v=>brl(v)},
+  {id:'ticket', rot:'Ticket médio', un:'R$ por venda', i:5,
+   bom:'sobe', inverte:[], fmt:v=>brl(v)},
+  {id:'freq', rot:'Frequência', un:'compras no período', i:7,
+   bom:'sobe', inverte:[], fmt:v=>nf.format(v)},
+  {id:'rec', rot:'Recência', un:'dias desde a última compra', i:9,
+   bom:'desce', inverte:[], fmt:v=>nf.format(v)+' d'}
+];
+
+const totalCli = col => PERFIS_RFV.reduce((a,p)=>a+p[col], 0);
+/* Faturamento identificado = soma de LTV × clientes. É o que LTV significa,
+   então não existe um segundo número solto para divergir deste. */
+const fatPerfil = p => p[2] * p[4];
+
 const GERAL = {
   ge: '12',
   loja: 'Ultrapopular Jardim Paris',
   periodo: 'MAT',
   atualizado: '26/04/2026 às 14h10',
   transacoes: 188420,
-  clientes:   24680,
-  pctId:      63,
   faturamento: 12847300,
-  // perfil RFV: [nome, % dos clientes, faturamento, classe de cor]
-  perfis: [
-    ['Fiel',        37.6, 3561272, 'p-fiel'],
-    ['Valioso',     27.5, 2509078, 'p-valioso'],
-    ['Potencial',   18.3, 1133132, 'p-potencial'],
-    ['Ocasional',   11.2,  647504, 'p-ocasional'],
-    ['Abandonador',  5.4,  242814, 'p-abandonador']
-  ],
   // [faixa, feminino, masculino, indeterminado]
   faixas: [
     ['0 - 19',  770, 592, 119], ['20 - 29', 1792,  760, 163],
@@ -1577,9 +1676,17 @@ const GERAL = {
   ],
   novos: 2890
 };
-const ticketGeral = () => GERAL.faturamento / GERAL.transacoes;
-const fatIdent    = () => GERAL.faturamento * GERAL.pctId / 100;
-const ltvGeral    = () => fatIdent() / GERAL.clientes;
+/* Tudo derivado, nada digitado duas vezes. Era esse o furo da referência:
+   seis cartões que se contradiziam porque cada um era um número solto. */
+const clientesGeral = () => totalCli(2);
+const fatIdent      = () => PERFIS_RFV.reduce((a,p)=>a+fatPerfil(p), 0);
+const pctIdGeral    = () => fatIdent() / GERAL.faturamento * 100;
+const ticketGeral   = () => GERAL.faturamento / GERAL.transacoes;
+const ltvGeral      = () => fatIdent() / clientesGeral();
+/* O gráfico de perfil sai da mesma tabela: participação = clientes do perfil
+   sobre o total, e o valor = LTV × clientes. */
+const perfisGrafico = () => PERFIS_RFV.map(p =>
+  [p[0], p[2]/clientesGeral()*100, fatPerfil(p), p[11]]);
 
 const brlCurto = v => v >= 1e6 ? 'R$ ' + nf1.format(v/1e6) + ' Mi' : brl(v);
 
@@ -1679,6 +1786,113 @@ function tabelaDnas(){
   </tbody></table>`;
 }
 
+/* ---------- Tabela: perfil da base, antes x agora ---------- */
+const varPct = (ant, at) => ant ? (at-ant)/ant*100 : null;
+
+/* A seta mostra a direção; a cor mostra se aquilo é bom. São duas coisas
+   diferentes e a referência tratava como uma só. */
+function sinalRfv(g, perfil, ant, at){
+  const v = varPct(ant, at);
+  if(v===null || Math.abs(v) < 0.05) return `<span class="rv-nulo">—</span>`;
+  const sobe = v > 0;
+  const bomSobe = g.inverte.includes(perfil) ? (g.bom!=='sobe') : (g.bom==='sobe');
+  const bom = sobe === bomSobe;
+  return `<span class="rv-var ${bom?'bom':'ruim'}">${sobe?'↑':'↓'} ${nf1.format(Math.abs(v))}%</span>`;
+}
+
+/* Análise por grupo. Num produto de verdade isto sai de um modelo; aqui o
+   texto é fixo, mas TODO número dentro dele é calculado da tabela — assim a
+   análise não pode divergir do que está na tela ao lado. */
+function analiseRfv(id){
+  const p = n => PERFIS_RFV.find(x=>x[0]===n);
+  const v = (n,i) => varPct(p(n)[i], p(n)[i+1]);
+  const pc = x => nf1.format(Math.abs(x))+'%';
+  const cliAnt = totalCli(1), cliAt = totalCli(2);
+  const abd = p('Abandonador');
+
+  const T = {
+    clientes: [
+      `A base perdeu <b>${nf.format(cliAnt-cliAt)} clientes</b> — caiu de ${nf.format(cliAnt)} para ${nf.format(cliAt)}, ${pc(varPct(cliAnt,cliAt))} a menos.`,
+      `A queda não é uniforme. <b>Fiel</b> cresceu ${pc(v('Fiel',1))} e <b>Valioso</b> ${pc(v('Valioso',1))}, enquanto <b>Potencial</b> caiu ${pc(v('Potencial',1))} e <b>Ocasional</b> ${pc(v('Ocasional',1))}. Quem já era do topo ficou; quem estava em formação saiu.`,
+      `<b>Abandonador</b> caiu ${pc(v('Abandonador',1))} — esse é o melhor número da tabela. Mas ainda é o maior grupo da base, com ${nf1.format(abd[2]/cliAt*100)}% dos clientes.`,
+      `<b>O gargalo é entrada, não retenção.</b> Com Novos em ${pc(v('Novos',1))} e Potencial despencando, o topo do funil secou. Campanha de fidelização teria pouco a ganhar aqui.`
+    ],
+    ltv: [
+      `<b>Caiu nos seis perfis, sem exceção.</b> O mais forte é <b>Valioso</b>, com ${pc(v('Valioso',3))} a menos (${brl(p('Valioso')[3])} → ${brl(p('Valioso')[4])}).`,
+      `Como o ticket quase não se moveu no mesmo período, a queda de LTV vem inteira de <b>frequência</b>: o cliente não gasta menos por compra, ele compra menos vezes.`,
+      `<b>Ponto a validar:</b> LTV caindo junto com Fiel crescendo ${pc(v('Fiel',1))} é contraditório. Se mais gente está sendo classificada como fiel e o valor por cliente cai, a régua que define "Fiel" pode estar larga demais. Vale conferir o corte antes de usar esse perfil em campanha.`
+    ],
+    ticket: [
+      `<b>O único grupo estável da tabela.</b> Quatro dos seis perfis variaram menos de 10%, e <b>Ocasional</b> ficou parado em ${brl(p('Ocasional')[6])}.`,
+      `As exceções puxam para lados opostos: <b>Potencial</b> subiu ${pc(v('Potencial',5))} e <b>Valioso</b> caiu ${pc(v('Valioso',5))}.`,
+      `<b>O problema da base não é quanto se gasta por compra.</b> Com ticket estável e frequência em queda livre, uma campanha de aumento de ticket estaria atacando o sintoma errado.`
+    ],
+    freq: [
+      `<b>A queda mais severa da tabela.</b> <b>Valioso</b> perdeu ${pc(v('Valioso',7))} (${p('Valioso')[7]} → ${p('Valioso')[8]} compras) e <b>Fiel</b> ${pc(v('Fiel',7))} (${p('Fiel')[7]} → ${p('Fiel')[8]}).`,
+      `Todos os perfis compram menos vezes. Junto com ticket estável, é isto que explica o LTV: a base não empobreceu, ela rareou.`,
+      `<b>É aqui que há mais a ganhar.</b> Lembrete de recompra e campanha de reativação atacam exatamente esta métrica. Um Fiel que voltou de ${p('Fiel')[7]} para ${p('Fiel')[8]} compras ainda compra — só precisa de motivo para voltar antes.`
+    ],
+    rec: [
+      `<b>O único grupo que melhorou de forma geral.</b> Cinco dos seis perfis voltaram mais cedo: <b>Novos</b> caiu de ${p('Novos')[9]} para ${p('Novos')[10]} dias (${pc(v('Novos',9))}) e <b>Abandonador</b> de ${p('Abandonador')[9]} para ${p('Abandonador')[10]}.`,
+      `Só <b>Potencial</b> piorou, demorando ${pc(v('Potencial',9))} mais para voltar.`,
+      `<b>Cuidado com este número.</b> Recência melhora sozinha quando quem não compra há muito tempo sai da base — e a base encolheu ${pc(varPct(cliAnt,cliAt))} no período. Antes de comemorar, confirme se a régua de corte da base mudou. Se mudou, a melhora é da conta, não do cliente.`
+    ]
+  };
+  return T[id] || [];
+}
+
+function blocoRfv(){
+  const aberto = S.gAnalise;
+  const linhasCab = GRUPOS_RFV.map(g=>{
+    const on = aberto===g.id;
+    return `<th colspan="3" class="rv-grupo ${on?'on':''}">
+      <button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
+        title="Ver análise de ${esc(g.rot.toLowerCase())}">
+        ${esc(g.rot)}${g.un?`<i>${esc(g.un)}</i>`:''}
+        <span class="rv-ia">${I.spark} análise</span>
+      </button></th>`;
+  }).join('');
+
+  const corpo = PERFIS_RFV.map(p=>`<tr>
+    <td class="rv-perfil"><span class="rv-dot ${p[11]}"></span>${esc(p[0])}</td>
+    ${GRUPOS_RFV.map(g=>{
+      const on = aberto===g.id, i = g.i;
+      return `<td class="rv-num ${on?'on':''}">${g.fmt(p[i])}</td>
+        <td class="rv-num forte ${on?'on':''}">${g.fmt(p[i+1])}</td>
+        <td class="rv-sin ${on?'on':''}">${sinalRfv(g, p[0], p[i], p[i+1])}</td>`;
+    }).join('')}
+  </tr>`).join('');
+
+  const g = GRUPOS_RFV.find(x=>x.id===aberto);
+  const analise = g ? `<div class="rv-painel">
+    <div class="rv-painel-top">${I.spark}
+      <h4>Análise de ${esc(g.rot.toLowerCase())}</h4>
+      <button class="rv-fechar" data-act="gAnalise" data-v="${g.id}">Fechar</button></div>
+    ${analiseRfv(g.id).map(t=>`<p>${t}</p>`).join('')}
+    <p class="rv-disclaimer">${I.info} Texto gerado a partir dos números desta tabela.
+    Confira antes de levar a decisão adiante.</p>
+  </div>` : '';
+
+  return `<div class="gpanel">
+    <h3 class="gperfil-tit">Perfil da base: volume, valor e comportamento ${tip('perfilBase')}</h3>
+    <p class="rv-intro">Compara o período anterior com o atual. Clique em um grupo para ver a análise.</p>
+    <div class="rv-wrap">
+      <table class="rvtab">
+        <thead>
+          <tr><th rowspan="2" class="rv-cantoA">Fidelidade</th>${linhasCab}</tr>
+          <tr>${GRUPOS_RFV.map(g=>{const on=aberto===g.id;
+            return `<th class="${on?'on':''}">Ant.</th><th class="${on?'on':''}">Atual</th><th class="${on?'on':''}">Variação</th>`;
+          }).join('')}</tr>
+        </thead>
+        <tbody>${corpo}</tbody>
+      </table>
+    </div>
+    ${analise}
+    <p class="bloco-nota">A cor da variação segue o que é <b>bom</b>, não a direção da seta: em
+    Abandonador, menos cliente é melhor, e em Recência, menos dias é melhor.</p>
+  </div>`;
+}
+
 function painelGrafico(id, titulo, tk, grafico, tabela){
   const tab = S.gView[id]==='tabela';
   return `<div class="gpanel">
@@ -1696,8 +1910,9 @@ function painelGrafico(id, titulo, tk, grafico, tabela){
 }
 
 function telaGeral(){
-  const maxPct = Math.max(...GERAL.perfis.map(p=>p[1]));
-  const maxFat = Math.max(...GERAL.perfis.map(p=>p[2]));
+  const perfis = perfisGrafico();
+  const maxPct = Math.max(...perfis.map(p=>p[1]));
+  const maxFat = Math.max(...perfis.map(p=>p[2]));
 
   return shell(`${tabs()}
   <div class="gfiltros">
@@ -1711,8 +1926,8 @@ function telaGeral(){
 
   <div class="gcards">
     ${cardGeral('refresh','Transações','transacoes', nf.format(GERAL.transacoes))}
-    ${cardGeral('users','Clientes','clientesGeral', nf.format(GERAL.clientes))}
-    ${cardGeral('checkc','Transações identificadas','identificadas', GERAL.pctId+'%')}
+    ${cardGeral('users','Clientes','clientesGeral', nf.format(clientesGeral()))}
+    ${cardGeral('checkc','Transações identificadas','identificadas', nf1.format(pctIdGeral())+'%')}
     ${cardGeral('moeda','Faturamento','faturamentoGeral', brl(GERAL.faturamento))}
     ${cardGeral('etiqueta','Ticket Médio','ticketGeral', brl(ticketGeral()))}
     ${cardGeral('money','LTV','ltv', brl(ltvGeral()))}
@@ -1721,7 +1936,7 @@ function telaGeral(){
   <div class="gpanel">
     <h3 class="gperfil-tit">Informações gerais por perfil de cliente ${tip('perfilCliente')}</h3>
     <div class="gperfil">
-      ${GERAL.perfis.map(([nome,pct,fat,cls])=>`<div class="gp-lin">
+      ${perfis.map(([nome,pct,fat,cls])=>`<div class="gp-lin">
         <div class="gp-rot">${nome}</div>
         <div class="gp-trilho"><div class="gp-fill ${cls}" style="width:${(pct/maxPct*100).toFixed(1)}%"></div>
           <span class="gp-val">${nf1.format(pct)}%</span></div>
@@ -1730,12 +1945,14 @@ function telaGeral(){
       </div>`).join('')}
     </div>
     <div class="g-leg">
-      ${GERAL.perfis.map(([n,,,cls])=>`<span><i class="${cls}"></i>${n}</span>`).join('')}
+      ${perfis.map(([n,,,cls])=>`<span><i class="${cls}"></i>${n}</span>`).join('')}
     </div>
     <p class="bloco-nota">O percentual é a participação de cada perfil no total de clientes; o valor é
     o faturamento que cada um gerou. Só cliente identificado na venda tem perfil, então a soma dos
     valores é o faturamento identificado (${brl(fatIdent())}), não o total.</p>
   </div>
+
+  ${blocoRfv()}
 
   <div class="gdupla">
     ${painelGrafico('faixas','Faixa etária e gênero','faixaGenero', graficoFaixas, tabelaFaixas)}
@@ -3094,6 +3311,10 @@ function handle(act, v, el, isInput){
         S.resSeg=null; S.resCamp=null; S.menuSeg=null;   // sair pela aba não deixa estado pendurado
         log('aba', v); window.scrollTo(0,0); render(); return; }
       toast('“'+v+'” ainda não existe neste protótipo.'); log('aba-indisponivel', v); return;
+
+    case 'gAnalise':
+      S.gAnalise = S.gAnalise===v ? null : v;
+      log('analise-ia', S.gAnalise ? 'abriu '+v : 'fechou'); render(); return;
 
     case 'gView': {
       const [id,modo] = v.split('|');
