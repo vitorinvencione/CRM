@@ -538,18 +538,25 @@ tbody tr.sel{background:#F3F8FF}
 .rvtab th{font-weight:600;color:var(--ink-3);font-size:12px;padding:0;
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 .rvtab thead tr:first-child th{border-bottom:0}
-.rv-cantoA,.rv-perfil{position:sticky;left:0;z-index:2;background:#fff}
-.rv-cantoA{text-align:left!important;padding:0 14px 10px 0!important;
-  font-size:12.5px;color:var(--ink-2);vertical-align:bottom;border-bottom:1px solid var(--border)!important}
-.rv-grupo{text-align:center!important;padding:0 4px 8px!important}
-.rv-grupo button{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;
-  padding:9px 10px;border-radius:9px;transition:.12s;background:#F8FAFC;border:1px solid transparent}
+.rv-grupo.primeira,.rv-perfil{position:sticky;left:0;z-index:2;background:#fff}
+.rv-grupo{text-align:center!important;padding:0 4px 10px!important;vertical-align:bottom;
+  border-bottom:0!important}
+.rv-grupo.primeira{padding-right:14px!important;min-width:132px}
+
+/* Três linhas de altura fixa: rótulo, unidade, ação. A unidade reserva duas
+   linhas mesmo quando usa uma, então "LTV" e "Recência" terminam com a mesma
+   altura sem depender do tamanho do texto. */
+.rv-grupo button{display:grid;grid-template-rows:auto 2.6em auto;justify-items:center;
+  align-items:center;gap:2px;width:100%;height:100%;padding:10px 10px 9px;border-radius:10px;
+  background:#F8FAFC;border:1px solid transparent;transition:.12s}
 .rv-grupo button:hover{background:var(--primary-soft);border-color:#BFD9F5}
+.rv-grupo button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .rv-grupo.on button{background:var(--primary-soft);border-color:var(--primary)}
-.rv-grupo button>:first-child{font-size:13px;font-weight:600;color:var(--ink)}
-.rv-grupo i{font-style:normal;font-size:11px;font-weight:400;color:var(--ink-3)}
+.rv-g-rot{font-size:13px;font-weight:600;color:var(--ink);line-height:1.25;text-align:center}
+.rv-g-un{display:flex;align-items:center;font-size:11px;color:var(--ink-3);line-height:1.3;
+  text-align:center;text-wrap:balance}
 .rv-ia{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
-  color:var(--primary);opacity:.55;transition:.12s}
+  color:var(--primary);opacity:.5;transition:.12s}
 .rv-grupo button:hover .rv-ia,.rv-grupo.on .rv-ia{opacity:1}
 .rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11.5px}
 .rvtab thead tr:nth-child(2) th.on{background:#F3F8FE}
@@ -1620,7 +1627,7 @@ function tabs(){
   const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Segmentação'];
   const ativa = S.screen==='geral' ? 'Visão geral' : 'Segmentação';
   return `<h1 class="page">Painel CRM ${tip('painel')}</h1>
-  <div class="tabs">${t.map(x=>`<div class="tab ${x===ativa?'active':''}" data-act="irAba" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
+  <div class="tabs">${t.map(x=>`<div class="tab${x===ativa?' active':''}" data-act="irAba" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
 }
 
 /* =========================================================================
@@ -1671,9 +1678,9 @@ const PERFIS_RFV = [
 /* Os cinco grupos de indicador. `bom` diz para que lado a variação é boa;
    `inverte` lista os perfis em que a regra se inverte. */
 const GRUPOS_RFV = [
-  {id:'clientes', rot:'Quantidade de clientes', un:'', i:1,
+  {id:'clientes', rot:'Clientes', un:'quantidade no período', i:1,
    bom:'sobe', inverte:['Abandonador'], fmt:v=>nf.format(v)},
-  {id:'ltv', rot:'LTV', un:'R$', i:3,
+  {id:'ltv', rot:'LTV', un:'R$ por cliente', i:3,
    bom:'sobe', inverte:[], fmt:v=>brl(v)},
   {id:'ticket', rot:'Ticket médio', un:'R$ por venda', i:5,
    bom:'sobe', inverte:[], fmt:v=>brl(v)},
@@ -1682,6 +1689,13 @@ const GRUPOS_RFV = [
   {id:'rec', rot:'Recência', un:'dias desde a última compra', i:9,
    bom:'desce', inverte:[], fmt:v=>nf.format(v)+' d'}
 ];
+
+/* Todos os cabeçalhos — inclusive o da primeira coluna — passam pela mesma
+   lista e pelo mesmo botão. Antes "Clientes" era o único sem linha de unidade
+   (ficava com duas linhas contra três dos outros) e "Fidelidade" era texto
+   morto enquanto os cinco ao lado eram botões. */
+const CAB_RFV = [{id:'geral', rot:'Fidelidade', un:'todos os indicadores', span:1}]
+  .concat(GRUPOS_RFV.map(g=>({id:g.id, rot:g.rot, un:g.un, span:3})));
 
 const totalCli = col => PERFIS_RFV.reduce((a,p)=>a+p[col], 0);
 /* Faturamento identificado = soma de LTV × clientes. É o que LTV significa,
@@ -1847,6 +1861,13 @@ function analiseRfv(id){
   const abd = p('Abandonador');
 
   const T = {
+    geral: [
+      `A base perdeu <b>${nf.format(cliAnt-cliAt)} clientes</b> no período, ${pc(varPct(cliAnt,cliAt))} a menos. Mas o dinheiro por compra ficou parado: o ticket variou menos de 10% em quatro dos seis perfis.`,
+      `<b>A base não empobreceu, ela rareou.</b> Quem ficou continua gastando o mesmo por compra — só vem menos vezes. <b>Valioso</b> caiu de ${p('Valioso')[7]} para ${p('Valioso')[8]} compras e <b>Fiel</b> de ${p('Fiel')[7]} para ${p('Fiel')[8]}. É isso que derruba o LTV em todos os perfis, sem exceção.`,
+      `A perda também não foi por igual. <b>Fiel</b> e <b>Valioso</b> cresceram, <b>Potencial</b> caiu ${pc(v('Potencial',1))} e <b>Ocasional</b> ${pc(v('Ocasional',1))}. O topo secou pela base: quem estava em formação saiu, e <b>Novos</b> (${pc(v('Novos',1))}) não repôs.`,
+      `<b>Dos cinco indicadores, só recência melhorou</b> — e melhorou de um jeito que pede conferência: ela sobe sozinha quando quem sumiu deixa de contar, e a base encolheu ${pc(varPct(cliAnt,cliAt))}.`,
+      `<b>Onde agir:</b> aquisição e recompra. <b>O que não fazer:</b> campanha de ticket — esse número não é o problema.`
+    ],
     clientes: [
       `A base perdeu <b>${nf.format(cliAnt-cliAt)} clientes</b> — caiu de ${nf.format(cliAnt)} para ${nf.format(cliAt)}, ${pc(varPct(cliAnt,cliAt))} a menos.`,
       `A queda não é uniforme. <b>Fiel</b> cresceu ${pc(v('Fiel',1))} e <b>Valioso</b> ${pc(v('Valioso',1))}, enquanto <b>Potencial</b> caiu ${pc(v('Potencial',1))} e <b>Ocasional</b> ${pc(v('Ocasional',1))}. Quem já era do topo ficou; quem estava em formação saiu.`,
@@ -1879,32 +1900,38 @@ function analiseRfv(id){
 
 function blocoRfv(){
   const aberto = S.gAnalise;
-  const linhasCab = GRUPOS_RFV.map(g=>{
-    const on = aberto===g.id;
-    return `<th colspan="3" class="rv-grupo ${on?'on':''}">
-      <button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
-        title="Ver análise de ${esc(g.rot.toLowerCase())}">
-        ${esc(g.rot)}${g.un?`<i>${esc(g.un)}</i>`:''}
+  // Um botão só, para os seis cabeçalhos. Três linhas fixas — rótulo, unidade,
+  // ação — então todos têm a mesma altura por construção, independente do
+  // tamanho do texto. Antes a altura vinha do conteúdo e cada um tinha a sua.
+  const linhasCab = CAB_RFV.map(c=>{
+    const on = aberto===c.id;
+    const cls = ['rv-grupo', c.span===1?'primeira':'', on?'on':''].filter(Boolean).join(' ');
+    return `<th colspan="${c.span}" rowspan="${c.span===1?2:1}" class="${cls}">
+      <button data-act="gAnalise" data-v="${c.id}" aria-expanded="${on}"
+        title="Ver análise de ${esc(c.id==='geral'?'todos os indicadores':c.rot.toLowerCase())}">
+        <span class="rv-g-rot">${esc(c.rot)}</span>
+        <span class="rv-g-un">${esc(c.un)}</span>
         <span class="rv-ia">${I.spark} análise</span>
       </button></th>`;
   }).join('');
 
+  const geralOn = aberto==='geral';
   const corpo = PERFIS_RFV.map(p=>`<tr>
-    <td class="rv-perfil"><span class="rv-dot ${p[11]}"></span>${esc(p[0])}</td>
+    <td class="rv-perfil${geralOn?' on':''}"><span class="rv-dot ${p[11]}"></span>${esc(p[0])}</td>
     ${GRUPOS_RFV.map(g=>{
       const on = aberto===g.id, i = g.i;
-      return `<td class="rv-num ${on?'on':''}">${g.fmt(p[i])}</td>
-        <td class="rv-num forte ${on?'on':''}">${g.fmt(p[i+1])}</td>
-        <td class="rv-sin ${on?'on':''}">${sinalRfv(g, p[0], p[i], p[i+1])}</td>`;
+      return `<td class="rv-num${on?' on':''}">${g.fmt(p[i])}</td>
+        <td class="rv-num forte${on?' on':''}">${g.fmt(p[i+1])}</td>
+        <td class="rv-sin${on?' on':''}">${sinalRfv(g, p[0], p[i], p[i+1])}</td>`;
     }).join('')}
   </tr>`).join('');
 
-  const g = GRUPOS_RFV.find(x=>x.id===aberto);
-  const analise = g ? `<div class="rv-painel">
+  const c = CAB_RFV.find(x=>x.id===aberto);
+  const analise = c ? `<div class="rv-painel">
     <div class="rv-painel-top">${I.spark}
-      <h4>Análise de ${esc(g.rot.toLowerCase())}</h4>
-      <button class="rv-fechar" data-act="gAnalise" data-v="${g.id}">Fechar</button></div>
-    ${analiseRfv(g.id).map(t=>`<p>${t}</p>`).join('')}
+      <h4>${c.id==='geral' ? 'Análise geral da base' : 'Análise de '+esc(c.rot.toLowerCase())}</h4>
+      <button class="rv-fechar" data-act="gAnalise" data-v="${c.id}">Fechar</button></div>
+    ${analiseRfv(c.id).map(t=>`<p>${t}</p>`).join('')}
     <p class="rv-disclaimer">${I.info} Texto gerado a partir dos números desta tabela.
     Confira antes de levar a decisão adiante.</p>
   </div>` : '';
@@ -1917,9 +1944,9 @@ function blocoRfv(){
     <div class="rv-wrap">
       <table class="rvtab">
         <thead>
-          <tr><th rowspan="2" class="rv-cantoA">Fidelidade</th>${linhasCab}</tr>
+          <tr>${linhasCab}</tr>
           <tr>${GRUPOS_RFV.map(g=>{const on=aberto===g.id;
-            return `<th class="${on?'on':''}">Ant.</th><th class="${on?'on':''}">Atual</th><th class="${on?'on':''}">Variação</th>`;
+            return `<th${on?' class="on"':''}>Ant.</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
           }).join('')}</tr>
         </thead>
         <tbody>${corpo}</tbody>
