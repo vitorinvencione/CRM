@@ -1241,7 +1241,11 @@ const STEP_PRODUTOS = 4;
 
 function estadoInicial(){
   return {
-    screen:'list',            // list | wizard | resultados | geral
+    /* O protótipo abre na Visão geral: é onde o associado chega no produto
+       real, olha os números e só então decide criar um público. Sair pelo
+       fluxo, salvar ou cancelar continua devolvendo para a lista de
+       segmentações, que é o contexto daquelas ações. */
+    screen:'geral',           // geral | list | wizard | resultados
     gView:{faixas:'grafico', dnas:'grafico'},
     gAnalise:null,            // grupo de indicador com a análise aberta  // gráfico ou tabela, por painel da Visão geral
     step:0,
