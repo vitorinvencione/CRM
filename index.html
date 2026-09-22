@@ -419,6 +419,105 @@ tbody tr.sel{background:#F3F8FF}
 
 .opc{font-size:11.5px;font-weight:500;color:var(--ink-4);background:#EDF1F6;border-radius:999px;padding:2px 8px;margin-left:4px}
 
+/* =========================================================================
+   VISÃO GERAL
+   ========================================================================= */
+.gfiltros{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;margin:18px 0 16px}
+.gf-esq{display:flex;gap:14px;flex-wrap:wrap}
+.gf-campo label{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:5px}
+.gf-campo select{height:38px;padding:0 30px 0 12px;font-size:13.5px;font-weight:600;
+  color:var(--ink);min-width:90px}
+.gf-fonte{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3);padding-bottom:9px}
+
+/* Seis cartões de número. Grade fixa para os rótulos de duas linhas não
+   empurrarem o valor para baixo e desalinharem a fileira. */
+.gcards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.gcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;gap:12px}
+.gcard-top{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.3}
+.gcard-top>svg{flex-shrink:0;color:var(--ink-3);margin-top:1px}
+.gcard-top span{flex:1;min-width:0}
+.gcard b{font-size:21px;font-weight:700;color:var(--ink);line-height:1.15;align-self:end;
+  font-variant-numeric:tabular-nums}
+
+.gpanel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
+  box-shadow:var(--shadow);margin-bottom:16px}
+.gpanel-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.gpanel h3,.gperfil-tit{margin:0;font-size:15px;font-weight:600;color:var(--ink)}
+.gperfil-tit{margin-bottom:18px}
+
+.gtoggle{display:flex;gap:4px;background:#F1F5F9;border-radius:9px;padding:3px}
+.gtoggle button{width:34px;height:30px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;color:var(--ink-4);transition:.12s}
+.gtoggle button:hover{color:var(--ink-2)}
+.gtoggle button.on{background:#fff;color:var(--primary);box-shadow:0 1px 2px rgba(16,36,64,.08)}
+
+/* Perfil: duas colunas de barra lado a lado, a mesma cor nas duas. É a mesma
+   categoria vista por duas medidas, então mudar de cor entre elas confundiria. */
+.gperfil{display:flex;flex-direction:column;gap:9px}
+.gp-lin{display:grid;grid-template-columns:96px 1fr 1fr;gap:14px;align-items:center}
+.gp-rot{font-size:13px;color:var(--ink-2);text-align:right}
+.gp-trilho{position:relative;display:flex;align-items:center;height:36px;background:#F8FAFC;
+  border-radius:7px}
+.gp-fill{height:100%;border-radius:7px;min-width:5px}
+.gp-val{font-size:13px;color:var(--ink-2);padding-left:11px;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.p-fiel{background:#12B981}
+.p-valioso{background:#1D8CF8}
+.p-potencial{background:#17BFD4}
+.p-ocasional{background:#EDA412}
+.p-abandonador{background:#E0134E}
+
+.gdupla{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Gráfico de colunas em CSS: eixo à esquerda, plot em flex, cada barra com
+   altura em % do topo da escala. */
+.grafico{display:grid;grid-template-columns:auto 1fr;gap:12px;height:290px}
+.g-eixo{display:flex;flex-direction:column;justify-content:space-between;
+  padding-bottom:46px;font-size:11.5px;color:var(--ink-4);text-align:right;
+  font-variant-numeric:tabular-nums}
+.g-plot{display:flex;align-items:flex-end;gap:6px;border-left:1px solid var(--border);
+  background:repeating-linear-gradient(to top,transparent,transparent calc(20% - 1px),
+    #EEF2F7 calc(20% - 1px),#EEF2F7 20%);
+  background-size:100% calc(100% - 46px);background-position:bottom;background-repeat:no-repeat}
+.g-col{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
+.g-pilha{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3px}
+.g-bar{display:block;width:100%;transition:filter .12s}
+.g-pilha .g-bar:first-child{border-radius:3px 3px 0 0}
+.g-col:hover .g-bar{filter:brightness(1.06)}
+.g-rot{height:46px;padding-top:7px;font-size:10.5px;line-height:1.25;color:var(--ink-3);
+  text-align:center;word-break:break-word}
+.b-fem{background:#C9B6F2}
+.b-masc{background:#9B7BE0}
+.b-ind{background:#5B3BA8}
+.b-dna{background:#1D8CF8}
+.b-novo{background:#6EC0FB}
+
+.g-leg{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:14px;
+  font-size:12.5px;color:var(--ink-3)}
+.g-leg span{display:inline-flex;align-items:center;gap:7px}
+.g-leg i{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+.gtab{width:100%;border-collapse:collapse;font-size:13px}
+.gtab th{text-align:right;padding:9px 10px;font-size:12px;font-weight:600;color:var(--ink-3);
+  border-bottom:1px solid var(--border);white-space:nowrap}
+.gtab th:first-child,.gtab td:first-child{text-align:left}
+.gtab td{text-align:right;padding:9px 10px;color:var(--ink-2);border-bottom:1px solid #F1F5F9;
+  font-variant-numeric:tabular-nums}
+.gtab tr:last-child td{border-bottom:0}
+
+@media(max-width:1180px){
+  .gcards{grid-template-columns:repeat(3,1fr)}
+  .gdupla{grid-template-columns:1fr}
+  .gp-lin{grid-template-columns:80px 1fr 1fr;gap:10px}
+}
+@media(max-width:700px){
+  .gcards{grid-template-columns:repeat(2,1fr)}
+  .gp-lin{grid-template-columns:1fr;gap:4px}
+  .gp-rot{text-align:left;font-weight:600}
+}
+
 /* ---------- Tela de resultados da campanha ---------- */
 .res-topo{margin-bottom:18px}
 .btn-voltar{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;
@@ -1042,7 +1141,8 @@ const STEP_PRODUTOS = 4;
 
 function estadoInicial(){
   return {
-    screen:'list',            // list | wizard | resultados
+    screen:'list',            // list | wizard | resultados | geral
+    gView:{faixas:'grafico', dnas:'grafico'},  // gráfico ou tabela, por painel da Visão geral
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
     // usuário RECORTA, em vez de começar do zero e ter que construir a base.
@@ -1226,6 +1326,15 @@ const TIPS = {
   periodoCompra:'Os períodos que você escolheu na etapa Produtos. Só entram clientes que compraram dentro deles.',
   aderencia:'O quanto esse comportamento aparece nas compras do cliente. Baixa, Média e Alta são faixas separadas — pode marcar mais de uma, e o público soma as faixas marcadas.',
   painel:'Aqui você acompanha seus clientes e cria públicos para campanhas.',
+  fonte:'De onde vêm os números e quando foram atualizados pela última vez.',
+  transacoes:'Quantas vendas foram feitas no período, com ou sem o cliente identificado.',
+  clientesGeral:'Clientes diferentes que compraram no período. Só conta quem foi identificado na venda.',
+  identificadas:'De cada 100 vendas, quantas saíram com o cliente identificado. É esse pedaço da base que alimenta o CRM.',
+  faturamentoGeral:'Tudo que entrou no período, identificado ou não.',
+  ticketGeral:'Faturamento dividido pelo número de transações.',
+  perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
+  faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
+  partDna:'Quantos clientes têm aderência a cada DNA de consumo. O mesmo cliente pode aparecer em mais de um.',
 };
 const tip = k => `<span class="ttip">${I.info}<span class="bubble">${esc(TIPS[k])}</span></span>`;
 
@@ -1408,10 +1517,230 @@ function shell(inner){
   </div></div>`;
 }
 
+/* Duas abas navegam de verdade; as outras três continuam avisando que não
+   existem aqui. A ativa vem da tela, não de um estado separado — assim não dá
+   para a aba marcada divergir do que está na tela. */
 function tabs(){
   const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Segmentação'];
+  const ativa = S.screen==='geral' ? 'Visão geral' : 'Segmentação';
   return `<h1 class="page">Painel CRM ${tip('painel')}</h1>
-  <div class="tabs">${t.map(x=>`<div class="tab ${x==='Segmentação'?'active':''}" data-act="tabNoop" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
+  <div class="tabs">${t.map(x=>`<div class="tab ${x===ativa?'active':''}" data-act="irAba" data-v="${esc(x)}">${x}</div>`).join('')}</div>`;
+}
+
+/* =========================================================================
+   TELA: VISÃO GERAL
+   -------------------------------------------------------------------------
+   Réplica da aba que já está no ar. Os números são de um cenário só —
+   G.E 12, uma loja, 12 meses móveis — e ficam todos neste objeto para trocar
+   num lugar só.
+
+   NÚMEROS COERENTES ENTRE SI, que a referência não era:
+   · faturamento ÷ transações  = ticket médio  (na referência dava R$ 1,00
+     contra um card que dizia R$ 8.998)
+   · clientes < transações     (não dá para ter mais cliente que compra)
+   · LTV ≥ ticket médio        (LTV é o acumulado; não pode ser menor)
+   · perfis somam 100%         (a referência somava 99,9%)
+   · faturamento dos perfis soma o faturamento IDENTIFICADO, não o total —
+     cliente sem CPF na nota não tem perfil RFV, então não entra na conta
+   ========================================================================= */
+const GERAL = {
+  ge: '12',
+  loja: 'Ultrapopular Jardim Paris',
+  periodo: 'MAT',
+  atualizado: '26/04/2026 às 14h10',
+  transacoes: 188420,
+  clientes:   24680,
+  pctId:      63,
+  faturamento: 12847300,
+  // perfil RFV: [nome, % dos clientes, faturamento, classe de cor]
+  perfis: [
+    ['Fiel',        37.6, 3561272, 'p-fiel'],
+    ['Valioso',     27.5, 2509078, 'p-valioso'],
+    ['Potencial',   18.3, 1133132, 'p-potencial'],
+    ['Ocasional',   11.2,  647504, 'p-ocasional'],
+    ['Abandonador',  5.4,  242814, 'p-abandonador']
+  ],
+  // [faixa, feminino, masculino, indeterminado]
+  faixas: [
+    ['0 - 19',  770, 592, 119], ['20 - 29', 1792,  760, 163],
+    ['30 - 39',2332,1148, 222], ['40 - 49', 2369, 1343, 237],
+    ['50 - 59',2110,1370, 222], ['60 - 69', 1732, 1283, 193],
+    ['70 - 79',1046, 809, 119], ['80 +',     543,  385,  59],
+    ['Não definido', 889, 652, 1421]
+  ],
+  // participação por DNA: clientes com aderência ao DNA. NÃO somam o total —
+  // o mesmo cliente pode ter dois DNAs, e muitos não têm nenhum.
+  dnas: [
+    ['Anticoncepcionais', 4120], ['Beleza', 6840], ['Diabetes', 3260],
+    ['Doenças Cardíacas', 2980], ['Hipertensão', 5510],
+    ['Hormônios Tireoidianos', 2140], ['Mães', 3720], ['Sistema Nervoso', 2460]
+  ],
+  novos: 2890
+};
+const ticketGeral = () => GERAL.faturamento / GERAL.transacoes;
+const fatIdent    = () => GERAL.faturamento * GERAL.pctId / 100;
+const ltvGeral    = () => fatIdent() / GERAL.clientes;
+
+const brlCurto = v => v >= 1e6 ? 'R$ ' + nf1.format(v/1e6) + ' Mi' : brl(v);
+
+/* Select próprio: os filtros daqui sempre têm valor, então não existe a opção
+   vazia "Selecionar" que o sel() do fluxo de criação precisa ter. */
+function selGeral(label, campo, opts, valor){
+  return `<div class="gf-campo"><label>${label}</label>
+    <select class="input" data-act="filtroGeral" data-v="${campo}">
+      ${opts.map(o=>`<option ${valor===o?'selected':''}>${esc(o)}</option>`).join('')}
+    </select></div>`;
+}
+
+/* Ordem dos parâmetros igual à ordem em que aparecem na tela: ícone, rótulo,
+   ajuda, valor. Com o valor antes da ajuda, as chamadas passavam a chave do
+   tooltip onde o número devia ir — e o cartão imprimia "transacoes". */
+function cardGeral(ic, rot, tk, val){
+  return `<div class="gcard">
+    <div class="gcard-top">${I[ic]}<span>${rot}</span>${tk?tip(tk):''}</div>
+    <b>${val}</b>
+  </div>`;
+}
+
+/* Eixo Y com linhas de grade, em escala fechada num múltiplo redondo. Escala
+   que termina num número quebrado obriga quem lê a calcular. */
+function escala(max){
+  const passo = Math.pow(10, Math.floor(Math.log10(max)));
+  const topo = Math.ceil(max/(passo/2))*(passo/2);
+  const n = 5, marcas = [];
+  for(let i=n; i>=0; i--) marcas.push(Math.round(topo*i/n));
+  return {topo, marcas};
+}
+function eixoY(marcas){
+  return `<div class="g-eixo">${marcas.map(v=>`<span>${nf.format(v)}</span>`).join('')}</div>`;
+}
+
+/* Barras verticais empilhadas: faixa etária por gênero. Três séries, três
+   tons da mesma família — é a mesma grandeza (pessoas), não três assuntos. */
+function graficoFaixas(){
+  const totais = GERAL.faixas.map(([,f,m,i]) => f+m+i);
+  const {topo, marcas} = escala(Math.max(...totais));
+  return `<div class="grafico">
+    ${eixoY(marcas)}
+    <div class="g-plot">
+      ${GERAL.faixas.map(([nome,f,m,i])=>{
+        const alt = p => (p/topo*100).toFixed(2)+'%';
+        return `<div class="g-col" title="${esc(nome)}: ${nf.format(f+m+i)} clientes">
+          <div class="g-pilha">
+            <span class="g-bar b-ind" style="height:${alt(i)}"></span>
+            <span class="g-bar b-masc" style="height:${alt(m)}"></span>
+            <span class="g-bar b-fem" style="height:${alt(f)}"></span>
+          </div>
+          <div class="g-rot">${esc(nome)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  <div class="g-leg">
+    <span><i class="b-fem"></i>Feminino</span>
+    <span><i class="b-masc"></i>Masculino</span>
+    <span><i class="b-ind"></i>Indeterminado</span>
+  </div>`;
+}
+
+function graficoDnas(){
+  const linhas = GERAL.dnas.concat([['Novos clientes', GERAL.novos, true]]);
+  const {topo, marcas} = escala(Math.max(...linhas.map(x=>x[1])));
+  return `<div class="grafico">
+    ${eixoY(marcas)}
+    <div class="g-plot">
+      ${linhas.map(([nome,v,novo])=>`<div class="g-col"
+        title="${esc(nome)}: ${nf.format(v)} clientes">
+        <div class="g-pilha">
+          <span class="g-bar ${novo?'b-novo':'b-dna'}" style="height:${(v/topo*100).toFixed(2)}%"></span>
+        </div>
+        <div class="g-rot">${esc(nome)}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="g-leg">
+    <span><i class="b-dna"></i>DNAs</span>
+    <span><i class="b-novo"></i>Novos clientes</span>
+  </div>`;
+}
+
+function tabelaFaixas(){
+  return `<table class="gtab"><thead><tr><th>Faixa etária</th>
+    <th>Feminino</th><th>Masculino</th><th>Indeterminado</th><th>Total</th></tr></thead><tbody>
+    ${GERAL.faixas.map(([n,f,m,i])=>`<tr><td>${esc(n)}</td><td>${nf.format(f)}</td>
+      <td>${nf.format(m)}</td><td>${nf.format(i)}</td><td><b>${nf.format(f+m+i)}</b></td></tr>`).join('')}
+  </tbody></table>`;
+}
+function tabelaDnas(){
+  const tot = GERAL.clientes;
+  return `<table class="gtab"><thead><tr><th>DNA</th><th>Clientes</th><th>% do total</th></tr></thead><tbody>
+    ${GERAL.dnas.concat([['Novos clientes', GERAL.novos]]).map(([n,v])=>
+      `<tr><td>${esc(n)}</td><td>${nf.format(v)}</td><td>${nf1.format(v/tot*100)}%</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function painelGrafico(id, titulo, tk, grafico, tabela){
+  const tab = S.gView[id]==='tabela';
+  return `<div class="gpanel">
+    <div class="gpanel-top">
+      <h3>${titulo} ${tip(tk)}</h3>
+      <div class="gtoggle">
+        <button class="${tab?'':'on'}" data-act="gView" data-v="${id}|grafico"
+          aria-label="Ver como gráfico" title="Gráfico">${I.chart}</button>
+        <button class="${tab?'on':''}" data-act="gView" data-v="${id}|tabela"
+          aria-label="Ver como tabela" title="Tabela">${I.sheet}</button>
+      </div>
+    </div>
+    ${tab ? tabela() : grafico()}
+  </div>`;
+}
+
+function telaGeral(){
+  const maxPct = Math.max(...GERAL.perfis.map(p=>p[1]));
+  const maxFat = Math.max(...GERAL.perfis.map(p=>p[2]));
+
+  return shell(`${tabs()}
+  <div class="gfiltros">
+    <div class="gf-esq">
+      ${selGeral('G.E','ge',['12','07','19','23'],GERAL.ge)}
+      ${selGeral('Lojas','loja',['Ultrapopular Jardim Paris','Ultrapopular Centro','Todas as lojas do grupo'],GERAL.loja)}
+      ${selGeral('Período','periodo',['MAT','Mês atual','Últimos 90 dias'],GERAL.periodo)}
+    </div>
+    <div class="gf-fonte">Fonte de dados PEC · Última atualização: ${GERAL.atualizado} ${tip('fonte')}</div>
+  </div>
+
+  <div class="gcards">
+    ${cardGeral('refresh','Transações','transacoes', nf.format(GERAL.transacoes))}
+    ${cardGeral('users','Clientes','clientesGeral', nf.format(GERAL.clientes))}
+    ${cardGeral('checkc','Transações identificadas','identificadas', GERAL.pctId+'%')}
+    ${cardGeral('moeda','Faturamento','faturamentoGeral', brl(GERAL.faturamento))}
+    ${cardGeral('etiqueta','Ticket Médio','ticketGeral', brl(ticketGeral()))}
+    ${cardGeral('money','LTV','ltv', brl(ltvGeral()))}
+  </div>
+
+  <div class="gpanel">
+    <h3 class="gperfil-tit">Informações gerais por perfil de cliente ${tip('perfilCliente')}</h3>
+    <div class="gperfil">
+      ${GERAL.perfis.map(([nome,pct,fat,cls])=>`<div class="gp-lin">
+        <div class="gp-rot">${nome}</div>
+        <div class="gp-trilho"><div class="gp-fill ${cls}" style="width:${(pct/maxPct*100).toFixed(1)}%"></div>
+          <span class="gp-val">${nf1.format(pct)}%</span></div>
+        <div class="gp-trilho"><div class="gp-fill ${cls}" style="width:${(fat/maxFat*100).toFixed(1)}%"></div>
+          <span class="gp-val">${brlCurto(fat)}</span></div>
+      </div>`).join('')}
+    </div>
+    <div class="g-leg">
+      ${GERAL.perfis.map(([n,,,cls])=>`<span><i class="${cls}"></i>${n}</span>`).join('')}
+    </div>
+    <p class="bloco-nota">O percentual é a participação de cada perfil no total de clientes; o valor é
+    o faturamento que cada um gerou. Só cliente identificado na venda tem perfil, então a soma dos
+    valores é o faturamento identificado (${brl(fatIdent())}), não o total.</p>
+  </div>
+
+  <div class="gdupla">
+    ${painelGrafico('faixas','Faixa etária e gênero','faixaGenero', graficoFaixas, tabelaFaixas)}
+    ${painelGrafico('dnas','Participação por DNA','partDna', graficoDnas, tabelaDnas)}
+  </div>`);
 }
 
 /* ---------- Tela: lista de segmentações ---------- */
@@ -2701,6 +3030,7 @@ function render(){
   let pos = null; try{ pos = a && a.selectionStart; }catch(e){}
 
   let html = S.screen==='list' ? telaLista()
+           : S.screen==='geral' ? telaGeral()
            : S.screen==='resultados' ? telaResultados()
            : telaWizard();
   if(S.modal) html += modalSalvar();
@@ -2736,7 +3066,9 @@ root.addEventListener('input', ev=>{
 root.addEventListener('change', ev=>{
   const el = ev.target.closest('[data-act]');
   if(!el) return;
-  if(el.tagName==='SELECT') handle('filtro', el.dataset.v, el);
+  // despacha a ação do próprio elemento: antes era 'filtro' fixo, o que
+  // impedia qualquer outro select de ter comportamento próprio
+  if(el.tagName==='SELECT') handle(el.dataset.act, el.dataset.v, el);
 });
 // clique fora fecha o seletor de períodos e o menu "..." dos cards
 document.addEventListener('mousedown', ev=>{
@@ -2756,7 +3088,23 @@ document.addEventListener('keydown', ev=>{
 
 function handle(act, v, el, isInput){
   switch(act){
-    case 'tabNoop': toast('Só a aba Segmentação está disponível neste protótipo.'); log('aba-indisponivel', v); return;
+    case 'irAba':
+      if(v==='Visão geral' || v==='Segmentação'){
+        S.screen = v==='Visão geral' ? 'geral' : 'list';
+        S.resSeg=null; S.resCamp=null; S.menuSeg=null;   // sair pela aba não deixa estado pendurado
+        log('aba', v); window.scrollTo(0,0); render(); return; }
+      toast('“'+v+'” ainda não existe neste protótipo.'); log('aba-indisponivel', v); return;
+
+    case 'gView': {
+      const [id,modo] = v.split('|');
+      S.gView[id] = modo; log('visao-geral-modo', id+' → '+modo); render(); return; }
+
+    case 'filtroGeral':
+      // protótipo: os filtros mudam o rótulo, não recalculam — o cenário é um só
+      GERAL[v] = el.value;
+      log('filtro-visao-geral', v+' → '+el.value);
+      toast('Neste protótipo os números são de um cenário só e não mudam com o filtro.');
+      return;
 
     case 'nova':
       S = Object.assign(estadoInicial(), {segmentacoes:S.segmentacoes, screen:'wizard', step:0});
