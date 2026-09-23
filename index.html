@@ -186,10 +186,12 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
   font-weight:700;color:var(--ink-2)}
 /* Ponto colorido E palavra: o tipo do sinal nunca depende só da cor. */
 .fp-sug-tag::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.sg-repor::before{background:var(--green)}
-.sg-parou::before{background:#C98A00}
-.sg-junto::before{background:#9AA8BC}
-.fp-sug-dna{font-size:11.5px;font-weight:600;color:#7C5CF0}
+/* Uma cor por modelo. O ponto acompanha a palavra, nunca substitui: o
+   balconista precisa poder dizer em voz alta de onde veio a sugestão. */
+.sg-cliente::before{background:var(--green)}
+.sg-junto::before{background:#7C5CF0}
+.sg-parecido::before{background:#2C8FB0}
+.sg-cesta::before{background:#C98A00}
 .fp-sug-l2{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
 .fp-sug-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}
 .fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
@@ -1594,7 +1596,9 @@ function estadoInicial(){
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
     motorSug:{},            // índice atual de cada linha de sugestão
-    motorTrocou:null,       // linha que acabou de trocar, para a animação
+    motorTrocou:null,       // bloco que acabou de trocar, para a animação
+    motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
+    motorPilhas:null,       // ordem congelada das pilhas nesta consulta
     gView:{faixas:'grafico', dnas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
@@ -2126,81 +2130,88 @@ const linhaProduto = (nome, ic, txt) => `<div class="fp-prod">
   </div>
 </div>`;
 
-/* Sugestões do balcão, derivadas dos DNAs da cliente.
+/* Sugestões do balcão — quatro modelos de recomendação.
 
-   TRÊS LINHAS FIXAS, uma por tipo de sinal, sempre na mesma ordem:
+   Cada bloco é um modelo diferente, com entrada e lógica próprias. Os
+   nomes técnicos ficam no código; na tela o balconista lê o que o
+   modelo faz por ele.
 
-     1. Repor            está na hora de comprar de novo
-     2. Parou de comprar comprava com frequência e sumiu
-     3. Combina          gente do mesmo DNA leva, ela nunca levou
+   | Na tela            | Modelo                      | Entrada → saída |
+   |--------------------|-----------------------------|-----------------|
+   | Para ela           | Cliente único               | CPF  → SKU      |
+   | Leva junto         | Produto único               | SKU  → SKU      |
+   | Parecido com       | Característica de Produto   | SKU  → SKU      |
+   | Completa a compra  | Conjunto de Produtos        | cesta → SKU     |
 
-   A posição é o que o balconista decora. Com fila e trinta segundos,
-   saber que a linha 1 é sempre "está na hora" vale mais do que ter o
-   item de maior score no topo. É também o que dá sentido ao carrossel:
-   cada linha é uma pilha de alternativas do MESMO tipo, então trocar
-   dentro dela preserva o significado da posição. Com ranking por score,
-   avançar não significaria nada.
+   O DNA SAIU DA TELA. Dizer "DNA Diabetes" para o balconista é expor
+   inferência de saúde no atendimento, em voz alta e com fila atrás. O
+   DNA continua governando o filtro por dentro — sensível não gera
+   sugestão — só não aparece. Cada modelo agora explica a si mesmo no
+   lugar onde o DNA estava.
 
-   COMO FUNCIONA COM MAIS DE UM DNA. Mariana compra fralda e leite (Mãe),
-   shampoo (Beleza) e anticoncepcional (Anticoncepcionais). No painel,
-   combinar DNAs ESTREITA a população: "quem tem os dois". No balcão é o
-   contrário — ela tem todos ao mesmo tempo, e a pergunta não é que grupo
-   analisar, é o que oferecer agora. Então os DNAs se somam: cada um
-   alimenta as três pilhas, e o DNA aparece no card para o balconista
-   saber de onde veio a ideia.
+   A ÂNCORA É DECLARADA. Os modelos por SKU precisam de um produto de
+   partida, e ele vem da última compra dela. Em vez de esconder isso, a
+   frase do card diz de onde saiu: "quem leva soro fisiológico também
+   leva". A dependência vira informação em vez de mágica.
 
-   QUATRO REGRAS DE CONTEÚDO
+   TRÊS TRAVAS
 
-   1. DNA SENSÍVEL NÃO GERA SUGESTÃO. Anticoncepcionais e Sistema Nervoso
-      ficam fora — o balconista fala em voz alta, com fila atrás. E a tela
-      NÃO avisa que existe um DNA excluído: dizer "há um DNA sensível
-      aqui" entrega a informação que a regra existe para proteger.
-   2. RECEITA NUNCA ENTRA, em nenhuma das três linhas.
-   3. REPOR SÓ ACEITA CICLO VENCIDO. "Comprou há 28 dias" só quer dizer
-      alguma coisa se o balconista souber o ciclo: 28 dias de fralda é na
-      hora, 28 dias de shampoo é cedo demais. Em vez de escrever o ciclo
-      e gastar a linha, a regra de entrada garante o significado — só
-      entra em Repor o que já passou do intervalo de recompra.
-   4. DNA TRANSITÓRIO AFUNDA NO "PAROU". Mãe expira. Quem sumiu há quatro
-      meses com fórmula infantil pode ter sido perdido — ou o bebê
-      cresceu. Sinal ambíguo não some da pilha, vai para o fim dela.
+   1. RECEITA nunca entra, em nenhum dos quatro modelos.
+   2. DNA SENSÍVEL não gera sugestão, mesmo sem aparecer na tela.
+   3. "PARECIDO COM" SÓ ACEITA NÃO-MEDICAMENTO. Produto semelhante por
+      princípio ativo entre medicamentos é intercambialidade — ato do
+      farmacêutico, com regra própria, não sugestão de balconista. Para
+      fralda e shampoo é inofensivo; para anti-hipertensivo não é.
 
-   LINHA SEM CANDIDATO SIMPLESMENTE NÃO APARECE. Preencher o slot com um
-   item fraco só para manter três cards é o risco real da estrutura fixa,
-   e é justamente o que ela não pode fazer. */
+   NÃO REPETE O QUE JÁ FOI OFERECIDO. A ordem por força do sinal continua
+   de pé: se a fralda está vencida hoje e amanhã, ela vem primeiro nos
+   dois dias. O que muda é que o item já mostrado e não levado desce para
+   o fim da pilha, então a próxima consulta abre com outro argumento em
+   vez de repetir o mesmo. */
 
 const DNA_SENSIVEL = ['Anticoncepcionais','Sistema Nervoso'];
 
-/* Ordem fixa das linhas. A chave é o tipo; o rótulo é o que aparece. */
-const SUG_LINHAS = [
-  {tipo:'repor', rot:'Repor'},
-  {tipo:'parou', rot:'Parou de comprar'},
-  {tipo:'junto', rot:'Combina'}
-];
-const SUG_TIPO = SUG_LINHAS.reduce((a,l)=>(a[l.tipo]=l.rot, a), {});
+/* Âncora dos modelos por SKU: a compra mais recente dela. `curto` é como
+   o balconista chama o produto — nome de catálogo não cabe numa frase. */
+const MOTOR_ANCORA = {sku:'Sorimax Sol Fisiológico 0,9% 500ml', curto:'soro fisiológico'};
 
-/* diasDesde = dias desde a última compra dela.
-   ciclo     = de quantos em quantos dias esse item costuma ser reposto.
-   Repor exige diasDesde >= ciclo. */
+/* Venda em andamento. No produto real vem do sistema de balcão; aqui é
+   exemplo, e o rodapé do bloco diz isso. */
+const MOTOR_CESTA = ['Dipirona 500mg','Fralda G 40un'];
+
+const MOTOR_MODELOS = [
+  {id:'cliente',  rot:'Para ela',          tecnico:'Cliente único',             entrada:'CPF'},
+  {id:'junto',    rot:'Leva junto',        tecnico:'Produto único',             entrada:'SKU'},
+  {id:'parecido', rot:'Parecido com',      tecnico:'Característica de Produto', entrada:'SKU'},
+  {id:'cesta',    rot:'Completa a compra', tecnico:'Conjunto de Produtos',      entrada:'cesta'}
+];
+const MOTOR_ROT = MOTOR_MODELOS.reduce((a,m)=>(a[m.id]=m.rot, a), {});
+
+/* sinal: só no modelo "Para ela", que é o único que olha o histórico dela.
+   dias/ciclo alimentam a frase; os outros modelos têm frase fixa. */
 const MOTOR_CAND = [
-  // --- repor: ciclo vencido ---
-  {nome:'Fralda G 40un',                dna:'Mãe',    tipo:'repor', valor:79.90, dias:28,  ciclo:25},
-  {nome:'Lenço Umedecido 96un',         dna:'Mãe',    tipo:'repor', valor:16.90, dias:41,  ciclo:35},
-  {nome:'Sabonete Líquido 250ml',       dna:'Mãe',    tipo:'repor', valor:19.90, dias:52,  ciclo:45},
-  {nome:'Shampoo Anticaspa',            dna:'Beleza', tipo:'repor', valor:38.00, dias:50,  ciclo:60},
-  // --- parou de comprar ---
-  {nome:'Ninho Leite Pó Integral 380g', dna:'Mãe',    tipo:'parou', valor:38.50, dias:126},
-  {nome:'Pomada para Assadura 45g',     dna:'Mãe',    tipo:'parou', valor:34.90, dias:55},
-  {nome:'Água Micelar 200ml',           dna:'Beleza', tipo:'parou', valor:42.00, dias:98},
-  {nome:'Condicionador 300ml',          dna:'Beleza', tipo:'parou', valor:32.00, dias:71},
-  // --- combina: gente do mesmo DNA leva, ela nunca levou ---
-  {nome:'Simeticona Gotas 15ml',        dna:'Mãe',    tipo:'junto', valor:16.50},
-  {nome:'Soro Fisiológico 500ml',       dna:'Mãe',    tipo:'junto', valor:14.90},
-  {nome:'Protetor Solar FPS 50',        dna:'Beleza', tipo:'junto', valor:72.00},
-  {nome:'Creme Facial Antissinais',     dna:'Beleza', tipo:'junto', valor:89.90},
-  // --- fora: exige receita ---
-  {nome:'Ogestan Gold Caps X 30',       dna:'Anticoncepcionais', tipo:'repor',
-   valor:42.00, dias:33, ciclo:30, receita:true}
+  // Para ela — histórico dela + clientes de perfil parecido
+  {nome:'Fralda G 40un',                modelo:'cliente', dna:'Mãe',    valor:79.90, sinal:'repor', dias:28, ciclo:25},
+  {nome:'Pomada para Assadura 45g',     modelo:'cliente', dna:'Mãe',    valor:34.90, sinal:'parou', dias:55},
+  {nome:'Lenço Umedecido 96un',         modelo:'cliente', dna:'Mãe',    valor:16.90, sinal:'repor', dias:41, ciclo:35},
+  {nome:'Condicionador 300ml',          modelo:'cliente', dna:'Beleza', valor:32.00, sinal:'parou', dias:71},
+  {nome:'Ninho Leite Pó Integral 380g', modelo:'cliente', dna:'Mãe',    valor:38.50, sinal:'parou', dias:126},
+  // Leva junto — regra de associação a partir da âncora
+  {nome:'Buba Lavador Nasal Seringa',   modelo:'junto',   dna:'Mãe',    valor:24.90},
+  {nome:'Aspirador Nasal Infantil',     modelo:'junto',   dna:'Mãe',    valor:39.90},
+  {nome:'Simeticona Gotas 15ml',        modelo:'junto',   dna:'Mãe',    valor:16.50},
+  {nome:'Lenço de Papel 50un',          modelo:'junto',   dna:'Mãe',    valor:12.90},
+  // Parecido com — mesma finalidade da âncora. Só não-medicamento.
+  {nome:'Rinosoro Jet Spray 50ml',      modelo:'parecido', dna:'Mãe',   valor:26.90},
+  {nome:'Maresis Solução Nasal 100ml',  modelo:'parecido', dna:'Mãe',   valor:32.50},
+  {nome:'Neosoro Sol Nasal 30ml',       modelo:'parecido', dna:'Mãe',   valor:19.90},
+  // Completa a compra — cruza a venda atual com o histórico
+  {nome:'Paracetamol 750mg',            modelo:'cesta',   dna:'Mãe',    valor:10.90},
+  {nome:'Termômetro Digital',           modelo:'cesta',   dna:'Mãe',    valor:29.90},
+  {nome:'Talco Antisséptico 100g',      modelo:'cesta',   dna:'Mãe',    valor:18.50},
+  // Fora: exige receita / DNA sensível
+  {nome:'Ogestan Gold Caps X 30',       modelo:'cliente', dna:'Anticoncepcionais', valor:42.00, sinal:'repor', dias:33, ciclo:30, receita:true},
+  {nome:'Losartana 50mg',               modelo:'parecido', dna:'Hipertensão', valor:22.00, medicamento:true}
 ];
 
 const MOTOR_SUG_BLOQUEADOS = MOTOR_CAND.filter(c=>c.receita).length;
@@ -2208,78 +2219,113 @@ const MOTOR_SUG_BLOQUEADOS = MOTOR_CAND.filter(c=>c.receita).length;
 const dnaTransitorio = dna =>
   DNA_TRANSITORIO.includes(dna) || DNA_TRANSITORIO.includes(dna+'s');
 
-/* Pilha de uma linha, já ordenada.
-
-   REPOR ordena por venda recuperável: o quanto o item está atrasado em
-   relação ao próprio ciclo, multiplicado pelo valor. Entre dois itens
-   vencidos, o de R$ 80 pesa mais que o de R$ 20 — é a maior venda em
-   risco. Isso ordena a fila; não muda o que o balconista lê primeiro,
-   que continua sendo o motivo.
-
-   PAROU ordena por tempo de sumiço: quem sumiu há menos tempo é mais
-   fácil de recuperar. A penalidade de DNA transitório entra só nos
-   sumiços longos — pomada de assadura parada há 55 dias ainda é venda
-   perdida, mas fórmula infantil parada há 126 dias provavelmente é bebê
-   que cresceu. Penalizar o DNA inteiro, como eu tinha feito antes,
-   derrubava junto o caso que ainda era recuperável.
-
-   COMBINA mantém a ordem do catálogo: nenhum sinal individual distingue
-   um do outro, e inventar um ranking aqui seria falsa precisão. */
-function pilhaSugestao(tipo){
+/* Pilha de um modelo: filtrada pelas três travas e ordenada por força do
+   sinal. Função pura — não olha o que já foi mostrado. */
+function pilhaModelo(id){
   const atrasoLongo = c => dnaTransitorio(c.dna) && c.dias > 90 ? 2 : 1;
-  return MOTOR_CAND
-    .filter(c => c.tipo===tipo && !c.receita && !DNA_SENSIVEL.includes(c.dna))
-    .filter(c => tipo!=='repor' || c.dias >= c.ciclo)
-    .sort((a,b)=>{
-      if(tipo==='repor') return (b.dias/b.ciclo)*b.valor - (a.dias/a.ciclo)*a.valor;
-      if(tipo==='parou') return a.dias*atrasoLongo(a) - b.dias*atrasoLongo(b);
-      return 0;
-    });
+  const base = MOTOR_CAND.filter(c =>
+    c.modelo === id &&
+    !c.receita &&
+    !DNA_SENSIVEL.includes(c.dna) &&
+    !(id === 'parecido' && c.medicamento) &&
+    !(c.sinal === 'repor' && c.dias < c.ciclo) &&
+    // fora do "Para ela", oferecer o que ela acabou de levar é ruído:
+    // ela comprou o lavador nasal junto com o soro, no mesmo dia
+    !(id !== 'cliente' && MOTOR_CLIENTE.historico.some(([n]) => n === c.nome))
+  ).sort((a,b)=>{
+    if(id !== 'cliente') return 0;               // catálogo: nenhum sinal distingue
+    const peso = c => c.sinal === 'repor'
+      ? -1000 + (c.ciclo/c.dias)*c.valor*-1       // vencido e valioso primeiro
+      : c.dias * atrasoLongo(c);                  // sumiço curto antes do longo
+    return peso(a) - peso(b);
+  });
+  return base;
 }
 
-const PILHAS = () => SUG_LINHAS
-  .map(l => ({...l, itens: pilhaSugestao(l.tipo)}))
-  .filter(l => l.itens.length);        // linha sem candidato não aparece
+/* Ordem congelada por consulta.
 
-const sugestoesMotor = () => PILHAS().map(l => l.itens[(S.motorSug[l.tipo]||0) % l.itens.length]);
-const dnasDoMotor    = () => [...new Set(sugestoesMotor().map(c=>c.dna))];
+   O "não repetir o que já foi oferecido" reordena a pilha. Se essa
+   reordenação acontecesse a cada leitura, ela mudaria embaixo do
+   usuário: marcar um item como visto empurraria os outros, e o próximo
+   clique no carrossel cairia num produto imprevisível. Então a ordem é
+   calculada UMA VEZ, quando a ficha abre, e vale até a próxima consulta.
 
-function motivoSugestao(s){
-  if(s.tipo==='repor') return `comprou há ${s.dias} dias`;
-  if(s.tipo==='parou') return `última compra há ${s.dias} dias`;
-  return 'comum neste DNA';
+   Dentro da consulta o carrossel anda numa lista estável; entre
+   consultas, o que já foi oferecido e não levado abre no fim. */
+function congelarPilhas(){
+  S.motorPilhas = {};
+  MOTOR_MODELOS.forEach(m => {
+    const base = pilhaModelo(m.id);
+    const novos  = base.filter(c => !S.motorVistos.includes(c.nome));
+    const vistos = base.filter(c =>  S.motorVistos.includes(c.nome));
+    S.motorPilhas[m.id] = novos.concat(vistos).map(c => c.nome);
+  });
 }
 
-function linhaSugestao(l){
-  const itens = l.itens, i = (S.motorSug[l.tipo]||0) % itens.length, s = itens[i];
-  const trocou = S.motorTrocou === l.tipo;
+const BLOCOS = () => MOTOR_MODELOS
+  .map(m => {
+    const ordem = S.motorPilhas && S.motorPilhas[m.id];
+    const itens = pilhaModelo(m.id);
+    return {...m, itens: ordem
+      ? ordem.map(n => itens.find(c => c.nome === n)).filter(Boolean)
+      : itens};
+  })
+  .filter(m => m.itens.length);          // modelo sem candidato não aparece
+
+const itemDoBloco = b => b.itens[(S.motorSug[b.id]||0) % b.itens.length];
+const sugestoesMotor = () => BLOCOS().map(itemDoBloco);
+
+/* Registra o que já foi para a tela. Chamado quando a ficha abre e a
+   cada troca — nunca dentro do render, que roda muitas vezes. */
+function marcarVistos(){
+  sugestoesMotor().forEach(c => {
+    if(!S.motorVistos.includes(c.nome)) S.motorVistos.push(c.nome);
+  });
+}
+
+function motivoSugestao(c){
+  if(c.modelo === 'cliente')
+    return c.sinal === 'repor' ? `comprou há ${c.dias} dias, costuma repor`
+                               : `última compra há ${c.dias} dias`;
+  if(c.modelo === 'junto')    return `quem leva ${MOTOR_ANCORA.curto} também leva`;
+  if(c.modelo === 'parecido') return `mesma finalidade do ${MOTOR_ANCORA.curto}`;
+  return `combina com o que já está na venda`;
+}
+
+function cardModelo(b){
+  const itens = b.itens, i = (S.motorSug[b.id]||0) % itens.length, c = itens[i];
+  const trocou = S.motorTrocou === b.id;
   const troca = itens.length > 1 ? `<button class="fp-troca${trocou?' trocou':''}" data-act="motorTroca"
-      data-k="troca-${l.tipo}" data-v="${l.tipo}"
-      aria-label="Trocar sugestão de ${esc(l.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
-      title="Ver outra sugestão de ${esc(l.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
+      data-k="troca-${b.id}" data-v="${b.id}"
+      aria-label="Ver outra sugestão de ${esc(b.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
+      title="Ver outra sugestão de ${esc(b.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
   return `<div class="fp-prod fp-sug${trocou?' trocou':''}">
     <div class="fp-sug-l1">
-      <span class="fp-sug-tag sg-${l.tipo}">${esc(l.rot)}</span>
-      <span class="fp-sug-dna">${esc(s.dna)}</span>
+      <span class="fp-sug-tag sg-${b.id}">${esc(b.rot)}</span>
       ${troca}
     </div>
     <div class="fp-sug-troca">
       <div class="fp-sug-l2">
-        <span class="fp-sug-nome">${esc(s.nome)}</span>
-        <span class="fp-sug-valor">+ ${brl(s.valor)}</span>
+        <span class="fp-sug-nome">${esc(c.nome)}</span>
+        <span class="fp-sug-valor">+ ${brl(c.valor)}</span>
       </div>
-      <p class="fp-sug-motivo">${motivoSugestao(s)}</p>
-      <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(s.nome)}"
-        title="Copiar código">EAN: ${eanFake(s.nome)} ${I.copy}</button>
+      <p class="fp-sug-motivo">${esc(motivoSugestao(c))}</p>
+      <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(c.nome)}"
+        title="Copiar código">EAN: ${eanFake(c.nome)} ${I.copy}</button>
     </div>
   </div>`;
 }
 
 function blocoSugestoesMotor(){
-  return `<h3 class="fp-sec">${I.spark} Sugestões <i>DNA ${dnasDoMotor().map(esc).join(' · ')}</i></h3>
-  ${PILHAS().map(linhaSugestao).join('')}
+  const blocos = BLOCOS();
+  const temCesta = blocos.some(b => b.id === 'cesta');
+  return `<h3 class="fp-sec">${I.spark} Sugestões <i>${blocos.length} formas de sugerir</i></h3>
+  ${blocos.map(cardModelo).join('')}
   <p class="fp-sug-nota">${I.info} ${MOTOR_SUG_BLOQUEADOS} produto do padrão dela
-    não entra por exigir receita.</p>`;
+    não entra por exigir receita.</p>
+  ${temCesta ? `<p class="fp-sug-nota">${I.info} “Completa a compra” usa a venda em
+    andamento no sistema de balcão. Neste protótipo ela é um exemplo:
+    ${MOTOR_CESTA.map(esc).join(' e ')}.</p>` : ''}`;
 }
 
 function motorPerfil(){
@@ -4589,21 +4635,22 @@ function handle(act, v, el, isInput){
         toast('Digite os 11 dígitos do CPF.'); return; }
       S.motorFase = 'carregando'; log('motor-busca', mascaraCpf(S.motorCpf)); render();
       clearTimeout(S.motorTimer);
-      S.motorTimer = setTimeout(()=>{ S.motorFase = 'perfil'; log('motor-perfil'); render(); }, 1400);
+      S.motorTimer = setTimeout(()=>{ S.motorFase = 'perfil'; congelarPilhas(); marcarVistos(); log('motor-perfil'); render(); }, 1400);
       return;
 
     case 'motorNova':
       clearTimeout(S.motorTimer);
-      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; log('motor-nova-consulta'); render(); return;
+      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; log('motor-nova-consulta');   // motorVistos sobrevive: é o que faz a próxima consulta abrir com outro argumento render(); return;
 
     case 'motorTroca': {
       // dá a volta no fim: com 4 itens, voltar uma custa 3 cliques, e
       // um alvo de toque só numa linha de 420px vale mais que dois
-      const linha = PILHAS().find(l=>l.tipo===v);
-      if(!linha) return;
-      S.motorSug[v] = ((S.motorSug[v]||0) + 1) % linha.itens.length;
+      const bloco = BLOCOS().find(b=>b.id===v);
+      if(!bloco) return;
+      S.motorSug[v] = ((S.motorSug[v]||0) + 1) % bloco.itens.length;
       S.motorTrocou = v;
-      log('motor-troca-sugestao', v+' → '+linha.itens[S.motorSug[v]].nome);
+      marcarVistos();                 // o que aparece agora também não se repete
+      log('motor-troca-sugestao', v+' → '+bloco.itens[S.motorSug[v]].nome);
       render(); return; }
 
     case 'motorCopiar':
