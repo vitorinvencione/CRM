@@ -2136,12 +2136,18 @@ const linhaProduto = (nome, ic, txt) => `<div class="fp-prod">
    nomes técnicos ficam no código; na tela o balconista lê o que o
    modelo faz por ele.
 
-   | Na tela            | Modelo                      | Entrada → saída |
-   |--------------------|-----------------------------|-----------------|
-   | Para ela           | Cliente único               | CPF  → SKU      |
-   | Leva junto         | Produto único               | SKU  → SKU      |
-   | Parecido com       | Característica de Produto   | SKU  → SKU      |
-   | Completa a compra  | Conjunto de Produtos        | cesta → SKU     |
+   | Na tela            | Modelo                      | Âncora  |
+   |--------------------|-----------------------------|---------|
+   | Costuma comprar    | Cliente único               | ela     |
+   | Pode levar junto   | Produto único               | um SKU  |
+   | Se não tiver       | Característica de Produto   | um SKU  |
+   | Oportunidade cesta | Conjunto de Produtos        | a cesta |
+
+   TRÊS ÂNCORAS, QUATRO BLOCOS. "Pode levar junto" e "Se não tiver" saem
+   da MESMA chamada da API (/recomendacoes/produto/{sku} devolve
+   `relacionados` e `similares` juntos) e por isso compartilham o produto
+   de partida. Um diz o que acompanha aquele produto; o outro, o que
+   entra no lugar dele.
 
    O DNA SAIU DA TELA. Dizer "DNA Diabetes" para o balconista é expor
    inferência de saúde no atendimento, em voz alta e com fila atrás. O
@@ -2180,32 +2186,32 @@ const MOTOR_ANCORA = {sku:'Sorimax Sol Fisiológico 0,9% 500ml', curto:'soro fis
 const MOTOR_CESTA = ['Dipirona 500mg','Fralda G 40un'];
 
 const MOTOR_MODELOS = [
-  {id:'cliente',  rot:'Para ela',          tecnico:'Cliente único',             entrada:'CPF'},
-  {id:'junto',    rot:'Leva junto',        tecnico:'Produto único',             entrada:'SKU'},
-  {id:'parecido', rot:'Parecido com',      tecnico:'Característica de Produto', entrada:'SKU'},
-  {id:'cesta',    rot:'Completa a compra', tecnico:'Conjunto de Produtos',      entrada:'cesta'}
+  {id:'cliente',  rot:'Costuma comprar',    tecnico:'Cliente único',             entrada:'CPF'},
+  {id:'junto',    rot:'Pode levar junto',   tecnico:'Produto único',             entrada:'SKU'},
+  {id:'parecido', rot:'Se não tiver',       tecnico:'Característica de Produto', entrada:'SKU'},
+  {id:'cesta',    rot:'Oportunidade cesta', tecnico:'Conjunto de Produtos',      entrada:'cesta'}
 ];
 const MOTOR_ROT = MOTOR_MODELOS.reduce((a,m)=>(a[m.id]=m.rot, a), {});
 
-/* sinal: só no modelo "Para ela", que é o único que olha o histórico dela.
+/* sinal: só no modelo "Costuma comprar", único que olha o histórico dela.
    dias/ciclo alimentam a frase; os outros modelos têm frase fixa. */
 const MOTOR_CAND = [
-  // Para ela — histórico dela + clientes de perfil parecido
+  // Costuma comprar — histórico dela + clientes de perfil parecido
   {nome:'Fralda G 40un',                modelo:'cliente', dna:'Mãe',    valor:79.90, sinal:'repor', dias:28, ciclo:25},
   {nome:'Pomada para Assadura 45g',     modelo:'cliente', dna:'Mãe',    valor:34.90, sinal:'parou', dias:55},
   {nome:'Lenço Umedecido 96un',         modelo:'cliente', dna:'Mãe',    valor:16.90, sinal:'repor', dias:41, ciclo:35},
   {nome:'Condicionador 300ml',          modelo:'cliente', dna:'Beleza', valor:32.00, sinal:'parou', dias:71},
   {nome:'Ninho Leite Pó Integral 380g', modelo:'cliente', dna:'Mãe',    valor:38.50, sinal:'parou', dias:126},
-  // Leva junto — regra de associação a partir da âncora
+  // Pode levar junto — regra de associação a partir da âncora
   {nome:'Buba Lavador Nasal Seringa',   modelo:'junto',   dna:'Mãe',    valor:24.90},
   {nome:'Aspirador Nasal Infantil',     modelo:'junto',   dna:'Mãe',    valor:39.90},
   {nome:'Simeticona Gotas 15ml',        modelo:'junto',   dna:'Mãe',    valor:16.50},
   {nome:'Lenço de Papel 50un',          modelo:'junto',   dna:'Mãe',    valor:12.90},
-  // Parecido com — mesma finalidade da âncora. Só não-medicamento.
+  // Se não tiver — substitutos da âncora. Só não-medicamento.
   {nome:'Rinosoro Jet Spray 50ml',      modelo:'parecido', dna:'Mãe',   valor:26.90},
   {nome:'Maresis Solução Nasal 100ml',  modelo:'parecido', dna:'Mãe',   valor:32.50},
   {nome:'Neosoro Sol Nasal 30ml',       modelo:'parecido', dna:'Mãe',   valor:19.90},
-  // Completa a compra — cruza a venda atual com o histórico
+  // Oportunidade cesta — cruza a venda atual com o histórico
   {nome:'Paracetamol 750mg',            modelo:'cesta',   dna:'Mãe',    valor:10.90},
   {nome:'Termômetro Digital',           modelo:'cesta',   dna:'Mãe',    valor:29.90},
   {nome:'Talco Antisséptico 100g',      modelo:'cesta',   dna:'Mãe',    valor:18.50},
@@ -2229,7 +2235,7 @@ function pilhaModelo(id){
     !DNA_SENSIVEL.includes(c.dna) &&
     !(id === 'parecido' && c.medicamento) &&
     !(c.sinal === 'repor' && c.dias < c.ciclo) &&
-    // fora do "Para ela", oferecer o que ela acabou de levar é ruído:
+    // fora de "Costuma comprar", oferecer o que ela acabou de levar é ruído:
     // ela comprou o lavador nasal junto com o soro, no mesmo dia
     !(id !== 'cliente' && MOTOR_CLIENTE.historico.some(([n]) => n === c.nome))
   ).sort((a,b)=>{
@@ -2288,7 +2294,7 @@ function motivoSugestao(c){
     return c.sinal === 'repor' ? `comprou há ${c.dias} dias, costuma repor`
                                : `última compra há ${c.dias} dias`;
   if(c.modelo === 'junto')    return `quem leva ${MOTOR_ANCORA.curto} também leva`;
-  if(c.modelo === 'parecido') return `mesma finalidade do ${MOTOR_ANCORA.curto}`;
+  if(c.modelo === 'parecido') return `substitui o ${MOTOR_ANCORA.curto}`;
   return `combina com o que já está na venda`;
 }
 
@@ -2323,7 +2329,7 @@ function blocoSugestoesMotor(){
   ${blocos.map(cardModelo).join('')}
   <p class="fp-sug-nota">${I.info} ${MOTOR_SUG_BLOQUEADOS} produto do padrão dela
     não entra por exigir receita.</p>
-  ${temCesta ? `<p class="fp-sug-nota">${I.info} “Completa a compra” usa a venda em
+  ${temCesta ? `<p class="fp-sug-nota">${I.info} “${esc(MOTOR_ROT.cesta)}” usa a venda em
     andamento no sistema de balcão. Neste protótipo ela é um exemplo:
     ${MOTOR_CESTA.map(esc).join(' e ')}.</p>` : ''}`;
 }
