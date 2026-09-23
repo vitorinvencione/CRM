@@ -209,9 +209,32 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-troca::after{content:'';position:absolute;inset:-8px -6px}
 .fp-troca svg{width:13px;height:13px;flex-shrink:0}
 .fp-troca:hover{border-color:#BFD9F5;background:var(--primary-soft);color:var(--primary)}
-.fp-troca:active svg{transform:rotate(90deg)}
-.fp-troca svg{transition:transform .18s ease}
-@media(prefers-reduced-motion:reduce){.fp-troca svg{transition:none}}
+/* A TROCA.
+
+   Só o que mudou se move. A tag e o DNA ficam parados de propósito: eles
+   não trocaram, e animá-los diria que trocaram. Quem se move é o bloco
+   do produto — nome, valor, motivo e código.
+
+   180ms com a curva padrão do Material, sem overshoot: é ferramenta de
+   balcão com fila, não vitrine. Rápido o bastante para não atrasar o
+   atendimento, longo o bastante para o olho registrar que a linha é a
+   mesma e o produto é outro.
+
+   Duas camadas, não três. Primária: o produto entra de baixo, 5px, com
+   opacidade — nunca só opacidade, senão a troca não se lê como
+   substituição. Secundária: o ícone do botão gira meia volta, para a
+   confirmação nascer no lugar onde o dedo tocou. Camada ambiente seria
+   excesso num movimento de 180ms. */
+@keyframes fpTroca{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes fpGira{from{transform:rotate(-180deg)}to{transform:none}}
+.fp-sug.trocou .fp-sug-troca{animation:fpTroca .18s cubic-bezier(.2,0,0,1) both}
+.fp-troca.trocou svg{animation:fpGira .26s cubic-bezier(.2,0,0,1) both}
+/* Sem movimento: a troca ainda precisa ser percebida, então sobra o
+   fade, que é o mínimo para não parecer que nada aconteceu. */
+@media(prefers-reduced-motion:reduce){
+  .fp-sug.trocou .fp-sug-troca{animation:none;opacity:1}
+  .fp-troca.trocou svg{animation:none}
+}
 .fp-troca:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .fp-troca span{font-variant-numeric:tabular-nums}
 
@@ -1571,6 +1594,7 @@ function estadoInicial(){
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
     motorSug:{},            // índice atual de cada linha de sugestão
+    motorTrocou:null,       // linha que acabou de trocar, para a animação
     gView:{faixas:'grafico', dnas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
@@ -2228,22 +2252,26 @@ function motivoSugestao(s){
 
 function linhaSugestao(l){
   const itens = l.itens, i = (S.motorSug[l.tipo]||0) % itens.length, s = itens[i];
-  const troca = itens.length > 1 ? `<button class="fp-troca" data-act="motorTroca"
-      data-v="${l.tipo}" aria-label="Trocar sugestão de ${esc(l.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
+  const trocou = S.motorTrocou === l.tipo;
+  const troca = itens.length > 1 ? `<button class="fp-troca${trocou?' trocou':''}" data-act="motorTroca"
+      data-k="troca-${l.tipo}" data-v="${l.tipo}"
+      aria-label="Trocar sugestão de ${esc(l.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
       title="Ver outra sugestão de ${esc(l.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
-  return `<div class="fp-prod fp-sug">
+  return `<div class="fp-prod fp-sug${trocou?' trocou':''}">
     <div class="fp-sug-l1">
       <span class="fp-sug-tag sg-${l.tipo}">${esc(l.rot)}</span>
       <span class="fp-sug-dna">${esc(s.dna)}</span>
       ${troca}
     </div>
-    <div class="fp-sug-l2">
-      <span class="fp-sug-nome">${esc(s.nome)}</span>
-      <span class="fp-sug-valor">+ ${brl(s.valor)}</span>
+    <div class="fp-sug-troca">
+      <div class="fp-sug-l2">
+        <span class="fp-sug-nome">${esc(s.nome)}</span>
+        <span class="fp-sug-valor">+ ${brl(s.valor)}</span>
+      </div>
+      <p class="fp-sug-motivo">${motivoSugestao(s)}</p>
+      <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(s.nome)}"
+        title="Copiar código">EAN: ${eanFake(s.nome)} ${I.copy}</button>
     </div>
-    <p class="fp-sug-motivo">${motivoSugestao(s)}</p>
-    <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(s.nome)}"
-      title="Copiar código">EAN: ${eanFake(s.nome)} ${I.copy}</button>
   </div>`;
 }
 
@@ -2294,7 +2322,7 @@ function telaBranco(){
     </div>
     <aside class="filipeta">
       ${cabecalhoMotor()}
-      <div class="fp-corpo${S.motorFase==='cpf'?' centro':''}">${corpo}</div>
+      <div class="fp-corpo${S.motorFase==='cpf'?' centro':''}" data-scroll="filipeta">${corpo}</div>
     </aside>
   </div>`;
 }
@@ -2655,7 +2683,7 @@ function blocoRfv(){
       <h3>Perfil da base: volume, valor e comportamento ${tip('perfilBase')}</h3>
       <p>Compara o período anterior com o atual. Clique em um grupo de indicadores para ver a análise.</p>
     </div>
-    <div class="rv-wrap">
+    <div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
         <thead>
           <tr>${linhasCab}</tr>
@@ -4455,6 +4483,16 @@ function render(){
   const key = a && a.dataset ? a.dataset.k : null;
   let pos = null; try{ pos = a && a.selectionStart; }catch(e){}
 
+  /* O protótipo redesenha o root inteiro a cada ação. Isso zera a rolagem
+     de qualquer caixa que role por dentro — a filipeta do balcão e a
+     tabela de perfis da Visão geral. Quem está no meio da filipeta e
+     troca uma sugestão era jogado de volta para o topo, e perdia o lugar.
+     Guardar e devolver a posição resolve para todas de uma vez, sem cada
+     tela ter que lembrar da sua. */
+  const rolagem = {};
+  root.querySelectorAll('[data-scroll]').forEach(n =>
+    rolagem[n.dataset.scroll] = [n.scrollTop, n.scrollLeft]);
+
   let html = S.screen==='list' ? telaLista()
            : S.screen==='branco' ? telaBranco()
            : S.screen==='geral' ? telaGeral()
@@ -4465,6 +4503,12 @@ function render(){
   if(S.modalCamp) html += modalNovaCampanha();
   if(S.toast) html += `<div class="toast">${esc(S.toast)}</div>`;
   root.innerHTML = html;
+
+  root.querySelectorAll('[data-scroll]').forEach(n => {
+    const r = rolagem[n.dataset.scroll];
+    if(r){ n.scrollTop = r[0]; n.scrollLeft = r[1]; }
+  });
+  S.motorTrocou = null;   // a animação de troca roda uma vez, não a cada render
 
   if(key){ const n = root.querySelector('[data-k="'+key+'"]'); if(n){ n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} } }
 }
@@ -4558,6 +4602,7 @@ function handle(act, v, el, isInput){
       const linha = PILHAS().find(l=>l.tipo===v);
       if(!linha) return;
       S.motorSug[v] = ((S.motorSug[v]||0) + 1) % linha.itens.length;
+      S.motorTrocou = v;
       log('motor-troca-sugestao', v+' → '+linha.itens[S.motorSug[v]].nome);
       render(); return; }
 
