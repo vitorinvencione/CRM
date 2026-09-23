@@ -148,10 +148,13 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-dado svg{color:var(--ink-4);flex-shrink:0}
 .fp-copia{display:inline-flex;color:var(--ink-4);padding:2px;border-radius:5px;transition:.12s}
 .fp-copia:hover{color:var(--primary);background:var(--primary-soft)}
-.fp-pref{margin-top:13px;font-size:13px;color:var(--ink-3);display:flex;align-items:center;
-  gap:8px;flex-wrap:wrap}
-.fp-pill{background:#EDF1F7;color:var(--ink-2);border-radius:999px;padding:5px 12px;
-  font-size:12.5px;font-weight:600}
+/* Rótulo em cima, pills embaixo: com "Preferências:" na mesma linha as
+   três não cabiam em 420px e a terceira caía sozinha. */
+.fp-pref{margin-top:13px}
+.fp-pref-rot{display:block;margin-bottom:7px;font-size:12px;color:var(--ink-3)}
+.fp-pills{display:flex;gap:6px;flex-wrap:wrap}
+.fp-pill{background:#EDF1F7;color:var(--ink-2);border-radius:999px;padding:5px 11px;
+  font-size:12.5px;font-weight:600;white-space:nowrap}
 
 .fp-sec{display:flex;align-items:center;gap:9px;margin:0 0 12px;font-size:15px;font-weight:700;
   color:var(--ink)}
@@ -169,44 +172,55 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 
 /* Sugestões dentro da filipeta.
 
-   Sem faixa colorida na lateral: com três cards seguidos ela virava uma
-   listra contínua e competia com o conteúdo. O que separa sugestão de
-   histórico agora é a posição (vem primeiro), o cabeçalho e o fundo
-   levemente mais claro — suficiente, e mais silencioso.
+   Três linhas fixas — Repor, Parou de comprar, Combina — e o card é
+   sempre da mesma altura, com ou sem carrossel. Altura estável importa
+   aqui: se o bloco crescer conforme o conteúdo, o histórico de compras
+   desce e sobe a cada troca, e o balconista perde o lugar.
 
-   Três linhas apertadas em vez de quatro soltas, e cada motivo cabe numa
-   linha só. O balconista lê de relance, com fila. O valor fica do
-   tamanho do EAN, em cinza: serve para escolher entre duas sugestões,
-   não para se animar com uma. */
+   A ordem dentro do card segue a leitura dele: que tipo de sinal é
+   (tag), de onde veio (DNA), qual produto, quanto custa, por quê, e o
+   código para digitar no ERP. */
 .fp-sug{background:#FBFCFE;padding:10px 12px;margin-bottom:7px}
-.fp-sug-l1{display:flex;align-items:baseline;gap:10px;margin-bottom:5px}
-.fp-sug-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);
-  line-height:1.3}
-.fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);
-  font-variant-numeric:tabular-nums}
-.fp-sug-l2{display:flex;align-items:center;gap:7px;margin-bottom:8px;font-size:11.5px;
-  color:var(--ink-3);line-height:1.35}
+.fp-sug-l1{display:flex;align-items:center;gap:8px;margin-bottom:6px;min-height:22px}
+.fp-sug-tag{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:11.5px;
+  font-weight:700;color:var(--ink-2)}
 /* Ponto colorido E palavra: o tipo do sinal nunca depende só da cor. */
-.fp-sug-tag{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-weight:700;
-  color:var(--ink-2)}
 .fp-sug-tag::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .sg-repor::before{background:var(--green)}
 .sg-parou::before{background:#C98A00}
 .sg-junto::before{background:#9AA8BC}
-.fp-sug-motivo{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fp-sug-dna{flex-shrink:0;font-weight:600;color:#7C5CF0}
+.fp-sug-dna{font-size:11.5px;font-weight:600;color:#7C5CF0}
+.fp-sug-l2{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
+.fp-sug-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}
+.fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fp-sug-motivo{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);line-height:1.35}
 .fp-sug .fp-ean{width:100%;justify-content:space-between}
 .fp-sug:last-of-type{margin-bottom:10px}
+
+/* Trocar sugestão. Fica no canto do card, longe do botão de copiar EAN,
+   que é a ação que o balconista mais usa — errar o alvo e trocar o
+   produto quando queria o código seria o pior engano possível aqui.
+   O contador responde a única pergunta que importa: quantas faltam. */
+.fp-troca{display:inline-flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0;
+  height:24px;padding:0 8px;border-radius:999px;border:1px solid var(--border);
+  background:#fff;font-size:11px;font-weight:600;color:var(--ink-3);cursor:pointer;
+  transition:.12s;position:relative}
+/* alvo de toque de 40px sem inflar a linha: a área invisível passa da caixa */
+.fp-troca::after{content:'';position:absolute;inset:-8px -6px}
+.fp-troca svg{width:13px;height:13px;flex-shrink:0}
+.fp-troca:hover{border-color:#BFD9F5;background:var(--primary-soft);color:var(--primary)}
+.fp-troca:active svg{transform:rotate(90deg)}
+.fp-troca svg{transition:transform .18s ease}
+@media(prefers-reduced-motion:reduce){.fp-troca svg{transition:none}}
+.fp-troca:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.fp-troca span{font-variant-numeric:tabular-nums}
+
 .fp-sug-nota{display:flex;gap:6px;align-items:flex-start;margin:0 0 20px;font-size:11px;
   line-height:1.45;color:var(--ink-4)}
 .fp-sug-nota svg{flex-shrink:0;margin-top:2px}
-/* Abaixo de 380px o motivo perde a briga por espaço e cai para a linha
-   de baixo em vez de virar reticências. */
 @media(max-width:380px){
   .fp-sec{flex-wrap:wrap}
   .fp-sec i{flex-basis:100%;margin-left:24px}
-  .fp-sug-l2{flex-wrap:wrap}
-  .fp-sug-motivo{flex-basis:100%;white-space:normal}
 }
 
 .tabs{display:flex;gap:26px;border-bottom:1px solid var(--border);margin-bottom:22px}
@@ -1556,6 +1570,7 @@ function estadoInicial(){
     voltaDoBranco:'geral',    // para onde o botão de voltar devolve
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
+    motorSug:{},            // índice atual de cada linha de sugestão
     gView:{faixas:'grafico', dnas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
@@ -2089,117 +2104,152 @@ const linhaProduto = (nome, ic, txt) => `<div class="fp-prod">
 
 /* Sugestões do balcão, derivadas dos DNAs da cliente.
 
-   COMO FUNCIONA COM MAIS DE UM DNA — que é o caso normal, não a exceção.
-   Mariana compra fralda, leite e pomada (Mãe), shampoo (Beleza) e
-   anticoncepcional (Anticoncepcionais). Três DNAs ao mesmo tempo.
+   TRÊS LINHAS FIXAS, uma por tipo de sinal, sempre na mesma ordem:
 
-   No painel, combinar DNAs ESTREITA a população: "quem tem os dois". No
-   balcão é o contrário — a pessoa tem todos os DNAs dela ao mesmo tempo,
-   e a pergunta não é que grupo analisar, é o que oferecer agora. Então
-   aqui os DNAs se somam: cada um gera candidatos, todos entram numa fila
-   só e os três primeiros aparecem. Quatro regras ordenam essa fila.
+     1. Repor            está na hora de comprar de novo
+     2. Parou de comprar comprava com frequência e sumiu
+     3. Combina          gente do mesmo DNA leva, ela nunca levou
 
-   1. DNA SENSÍVEL NÃO GERA SUGESTÃO NO BALCÃO. Anticoncepcionais e
-      Sistema Nervoso ficam de fora — o balconista fala em voz alta, com
-      fila atrás. E a tela NÃO avisa que existe um DNA excluído: dizer
-      "há um DNA sensível aqui" entrega a informação que a regra existe
-      para proteger.
-   2. FORÇA DO SINAL ORDENA. Quem já compra aqui e está na hora de repor
-      vem antes de quem parou, que vem antes de quem nunca levou.
-   3. DNA TRANSITÓRIO DERRUBA O "PAROU". Mãe expira. Quem parou de levar
-      fórmula infantil há quatro meses pode ter perdido a venda — ou o
-      bebê simplesmente cresceu. Sinal ambíguo vale menos, e por isso o
-      leite dela fica de fora da lista apesar de três compras.
-   4. NO MÁXIMO DOIS POR DNA. Não é equilíbrio decorativo: três sugestões
-      do mesmo DNA não são três chances, são quase a mesma chance repetida
-      — se ela recusar o assunto bebê, as três caem juntas. Um item de
-      outro DNA dá ao balconista um segundo ângulo de conversa. */
+   A posição é o que o balconista decora. Com fila e trinta segundos,
+   saber que a linha 1 é sempre "está na hora" vale mais do que ter o
+   item de maior score no topo. É também o que dá sentido ao carrossel:
+   cada linha é uma pilha de alternativas do MESMO tipo, então trocar
+   dentro dela preserva o significado da posição. Com ranking por score,
+   avançar não significaria nada.
+
+   COMO FUNCIONA COM MAIS DE UM DNA. Mariana compra fralda e leite (Mãe),
+   shampoo (Beleza) e anticoncepcional (Anticoncepcionais). No painel,
+   combinar DNAs ESTREITA a população: "quem tem os dois". No balcão é o
+   contrário — ela tem todos ao mesmo tempo, e a pergunta não é que grupo
+   analisar, é o que oferecer agora. Então os DNAs se somam: cada um
+   alimenta as três pilhas, e o DNA aparece no card para o balconista
+   saber de onde veio a ideia.
+
+   QUATRO REGRAS DE CONTEÚDO
+
+   1. DNA SENSÍVEL NÃO GERA SUGESTÃO. Anticoncepcionais e Sistema Nervoso
+      ficam fora — o balconista fala em voz alta, com fila atrás. E a tela
+      NÃO avisa que existe um DNA excluído: dizer "há um DNA sensível
+      aqui" entrega a informação que a regra existe para proteger.
+   2. RECEITA NUNCA ENTRA, em nenhuma das três linhas.
+   3. REPOR SÓ ACEITA CICLO VENCIDO. "Comprou há 28 dias" só quer dizer
+      alguma coisa se o balconista souber o ciclo: 28 dias de fralda é na
+      hora, 28 dias de shampoo é cedo demais. Em vez de escrever o ciclo
+      e gastar a linha, a regra de entrada garante o significado — só
+      entra em Repor o que já passou do intervalo de recompra.
+   4. DNA TRANSITÓRIO AFUNDA NO "PAROU". Mãe expira. Quem sumiu há quatro
+      meses com fórmula infantil pode ter sido perdido — ou o bebê
+      cresceu. Sinal ambíguo não some da pilha, vai para o fim dela.
+
+   LINHA SEM CANDIDATO SIMPLESMENTE NÃO APARECE. Preencher o slot com um
+   item fraco só para manter três cards é o risco real da estrutura fixa,
+   e é justamente o que ela não pode fazer. */
 
 const DNA_SENSIVEL = ['Anticoncepcionais','Sistema Nervoso'];
-const MOTOR_MAX_SUG = 3;
-const MOTOR_MAX_POR_DNA = 2;
 
-const PESO_TIPO = {repor:100, parou:70, junto:60};
+/* Ordem fixa das linhas. A chave é o tipo; o rótulo é o que aparece. */
+const SUG_LINHAS = [
+  {tipo:'repor', rot:'Repor'},
+  {tipo:'parou', rot:'Parou de comprar'},
+  {tipo:'junto', rot:'Combina'}
+];
+const SUG_TIPO = SUG_LINHAS.reduce((a,l)=>(a[l.tipo]=l.rot, a), {});
 
+/* diasDesde = dias desde a última compra dela.
+   ciclo     = de quantos em quantos dias esse item costuma ser reposto.
+   Repor exige diasDesde >= ciclo. */
 const MOTOR_CAND = [
-  {nome:'Fralda G 40un', dna:'Mãe', tipo:'repor', valor:79.90,
-   deHistorico:'Fralda G 40un', ciclo:30},
-  {nome:'Simeticona Gotas 15ml', dna:'Mãe', tipo:'junto', valor:16.50,
-   comOQue:'fralda e pomada'},
-  {nome:'Condicionador 300ml', dna:'Beleza', tipo:'junto', valor:32.00,
-   comOQue:'shampoo', peso:55},
-  {nome:'Ninho Leite Pó Integral 380g', dna:'Mãe', tipo:'parou', valor:38.50,
-   vezes:3, mesesSem:4},
-  {nome:'Ogestan Gold Caps X 30', dna:'Anticoncepcionais', tipo:'repor',
-   valor:42.00, ciclo:30, receita:true}
+  // --- repor: ciclo vencido ---
+  {nome:'Fralda G 40un',                dna:'Mãe',    tipo:'repor', valor:79.90, dias:28,  ciclo:25},
+  {nome:'Lenço Umedecido 96un',         dna:'Mãe',    tipo:'repor', valor:16.90, dias:41,  ciclo:35},
+  {nome:'Sabonete Líquido 250ml',       dna:'Mãe',    tipo:'repor', valor:19.90, dias:52,  ciclo:45},
+  {nome:'Shampoo Anticaspa',            dna:'Beleza', tipo:'repor', valor:38.00, dias:50,  ciclo:60},
+  // --- parou de comprar ---
+  {nome:'Ninho Leite Pó Integral 380g', dna:'Mãe',    tipo:'parou', valor:38.50, dias:126},
+  {nome:'Pomada para Assadura 45g',     dna:'Mãe',    tipo:'parou', valor:34.90, dias:55},
+  {nome:'Água Micelar 200ml',           dna:'Beleza', tipo:'parou', valor:42.00, dias:98},
+  {nome:'Condicionador 300ml',          dna:'Beleza', tipo:'parou', valor:32.00, dias:71},
+  // --- combina: gente do mesmo DNA leva, ela nunca levou ---
+  {nome:'Simeticona Gotas 15ml',        dna:'Mãe',    tipo:'junto', valor:16.50},
+  {nome:'Soro Fisiológico 500ml',       dna:'Mãe',    tipo:'junto', valor:14.90},
+  {nome:'Protetor Solar FPS 50',        dna:'Beleza', tipo:'junto', valor:72.00},
+  {nome:'Creme Facial Antissinais',     dna:'Beleza', tipo:'junto', valor:89.90},
+  // --- fora: exige receita ---
+  {nome:'Ogestan Gold Caps X 30',       dna:'Anticoncepcionais', tipo:'repor',
+   valor:42.00, dias:33, ciclo:30, receita:true}
 ];
 
-/* Excluído por exigir receita: Ogestan é anticoncepcional oral. Ela
-   compra três vezes, o padrão é o mais forte da ficha, e mesmo assim
-   não vira sugestão. É a trava funcionando no caso mais tentador. */
 const MOTOR_SUG_BLOQUEADOS = MOTOR_CAND.filter(c=>c.receita).length;
 
-function pesoSugestao(c){
-  let p = c.peso || PESO_TIPO[c.tipo];
-  if(c.tipo==='parou' && DNA_TRANSITORIO.includes(c.dna+'s')) p *= 0.5;
-  if(c.tipo==='parou' && DNA_TRANSITORIO.includes(c.dna))     p *= 0.5;
-  return p;
+const dnaTransitorio = dna =>
+  DNA_TRANSITORIO.includes(dna) || DNA_TRANSITORIO.includes(dna+'s');
+
+/* Pilha de uma linha, já ordenada.
+
+   REPOR ordena por venda recuperável: o quanto o item está atrasado em
+   relação ao próprio ciclo, multiplicado pelo valor. Entre dois itens
+   vencidos, o de R$ 80 pesa mais que o de R$ 20 — é a maior venda em
+   risco. Isso ordena a fila; não muda o que o balconista lê primeiro,
+   que continua sendo o motivo.
+
+   PAROU ordena por tempo de sumiço: quem sumiu há menos tempo é mais
+   fácil de recuperar. A penalidade de DNA transitório entra só nos
+   sumiços longos — pomada de assadura parada há 55 dias ainda é venda
+   perdida, mas fórmula infantil parada há 126 dias provavelmente é bebê
+   que cresceu. Penalizar o DNA inteiro, como eu tinha feito antes,
+   derrubava junto o caso que ainda era recuperável.
+
+   COMBINA mantém a ordem do catálogo: nenhum sinal individual distingue
+   um do outro, e inventar um ranking aqui seria falsa precisão. */
+function pilhaSugestao(tipo){
+  const atrasoLongo = c => dnaTransitorio(c.dna) && c.dias > 90 ? 2 : 1;
+  return MOTOR_CAND
+    .filter(c => c.tipo===tipo && !c.receita && !DNA_SENSIVEL.includes(c.dna))
+    .filter(c => tipo!=='repor' || c.dias >= c.ciclo)
+    .sort((a,b)=>{
+      if(tipo==='repor') return (b.dias/b.ciclo)*b.valor - (a.dias/a.ciclo)*a.valor;
+      if(tipo==='parou') return a.dias*atrasoLongo(a) - b.dias*atrasoLongo(b);
+      return 0;
+    });
 }
 
-function sugestoesMotor(){
-  const fila = MOTOR_CAND
-    .filter(c => !c.receita && !DNA_SENSIVEL.includes(c.dna))
-    .sort((a,b) => pesoSugestao(b) - pesoSugestao(a));
-  const porDna = {}, out = [];
-  for(const c of fila){
-    if(out.length >= MOTOR_MAX_SUG) break;
-    porDna[c.dna] = (porDna[c.dna]||0) + 1;
-    if(porDna[c.dna] > MOTOR_MAX_POR_DNA) continue;
-    out.push(c);
-  }
-  return out;
-}
+const PILHAS = () => SUG_LINHAS
+  .map(l => ({...l, itens: pilhaSugestao(l.tipo)}))
+  .filter(l => l.itens.length);        // linha sem candidato não aparece
 
-const dnasDoMotor = () => [...new Set(sugestoesMotor().map(c=>c.dna))];
+const sugestoesMotor = () => PILHAS().map(l => l.itens[(S.motorSug[l.tipo]||0) % l.itens.length]);
+const dnasDoMotor    = () => [...new Set(sugestoesMotor().map(c=>c.dna))];
 
-const SUG_TIPO = {repor:'Repor', parou:'Parou', junto:'Combina'};
-
-function diasDesde(dataBr){
-  const [d,m,a] = dataBr.split('/').map(Number);
-  return Math.max(0, Math.round((HOJE - new Date(a, m-1, d)) / 86400000));
-}
-
-/* Texto curto de propósito: o balconista lê de relance, com fila. Cada
-   motivo cabe em uma linha de 420px. */
 function motivoSugestao(s){
-  if(s.tipo==='repor'){
-    const l = MOTOR_CLIENTE.historico.find(([n])=>n===s.deHistorico);
-    return `comprou há ${l ? diasDesde(l[1]) : s.ciclo} dias`;
-  }
-  if(s.tipo==='parou') return `levou ${s.vezes}×, sumiu há ${s.mesesSem} meses`;
-  return `leva ${s.comOQue}, nunca levou este`;
+  if(s.tipo==='repor') return `comprou há ${s.dias} dias`;
+  if(s.tipo==='parou') return `última compra há ${s.dias} dias`;
+  return 'comum neste DNA';
 }
 
-function linhaSugestao(s){
+function linhaSugestao(l){
+  const itens = l.itens, i = (S.motorSug[l.tipo]||0) % itens.length, s = itens[i];
+  const troca = itens.length > 1 ? `<button class="fp-troca" data-act="motorTroca"
+      data-v="${l.tipo}" aria-label="Trocar sugestão de ${esc(l.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
+      title="Ver outra sugestão de ${esc(l.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
   return `<div class="fp-prod fp-sug">
     <div class="fp-sug-l1">
+      <span class="fp-sug-tag sg-${l.tipo}">${esc(l.rot)}</span>
+      <span class="fp-sug-dna">${esc(s.dna)}</span>
+      ${troca}
+    </div>
+    <div class="fp-sug-l2">
       <span class="fp-sug-nome">${esc(s.nome)}</span>
       <span class="fp-sug-valor">+ ${brl(s.valor)}</span>
     </div>
-    <div class="fp-sug-l2">
-      <span class="fp-sug-tag sg-${s.tipo}">${esc(SUG_TIPO[s.tipo])}</span>
-      <span class="fp-sug-motivo">${motivoSugestao(s)}</span>
-      <span class="fp-sug-dna">${esc(s.dna)}</span>
-    </div>
+    <p class="fp-sug-motivo">${motivoSugestao(s)}</p>
     <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(s.nome)}"
       title="Copiar código">EAN: ${eanFake(s.nome)} ${I.copy}</button>
   </div>`;
 }
 
 function blocoSugestoesMotor(){
-  const sug = sugestoesMotor();
   return `<h3 class="fp-sec">${I.spark} Sugestões <i>DNA ${dnasDoMotor().map(esc).join(' · ')}</i></h3>
-  ${sug.map(linhaSugestao).join('')}
+  ${PILHAS().map(linhaSugestao).join('')}
   <p class="fp-sug-nota">${I.info} ${MOTOR_SUG_BLOQUEADOS} produto do padrão dela
     não entra por exigir receita.</p>`;
 }
@@ -2218,8 +2268,10 @@ function motorPerfil(){
     <div class="fp-dado">${I.bolo} ${c.nascimento} · aniversário daqui a ${dias} dias</div>
     <div class="fp-dado">${I.card} ${c.cpf}
       <button class="fp-copia" data-act="motorCopiar" data-v="${c.cpf}" title="Copiar CPF">${I.copy}</button></div>
-    <div class="fp-pref">Preferências:
-      ${c.preferencias.map(p=>`<span class="fp-pill">${esc(p)}</span>`).join('')}</div>
+    <div class="fp-pref">
+      <span class="fp-pref-rot">Preferências</span>
+      <div class="fp-pills">
+        ${c.preferencias.map(p=>`<span class="fp-pill">${esc(p)}</span>`).join('')}</div></div>
   </div>
 
   ${blocoSugestoesMotor()}
@@ -4469,7 +4521,7 @@ function handle(act, v, el, isInput){
     case 'irBranco':
       // guarda de onde veio: voltar tem que devolver para a tela certa
       S.voltaDoBranco = S.screen; S.screen = 'branco';
-      S.motorFase = 'cpf'; S.motorCpf = '';
+      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {};
       log('abriu-pagina-branca', 'de ' + S.voltaDoBranco); window.scrollTo(0,0); render(); return;
 
     case 'voltarDoBranco':
@@ -4479,7 +4531,7 @@ function handle(act, v, el, isInput){
     case 'voltarCrm':
       // sempre para a Visão geral: é a porta de entrada do painel, e quem
       // estava no balcão não tem contexto de lista ou de campanha para retomar
-      S.screen = 'geral'; S.motorFase = 'cpf'; S.motorCpf = '';
+      S.screen = 'geral'; S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {};
       log('motor-voltou-ao-crm'); window.scrollTo(0,0); render(); return;
 
     case 'motorCpf':
@@ -4498,7 +4550,16 @@ function handle(act, v, el, isInput){
 
     case 'motorNova':
       clearTimeout(S.motorTimer);
-      S.motorFase = 'cpf'; S.motorCpf = ''; log('motor-nova-consulta'); render(); return;
+      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; log('motor-nova-consulta'); render(); return;
+
+    case 'motorTroca': {
+      // dá a volta no fim: com 4 itens, voltar uma custa 3 cliques, e
+      // um alvo de toque só numa linha de 420px vale mais que dois
+      const linha = PILHAS().find(l=>l.tipo===v);
+      if(!linha) return;
+      S.motorSug[v] = ((S.motorSug[v]||0) + 1) % linha.itens.length;
+      log('motor-troca-sugestao', v+' → '+linha.itens[S.motorSug[v]].nome);
+      render(); return; }
 
     case 'motorCopiar':
       toast('Código copiado: ' + v); log('motor-copiou', v); return;
