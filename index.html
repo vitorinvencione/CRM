@@ -864,14 +864,20 @@ tbody tr.sel{background:#F3F8FF}
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 .rvtab thead tr:first-child th{border-bottom:0}
 .rv-grupo.primeira,.rv-perfil,.rv-subvazia{position:sticky;left:0;z-index:2;background:#fff}
-/* A coluna de Fidelidade não tem Ant./Atual/Variação embaixo, então a
-   célula da segunda linha fica vazia. Em branco ela abria um buraco no
-   meio da única coluna que deveria ser contínua — as outras cinco seguem
-   com conteúdo. Mesma cor da cartela de cima, e a coluna fecha. */
+/* O cabeçalho da coluna presa é um bloco só.
+
+   Fidelidade é a coluna que fica fixa na rolagem, e o cabeçalho dela
+   tinha três pedaços de cor diferente: a cartela do botão em cinza, o
+   respiro em volta em branco e a célula vazia de baixo em branco. Em vez
+   de uma cartela, parecia uma cartela com remendos. Os três agora usam a
+   mesma cor e a coluna fecha de cima até a primeira linha de dado.
+
+   A célula vazia existe porque Fidelidade é a única coluna sem
+   Ant./Atual/Variação embaixo — ela segura a borda e o sticky. */
 .rv-subvazia{background:var(--rv-cab)}
 .rv-grupo{text-align:center!important;padding:0 4px 10px!important;vertical-align:bottom;
   border-bottom:0!important}
-.rv-grupo.primeira{padding-right:14px!important;min-width:132px}
+.rv-grupo.primeira{padding-right:14px!important;min-width:132px;background:var(--rv-cab)}
 
 /* Uma régua vertical na primeira coluna de cada grupo, do cabeçalho até a
    última linha. Sem ela o olho lê seis números em fila e não percebe onde
