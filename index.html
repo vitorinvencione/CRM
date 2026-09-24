@@ -873,7 +873,7 @@ tbody tr.sel{background:#F3F8FF}
    mesma cor e a coluna fecha de cima até a primeira linha de dado.
 
    A célula vazia existe porque Fidelidade é a única coluna sem
-   Ant./Atual/Variação embaixo — ela segura a borda e o sticky. */
+   Antes/Atual/Variação embaixo — ela segura a borda e o sticky. */
 .rv-subvazia{background:var(--rv-cab)}
 .rv-grupo{text-align:center!important;padding:0 4px 10px!important;vertical-align:bottom;
   border-bottom:0!important}
@@ -881,7 +881,7 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Uma régua vertical na primeira coluna de cada grupo, do cabeçalho até a
    última linha. Sem ela o olho lê seis números em fila e não percebe onde
-   termina Clientes e começa LTV — o par "Variação | Ant." fica colado. */
+   termina Clientes e começa LTV — o par "Variação | Antes" fica colado. */
 .rvtab .sep{border-left:1px solid var(--border)}
 
 /* Três linhas de altura fixa: rótulo, unidade, ação. A unidade reserva duas
@@ -2708,7 +2708,7 @@ function blocoRfv(){
     const cls = ['rv-grupo', c.span===1?'primeira':'', c.span===3?'sep':'', on?'on':'']
       .filter(Boolean).join(' ');
     // Sem rowspan: com ele o botão de Fidelidade esticava sobre a linha de
-    // Ant./Atual/Variação e a cartela cinza ficava mais alta que as outras
+    // Antes/Atual/Variação e a cartela cinza ficava mais alta que as outras
     // cinco. Agora os seis ocupam a mesma linha e a coluna de Fidelidade
     // recebe uma célula vazia embaixo, só para segurar a borda e o sticky.
     return `<th colspan="${c.span}" class="${cls}">
@@ -2753,7 +2753,7 @@ function blocoRfv(){
         <thead>
           <tr>${linhasCab}</tr>
           <tr><th class="rv-subvazia${geralOn?' on':''}"></th>${GRUPOS_RFV.map(g=>{const on=aberto===g.id;
-            return `<th class="sep${on?' on':''}">Ant.</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
+            return `<th class="sep${on?' on':''}">Antes</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
           }).join('')}</tr>
         </thead>
         <tbody>${corpo}</tbody>
