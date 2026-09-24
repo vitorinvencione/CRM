@@ -16,6 +16,8 @@
   /* Vinho da marca, só no selo CRM da filipeta. Fica como token para a
      troca ser em um lugar só, e não caçada de hex pelo arquivo. */
   --marca:#C2113B;
+  /* fundo das cartelas do cabeçalho da tabela de perfil */
+  --rv-cab:#F5F8FC;
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
   --primary-soft:#E7F1FE;
@@ -862,6 +864,11 @@ tbody tr.sel{background:#F3F8FF}
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 .rvtab thead tr:first-child th{border-bottom:0}
 .rv-grupo.primeira,.rv-perfil,.rv-subvazia{position:sticky;left:0;z-index:2;background:#fff}
+/* A coluna de Fidelidade não tem Ant./Atual/Variação embaixo, então a
+   célula da segunda linha fica vazia. Em branco ela abria um buraco no
+   meio da única coluna que deveria ser contínua — as outras cinco seguem
+   com conteúdo. Mesma cor da cartela de cima, e a coluna fecha. */
+.rv-subvazia{background:var(--rv-cab)}
 .rv-grupo{text-align:center!important;padding:0 4px 10px!important;vertical-align:bottom;
   border-bottom:0!important}
 .rv-grupo.primeira{padding-right:14px!important;min-width:132px}
@@ -876,7 +883,7 @@ tbody tr.sel{background:#F3F8FF}
    altura sem depender do tamanho do texto. */
 .rv-grupo button{display:grid;grid-template-rows:auto 2.6em auto;justify-items:center;
   align-items:center;gap:2px;width:100%;height:100%;padding:10px 10px 9px;border-radius:10px;
-  background:#F8FAFC;border:1px solid transparent;transition:.12s}
+  background:var(--rv-cab);border:1px solid transparent;transition:.12s}
 .rv-grupo button:hover{background:var(--primary-soft);border-color:#BFD9F5}
 .rv-grupo button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .rv-grupo.on button{background:var(--primary-soft);border-color:var(--primary)}
