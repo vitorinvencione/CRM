@@ -18,6 +18,11 @@
   --marca:#C2113B;
   /* fundo das cartelas do cabeçalho da tabela de perfil */
   --rv-cab:#F5F8FC;
+  /* Ritmo vertical da filipeta. Um item para o seguinte é 8; de um grupo
+     para o próximo é 28 — três vezes e meia mais. Abaixo de três vezes o
+     olho não separa os grupos e a lista vira um bloco só. */
+  --fp-item:8px;
+  --fp-grupo:28px;
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
   --primary-soft:#E7F1FE;
@@ -136,7 +141,7 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-nova{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
   color:var(--primary);padding:4px 2px;margin-bottom:14px}
 .fp-nova:hover{text-decoration:underline}
-.fp-card{border:1px solid var(--border);border-radius:12px;padding:16px 17px;margin-bottom:22px}
+.fp-card{border:1px solid var(--border);border-radius:12px;padding:16px 17px}
 .fp-perfil{display:inline-block;font-size:11.5px;font-weight:700;color:#0C6B45;
   background:#D8F3E5;border-radius:7px;padding:4px 10px;margin-bottom:11px}
 .fp-card-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
@@ -162,7 +167,15 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
   color:var(--ink)}
 .fp-sec svg{color:#7C5CF0;flex-shrink:0}
 .fp-sec i{font-style:normal;font-size:13px;font-weight:400;color:var(--ink-3)}
-.fp-prod{border:1px solid var(--border);border-radius:11px;padding:13px 14px;margin-bottom:9px}
+.fp-prod{border:1px solid var(--border);border-radius:11px;padding:13px 14px;
+  margin-bottom:var(--fp-item)}
+/* O intervalo entre grupos mora aqui, no cabeçalho que abre o próximo.
+   Era zero: a distância do último card de sugestão até "Histórico de
+   compras" era a mesma que entre dois cards da mesma lista, e as três
+   seções liam como uma só. A margem colapsa com a do item acima, então o
+   valor final é exatamente --fp-grupo, sem somar. */
+.fp-card + .fp-sec,
+.fp-prod + .fp-sec{margin-top:var(--fp-grupo)}
 .fp-prod-nome{font-size:14px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:9px}
 .fp-prod-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .fp-prod-meta{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)}
@@ -170,19 +183,18 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
   background:#F3F6FA;border-radius:8px;padding:6px 10px;transition:.12s;
   font-variant-numeric:tabular-nums}
 .fp-ean:hover{background:var(--primary-soft);color:var(--primary)}
-.fp-prod:last-of-type{margin-bottom:22px}
 
 /* Sugestões dentro da filipeta.
 
-   Três linhas fixas — Repor, Parou de comprar, Combina — e o card é
-   sempre da mesma altura, com ou sem carrossel. Altura estável importa
-   aqui: se o bloco crescer conforme o conteúdo, o histórico de compras
-   desce e sobe a cada troca, e o balconista perde o lugar.
+   Quatro blocos fixos, um por modelo, e o card tem sempre a mesma altura
+   com ou sem carrossel. Altura estável importa aqui: se o bloco crescer
+   conforme o conteúdo, o histórico de compras desce e sobe a cada troca
+   e o balconista perde o lugar. A única coisa que muda a altura é a
+   explicação, que ele abriu de propósito.
 
-   A ordem dentro do card segue a leitura dele: que tipo de sinal é
-   (tag), de onde veio (DNA), qual produto, quanto custa, por quê, e o
-   código para digitar no ERP. */
-.fp-sug{background:#FBFCFE;padding:10px 12px;margin-bottom:7px}
+   A ordem dentro do card segue a leitura dele: que tipo de sugestão é,
+   qual produto, quanto custa, por quê, e o código para digitar no ERP. */
+.fp-sug{background:#FBFCFE;padding:10px 12px;margin-bottom:var(--fp-item)}
 .fp-sug-l1{display:flex;align-items:center;gap:8px;margin-bottom:6px;min-height:22px}
 .fp-sug-tag{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:11.5px;
   font-weight:700;color:var(--ink-2)}
@@ -199,7 +211,6 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .fp-sug-motivo{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);line-height:1.35}
 .fp-sug .fp-ean{width:100%;justify-content:space-between}
-.fp-sug:last-of-type{margin-bottom:10px}
 
 /* Trocar sugestão. Fica no canto do card, longe do botão de copiar EAN,
    que é a ação que o balconista mais usa — errar o alvo e trocar o
@@ -266,7 +277,6 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-troca:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .fp-troca span{font-variant-numeric:tabular-nums}
 
-.fp-sug:last-of-type{margin-bottom:22px}
 @media(max-width:380px){
   .fp-sec{flex-wrap:wrap}
   .fp-sec i{flex-basis:100%;margin-left:24px}
