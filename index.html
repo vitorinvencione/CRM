@@ -213,6 +213,30 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-troca::after{content:'';position:absolute;inset:-8px -6px}
 .fp-troca svg{width:13px;height:13px;flex-shrink:0}
 .fp-troca:hover{border-color:#BFD9F5;background:var(--primary-soft);color:var(--primary)}
+/* O nome do bloco abre a explicação.
+
+   Vira botão de verdade — com foco, aria-expanded e alvo de toque —
+   porque é o que responde "de onde veio isso?" na hora em que a dúvida
+   nasce. As duas notas de rodapé que existiam antes diziam a mesma coisa
+   e ninguém lia: informação embaixo da lista é informação perdida.
+
+   O parágrafo também fecha ao clique, por conveniência de mouse, mas não
+   é focável: quem usa teclado abre e fecha pelo próprio botão. */
+.fp-sug-tag{position:relative;padding:2px 0;border-radius:6px;transition:.12s}
+.fp-sug-tag svg{width:12px;height:12px;opacity:.55;transition:transform .18s cubic-bezier(.2,0,0,1)}
+.fp-sug-tag:hover{color:var(--primary)}
+.fp-sug-tag:hover svg{opacity:1}
+.fp-sug-tag:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+/* alvo de toque maior que a caixa, sem inflar a linha */
+.fp-sug-tag::after{content:'';position:absolute;inset:-9px -6px}
+.fp-sug.explicando .fp-sug-tag{color:var(--primary)}
+.fp-sug.explicando .fp-sug-tag svg{transform:rotate(180deg);opacity:1}
+.fp-sug-exp{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--border);
+  font-size:11.5px;line-height:1.55;color:var(--ink-3);cursor:pointer;
+  animation:fpTroca .18s cubic-bezier(.2,0,0,1) both}
+.fp-sug-exp:hover{color:var(--ink-2)}
+@media(prefers-reduced-motion:reduce){.fp-sug-exp{animation:none}}
+
 /* A TROCA.
 
    Só o que mudou se move. A tag e o DNA ficam parados de propósito: eles
@@ -242,9 +266,7 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-troca:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .fp-troca span{font-variant-numeric:tabular-nums}
 
-.fp-sug-nota{display:flex;gap:6px;align-items:flex-start;margin:0 0 20px;font-size:11px;
-  line-height:1.45;color:var(--ink-4)}
-.fp-sug-nota svg{flex-shrink:0;margin-top:2px}
+.fp-sug:last-of-type{margin-bottom:22px}
 @media(max-width:380px){
   .fp-sec{flex-wrap:wrap}
   .fp-sec i{flex-basis:100%;margin-left:24px}
@@ -1612,6 +1634,7 @@ function estadoInicial(){
     motorTrocou:null,       // bloco que acabou de trocar, para a animação
     motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
+    motorExplica:null,      // bloco com a explicação aberta
     gView:{faixas:'grafico', dnas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
@@ -2206,6 +2229,28 @@ const MOTOR_MODELOS = [
 ];
 const MOTOR_ROT = MOTOR_MODELOS.reduce((a,m)=>(a[m.id]=m.rot, a), {});
 
+/* O que cada bloco responde quando o balconista clica no nome.
+
+   Tiramos as duas notas de rodapé que ficavam soltas embaixo da lista.
+   O conteúdo delas não se perdeu: a regra de receita e o aviso de que a
+   venda é um exemplo viraram parte da explicação do bloco a que cada uma
+   pertence. Informação de rodapé ninguém lê; informação atrás de um
+   clique aparece na hora em que a dúvida nasce. */
+const MOTOR_EXPLICA = {
+  cliente: () => `Vem do que ela já comprou nesta rede e do padrão de clientes
+    parecidos. O intervalo entre as compras dela é o que diz quando está na hora
+    de repor. Medicamento que exige receita nunca aparece aqui, mesmo quando é o
+    que ela mais compra.`,
+  junto: () => `Produtos que costumam sair junto com o ${MOTOR_ANCORA.curto}, o
+    último item que ela levou. Sai do padrão de compra da rede inteira, não de uma
+    regra escrita à mão.`,
+  parecido: () => `Produtos com a mesma finalidade do ${MOTOR_ANCORA.curto}. Serve
+    para quando o que ela procura está em falta. Medicamento não entra: trocar um
+    medicamento por outro é decisão do farmacêutico, não do balcão.`,
+  cesta: () => `Cruza o que já está na venda com o histórico dela. Neste protótipo
+    a venda é um exemplo: ${MOTOR_CESTA.join(' e ')}.`
+};
+
 /* sinal: só no modelo "Costuma comprar", único que olha o histórico dela.
    dias/ciclo alimentam a frase; os outros modelos têm frase fixa. */
 const MOTOR_CAND = [
@@ -2318,9 +2363,12 @@ function cardModelo(b){
       data-k="troca-${b.id}" data-v="${b.id}"
       aria-label="Ver outra sugestão de ${esc(b.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
       title="Ver outra sugestão de ${esc(b.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
-  return `<div class="fp-prod fp-sug${trocou?' trocou':''}">
+  const aberto = S.motorExplica === b.id;
+  return `<div class="fp-prod fp-sug${trocou?' trocou':''}${aberto?' explicando':''}">
     <div class="fp-sug-l1">
-      <span class="fp-sug-tag sg-${b.id}">${esc(b.rot)}</span>
+      <button class="fp-sug-tag sg-${b.id}" data-act="motorExplica" data-v="${b.id}"
+        data-k="explica-${b.id}" aria-expanded="${aberto}" aria-controls="exp-${b.id}"
+        title="${aberto?'Fechar':'Ver de onde vem esta sugestão'}">${esc(b.rot)}${I.chev}</button>
       ${troca}
     </div>
     <div class="fp-sug-troca">
@@ -2332,19 +2380,15 @@ function cardModelo(b){
       <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(c.nome)}"
         title="Copiar código">EAN: ${eanFake(c.nome)} ${I.copy}</button>
     </div>
+    ${aberto ? `<p class="fp-sug-exp" id="exp-${b.id}" data-act="motorExplica" data-v="${b.id}"
+      title="Fechar">${MOTOR_EXPLICA[b.id]()}</p>` : ''}
   </div>`;
 }
 
 function blocoSugestoesMotor(){
   const blocos = BLOCOS();
-  const temCesta = blocos.some(b => b.id === 'cesta');
   return `<h3 class="fp-sec">${I.spark} Sugestões <i>${blocos.length} formas de sugerir</i></h3>
-  ${blocos.map(cardModelo).join('')}
-  <p class="fp-sug-nota">${I.info} ${MOTOR_SUG_BLOQUEADOS} produto do padrão dela
-    não entra por exigir receita.</p>
-  ${temCesta ? `<p class="fp-sug-nota">${I.info} “${esc(MOTOR_ROT.cesta)}” usa a venda em
-    andamento no sistema de balcão. Neste protótipo ela é um exemplo:
-    ${MOTOR_CESTA.map(esc).join(' e ')}.</p>` : ''}`;
+  ${blocos.map(cardModelo).join('')}`;
 }
 
 function motorPerfil(){
@@ -4659,7 +4703,17 @@ function handle(act, v, el, isInput){
 
     case 'motorNova':
       clearTimeout(S.motorTimer);
-      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; log('motor-nova-consulta');   // motorVistos sobrevive: é o que faz a próxima consulta abrir com outro argumento render(); return;
+      // motorVistos sobrevive de propósito: é o que faz a próxima consulta
+      // abrir com outro argumento em vez de repetir o mesmo produto
+      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; S.motorExplica = null;
+      log('motor-nova-consulta'); render(); return;
+
+    case 'motorExplica':
+      // um por vez: a filipeta tem 420px e quatro explicações abertas
+      // empurrariam o histórico de compras para fora da tela
+      S.motorExplica = S.motorExplica===v ? null : v;
+      log('motor-explica', S.motorExplica ? 'abriu '+v : 'fechou');
+      render(); return;
 
     case 'motorTroca': {
       // dá a volta no fim: com 4 itens, voltar uma custa 3 cliques, e
