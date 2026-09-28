@@ -900,24 +900,27 @@ tbody tr.sel{background:#F3F8FF}
   border-radius:9px;background:#FEF6F2;border:1px solid #F6D9CC;font-size:12.5px;
   line-height:1.5;color:#8A3B18}
 .cmp-choque svg{flex-shrink:0;margin-top:2px;color:var(--danger)}
-.cmp-grade{display:grid;grid-template-columns:1fr auto 18px auto 96px;gap:4px 12px;
-  align-items:baseline}
-.cmp-cab{display:contents}
-.cmp-cab span{font-size:11px;color:var(--ink-4);padding-bottom:4px;border-bottom:1px solid var(--border)}
-.cmp-cab span:nth-child(2),.cmp-cab span:nth-child(4){text-align:right}
-.cmp-lin{display:contents}
-.cmp-lin>*{padding:9px 0;border-bottom:1px solid #F1F5F9}
-.cmp-lin:last-child>*{border-bottom:0}
-.cmp-rot{font-size:13px;color:var(--ink-2)}
-.cmp-antes,.cmp-agora{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums}
-.cmp-antes{color:var(--ink-3)}
-.cmp-agora{color:var(--ink);font-weight:600}
-.cmp-seta{text-align:center;color:var(--ink-4)}
+.cmp-grade{display:flex;flex-direction:column;gap:18px}
+.cmp-item{display:flex;flex-direction:column;gap:6px}
+.cmp-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-bottom:2px}
+.cmp-rot{font-size:13px;font-weight:600;color:var(--ink)}
+/* rótulo, barra e valor: a coluna do valor é fixa para os números
+   alinharem à direita entre as duas linhas do par */
+.cmp-par{display:grid;grid-template-columns:92px minmax(0,1fr) 116px;gap:12px;
+  align-items:center}
+.cmp-leg{font-size:11.5px;color:var(--ink-3)}
+.cmp-trilho{height:12px;border-radius:99px;background:#EFF4F9;overflow:hidden}
+.cmp-fill{display:block;height:100%;border-radius:99px;transition:width .3s ease}
+.cmp-fill.antes{background:#C9D6E6}
+.cmp-fill.agora{background:linear-gradient(90deg,#2D8FFC,var(--primary))}
+@media(prefers-reduced-motion:reduce){.cmp-fill{transition:none}}
+.cmp-v{font-size:12.5px;text-align:right;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.cmp-v.forte{color:var(--ink);font-weight:600;font-size:13.5px}
 @media(max-width:700px){
-  .cmp-grade{grid-template-columns:1fr auto 14px auto;gap:4px 8px}
-  .cmp-cab span:nth-child(5),.cmp-lin>*:nth-child(5){grid-column:1/-1;text-align:right;
-    padding-top:0;border-bottom:0}
-  .cmp-lin>*:nth-child(4){border-bottom:0}
+  .cmp-par{grid-template-columns:76px minmax(0,1fr) 92px;gap:8px}
+  .cmp-leg{font-size:11px}
 }
 .gp-periodo{font-style:normal;font-size:12.5px;font-weight:400;color:var(--ink-3)}
 
@@ -1343,12 +1346,13 @@ tbody tr.sel{background:#F3F8FF}
 /* ---------- Tooltip ---------- */
 .ttip{position:relative;display:inline-flex;color:var(--ink-4);cursor:help}
 .ttip:hover{color:var(--primary)}
-.ttip .bubble{
+.bubble{
   position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
   background:var(--ink);color:#fff;padding:9px 12px;border-radius:7px;font-size:12px;line-height:1.45;
   width:246px;opacity:0;pointer-events:none;transition:.12s;z-index:40;font-weight:400;text-align:left;
 }
-.ttip:hover .bubble{opacity:1}
+.ttip:hover .bubble,
+.fun-trilho.com-tip:hover .bubble{opacity:1}
 
 /* Tooltip em lista: título centralizado, pares nas bordas opostas, rodapé
    com o denominador. A seta embaixo amarra a bolha ao que a disparou —
@@ -1372,7 +1376,6 @@ tbody tr.sel{background:#F3F8FF}
    porque o preenchimento já tem o próprio raio. */
 .fun-trilho.com-tip{overflow:visible;cursor:help;position:relative}
 .fun-trilho.com-tip .bubble{bottom:calc(100% + 10px)}
-.fun-trilho.com-tip:hover .bubble{opacity:1}
 .fun-trilho.com-tip:hover .fun-fill{filter:brightness(1.06)}
 .fun-trilho.com-tip .fun-fill{transition:width .25s ease,filter .12s ease}
 @media(prefers-reduced-motion:reduce){.fun-trilho.com-tip .fun-fill{transition:none}}
@@ -2141,8 +2144,14 @@ function shell(inner){
    e um atalho para outro lugar só atrapalha. */
 const BOTAO_TOPO = { rot:'Motor de sugestões', ic:'spark', titulo:'Motor de sugestões' };
 
+/* A aba Sugestões está pronta e fora do ar por decisão de produto. Uma
+   constante em vez de apagar o item: religar é trocar false por true, e o
+   código da tela continua testado enquanto isso. */
+const ABA_SUGESTOES = false;
+
 function tabs(){
-  const t = ['Visão geral','Visão diária','DNA','Listagem de clientes','Sugestões','Segmentação'];
+  const t = ['Visão geral','Visão diária','DNA','Listagem de clientes',
+    ...(ABA_SUGESTOES ? ['Sugestões'] : []), 'Segmentação'];
   const ativa = S.screen==='geral' ? 'Visão geral'
               : S.screen==='sugestoes' ? 'Sugestões' : 'Segmentação';
   return `<div class="pagetopo">
@@ -3667,7 +3676,14 @@ const diasCampanha = c => Math.round((brDate(c.fim) - brDate(c.ini)) / DIA) + 1;
    ticketHist do público, que é o valor que ele gasta fora de campanha. */
 function periodoNormal(s, c, chave, escala){
   const compras = Math.max(1, Math.round(c.compras * FATOR_PRE * jitterCamp(chave) * (escala||1)));
-  const razao   = c.compras ? c.clientesComp / c.compras : 0.9;
+  /* Quantos clientes distintos fizeram essas compras. A razão não é a
+     mesma da campanha: se fosse, clientes e compras cairiam exatamente no
+     mesmo percentual e as duas barras sairiam do mesmo tamanho — dado
+     real não se comporta assim, e barra idêntica denuncia número gerado.
+     O teto de 0,97 mantém a invariante de que sempre há mais compras que
+     clientes. */
+  const razao = Math.min(0.97,
+    (c.compras ? c.clientesComp / c.compras : 0.9) * jitterCamp(chave + '|cli'));
   return {
     compras,
     clientesComp: Math.round(compras * razao),
@@ -3699,15 +3715,36 @@ const campanhasNaJanela = (s, c, j) => (s.campanhas||[])
   .filter(x => x.id !== c.id && x.compras > 0 &&
     brDate(x.ini) <= j.fim && brDate(x.fim) >= j.ini);
 
+/* Duas barras por métrica em vez de dois números com uma seta no meio.
+   "Antes e durante" é comparação de dois estados, e barra pareada é a
+   forma que mostra o tamanho da diferença em vez de obrigar o leitor a
+   fazer a conta de cabeça.
+
+   CADA MÉTRICA TEM A PRÓPRIA ESCALA, porque as unidades são diferentes —
+   reais, clientes e compras não cabem num eixo comum. Por isso o par fica
+   agrupado e rotulado: o comprimento só é comparável dentro do bloco, e
+   nunca entre blocos. As duas barras de um par sempre dividem o mesmo
+   máximo, senão a comparação mentiria. */
 function linhaComp(rot, antes, agora, fmt){
   const d = delta(agora, antes);
-  return `<div class="cmp-lin">
-    <span class="cmp-rot">${esc(rot)}</span>
-    <span class="cmp-antes">${fmt(antes)}</span>
-    <span class="cmp-seta">→</span>
-    <span class="cmp-agora">${fmt(agora)}</span>
-    ${d ? `<span class="dlt ${d.dir}">${d.dir==='flat' ? 'igual'
-      : `${d.dir==='up'?'▲':'▼'} ${nf1.format(Math.abs(d.pct))}%`}</span>` : '<span></span>'}
+  const max = Math.max(antes, agora) || 1;
+  const larg = v => Math.max(2, v / max * 100);
+  return `<div class="cmp-item">
+    <div class="cmp-top">
+      <span class="cmp-rot">${esc(rot)}</span>
+      ${d ? `<span class="dlt ${d.dir}">${d.dir==='flat' ? 'sem mudança'
+        : `${d.dir==='up'?'▲':'▼'} ${nf1.format(Math.abs(d.pct))}%`}</span>` : ''}
+    </div>
+    <div class="cmp-par">
+      <span class="cmp-leg">Antes</span>
+      <span class="cmp-trilho"><span class="cmp-fill antes" style="width:${larg(antes).toFixed(1)}%"></span></span>
+      <span class="cmp-v">${fmt(antes)}</span>
+    </div>
+    <div class="cmp-par">
+      <span class="cmp-leg">Na campanha</span>
+      <span class="cmp-trilho"><span class="cmp-fill agora" style="width:${larg(agora).toFixed(1)}%"></span></span>
+      <span class="cmp-v forte">${fmt(agora)}</span>
+    </div>
   </div>`;
 }
 
@@ -3734,14 +3771,14 @@ function blocoAntesDurante(s, c){
       de ${esc(fmtBr(choque[0].ini.split('/').reverse().join('-')) || choque[0].ini)} deste mesmo público.
       A comparação vira campanha contra campanha e o ganho desaparece. Escolha outra data.</p>` : ''}
     <div class="cmp-grade">
-      <div class="cmp-cab"><span></span><span>Antes</span><span></span><span>Na campanha</span><span></span></div>
       ${linhaComp('Faturamento', pre.faturamento, c.faturamento, brl)}
       ${linhaComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
       ${linhaComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
     </div>
     <p class="bloco-nota">A duração dos dois períodos é sempre a mesma — ${j.dias} dias contra
     ${j.dias} dias. Comparar janelas de tamanhos diferentes não diz nada, então só a data de
-    início é escolhida.</p>
+    início é escolhida. <b>As barras só se comparam dentro de cada métrica</b>: reais, clientes e
+    compras não cabem na mesma escala.</p>
   </div>`;
 }
 
