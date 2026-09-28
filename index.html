@@ -956,6 +956,105 @@ tbody tr.sel{background:#F3F8FF}
 }
 .gp-periodo{font-style:normal;font-size:12.5px;font-weight:400;color:var(--ink-3)}
 
+/* ---------- Aba DNA ----------
+   Reaproveita a Visão geral inteira: os mesmos cartões, o mesmo painel com
+   alternância gráfico/tabela, as mesmas cores de perfil e de gênero. O que
+   é novo aqui são três coisas: a régua de DNAs, o cartão de aderência com
+   três valores e os cartões por grau. */
+
+/* Régua de DNAs: um controle segmentado, não abas — abas trocam de
+   assunto, isto filtra o mesmo assunto. */
+.dna-chips{display:flex;flex-wrap:wrap;gap:0;margin-bottom:var(--bloco);
+  border:1px solid var(--border);border-radius:10px;background:#fff;
+  overflow:hidden;box-shadow:var(--shadow)}
+.dna-chip{flex:1 1 auto;padding:10px 16px;font-size:13px;font-weight:500;
+  color:var(--ink-2);background:transparent;white-space:nowrap;transition:.12s;
+  border-right:1px solid var(--border)}
+.dna-chip:last-child{border-right:0}
+.dna-chip:hover{background:var(--primary-soft);color:var(--primary)}
+.dna-chip.on{background:#EFF3F8;color:var(--ink);font-weight:700}
+.dna-chip:focus-visible{outline:2px solid var(--primary);outline-offset:-2px;z-index:1}
+
+.gcards-4{grid-template-columns:repeat(4,1fr)}
+/* Aderência: três valores num cartão só, porque são partes do mesmo todo.
+   Em três cartões separados ninguém somaria 100. */
+.gcard-tri .tri{display:flex;align-items:flex-end;gap:2px;margin-top:2px}
+.tri-col{flex:1;min-width:0;text-align:center;padding:0 4px;
+  border-left:1px solid var(--border)}
+.tri-col:first-child{border-left:0;text-align:left;padding-left:0}
+.tri-col b{display:block;font-size:20px;font-weight:700;line-height:1.15;
+  font-variant-numeric:tabular-nums}
+.tri-col span{display:block;margin-top:2px;font-size:11.5px;color:var(--ink-3)}
+.tri-col.ad-alta b{color:#0C8A5F}
+.tri-col.ad-media b{color:#9A6400}
+.tri-col.ad-baixa b{color:var(--danger)}
+
+/* Tabela dos painéis, para a alternância gráfico/tabela. */
+.gtab-wrap{overflow-x:auto}
+.gtab{width:100%;border-collapse:collapse;font-size:13px}
+.gtab th{text-align:right;font-size:11.5px;font-weight:600;color:var(--ink-3);
+  padding:0 0 9px;border-bottom:1px solid var(--border);white-space:nowrap}
+.gtab th:first-child{text-align:left}
+.gtab td{text-align:right;padding:10px 0;border-bottom:1px solid #F1F5F9;
+  color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gtab td:first-child{text-align:left;color:var(--ink);font-weight:600}
+.gtab td.forte{color:var(--ink);font-weight:600}
+.gtab tbody tr:last-child td{border-bottom:0}
+.gtab th+th,.gtab td+td{padding-left:16px}
+
+/* Um cartão por grau de aderência. Os três lado a lado e com a mesma
+   anatomia: o olho compara na vertical, linha por linha. */
+.ad-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-bottom:var(--bloco)}
+.ad-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  box-shadow:var(--shadow);padding:18px 20px 20px;
+  border-top:3px solid var(--border-strong)}
+.ad-card.ad-alta{border-top-color:#12B981}
+.ad-card.ad-media{border-top-color:#EDA412}
+.ad-card.ad-baixa{border-top-color:#E0134E}
+.ad-tit{margin:0 0 14px;font-size:15px;font-weight:700;color:var(--ink)}
+.ad-kpi{border:1px solid var(--border);border-radius:9px;padding:10px 12px}
+.ad-kpi.larga{margin-bottom:9px}
+.ad-kpi>span{display:flex;align-items:center;gap:6px;font-size:11.5px;
+  color:var(--ink-3);margin-bottom:3px}
+.ad-kpi>span svg{width:13px;height:13px;flex-shrink:0;color:var(--ink-4)}
+.ad-kpi b{display:block;font-size:15px;font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.ad-dupla{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.ad-cli-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ad-cli-top i{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+/* Distribuição de perfil dentro do grau: mesma paleta da Visão geral, para
+   quem já conhece as cores não ter que reaprender. */
+.ad-mix{display:flex;height:7px;border-radius:99px;overflow:hidden;margin-top:9px;
+  background:#EFF4F9}
+.ad-mix span{display:block;height:100%}
+.ad-pref-tit{margin:16px 0 8px;font-size:11.5px;font-weight:600;color:var(--ink-3);
+  display:flex;align-items:center;gap:6px}
+.ad-pref{padding:8px 0 0;border-top:1px solid #F1F5F9}
+.ad-pref:first-of-type{border-top:0;padding-top:0}
+.ad-pref-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin-bottom:6px}
+.ad-pref-top span{font-size:12.5px;color:var(--ink-2);min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.ad-pref-top b{font-size:12.5px;font-weight:600;color:var(--ink);flex-shrink:0;
+  font-variant-numeric:tabular-nums}
+.ad-pref-trilho{display:block;height:4px;border-radius:99px;background:#EFF4F9;
+  margin-bottom:9px;overflow:hidden}
+.ad-pref-fill{display:block;height:100%;border-radius:99px}
+.ad-alta .ad-pref-fill{background:#12B981}
+.ad-media .ad-pref-fill{background:#EDA412}
+.ad-baixa .ad-pref-fill{background:#E0134E}
+
+@media(max-width:1180px){
+  .gcards-4{grid-template-columns:repeat(2,1fr)}
+  .ad-cards{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .dna-chips{border-radius:10px}
+  .dna-chip{flex:1 1 40%}
+}
+
 /* Rolagem horizontal com as duas coisas que ela precisa para não confundir:
    a coluna de Fidelidade fica presa à esquerda, e a sombra na borda direita
    avisa que ainda há tabela fora da tela. A sombra é o truque de dois planos
@@ -1734,7 +1833,7 @@ function estadoInicial(){
        real, olha os números e só então decide criar um público. Sair pelo
        fluxo, salvar ou cancelar continua devolvendo para a lista de
        segmentações, que é o contexto daquelas ações. */
-    screen:'geral',           // geral | sugestoes | list | wizard | resultados | branco
+    screen:'geral',           // geral | dna | sugestoes | list | wizard | resultados | branco
     voltaDoBranco:'geral',    // para onde o botão de voltar devolve
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
@@ -1743,8 +1842,9 @@ function estadoInicial(){
     motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
     motorExplica:null,      // bloco com a explicação aberta
+    dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
     preIni:null,            // início da janela de comparação; null = colada na campanha
-    gView:{faixas:'grafico', dnas:'grafico'},
+    gView:{faixas:'grafico', dnas:'grafico', dnaPerfil:'grafico', dnaFaixas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
     // abre com um formulário esperando input.
@@ -1937,6 +2037,15 @@ const TIPS = {
   estimativa:'Prévia de quantos clientes atendem aos critérios que você escolheu até aqui. O número muda a cada critério novo.',
   faturamento:'Soma do que esses clientes compraram nos últimos 12 meses.',
   ticket:'Valor médio de cada compra desses clientes.',
+  dnaAderencia:'Quanto o cliente concentra as compras deste DNA na sua rede. Alta é quem compra com regularidade e sem sumir; baixa é quem passa de vez em quando. As três faixas somam 100% dos clientes do DNA.',
+  dnaClientes:'Clientes identificados na venda que têm este DNA. Um cliente pode ter mais de um.',
+  dnaTicket:'Valor médio de cada compra dos clientes deste DNA.',
+  dnaLtv:'Quanto cada cliente deste DNA gerou de faturamento nos últimos 12 meses.',
+  adFat:'Faturamento dos clientes deste grau de aderência nos últimos 12 meses.',
+  adTicket:'Valor médio de cada compra neste grau.',
+  adLtv:'Faturamento dividido pelo número de clientes deste grau.',
+  adClientes:'Quantos clientes do DNA estão neste grau, e como eles se distribuem entre os perfis de fidelidade.',
+  adPref:'As cinco categorias que mais pesam no faturamento deste grau. Não somam o total: sobra o que veio de fora dessas cinco.',
   ltv:'Quanto cada cliente já gerou de receita desde a primeira compra.',
   prodsel:'Quantos produtos você marcou para filtrar o público.',
   periodoCompra:'Os períodos que você escolheu na etapa Produtos. Só entram clientes que compraram dentro deles.',
@@ -2203,6 +2312,7 @@ function tabs(){
   const t = ['Visão geral','Visão diária','DNA','Listagem de clientes',
     ...(ABA_SUGESTOES ? ['Sugestões'] : []), 'Segmentação'];
   const ativa = S.screen==='geral' ? 'Visão geral'
+              : S.screen==='dna' ? 'DNA'
               : S.screen==='sugestoes' ? 'Sugestões' : 'Segmentação';
   return `<div class="pagetopo">
     <h1 class="page">Painel CRM ${tip('painel')}</h1>
@@ -2987,6 +3097,173 @@ function painelGrafico(id, titulo, tk, grafico, tabela){
   </div>`;
 }
 
+/* =========================================================================
+   ABA DNA
+
+   Tudo aqui é derivado, nada é digitado duas vezes. O ponto de partida é o
+   que a Visão geral já publica — GERAL.dnas dá o tamanho de cada DNA,
+   PERFIS_RFV dá a distribuição de perfil, GERAL.faixas dá o formato etário
+   da base — e cada DNA aplica os próprios desvios sobre isso. Assim as
+   duas abas nunca se contradizem: a soma dos DNAs não estoura a base, e o
+   perfil etário de Mãe é jovem porque o desvio diz isso, não porque
+   alguém digitou.
+
+   TRÊS INVARIANTES que os testes travam:
+   1. os três graus de aderência somam o total de clientes do DNA;
+   2. os percentuais de aderência somam exatos 100%;
+   3. LTV e ticket caem de Alta para Baixa — se não caíssem, "aderência"
+      não estaria medindo nada.
+   ========================================================================= */
+
+const DNA_FAIXAS = ['0 - 19','20 - 29','30 - 39','40 - 49','50 - 59','60 - 69','70 - 79','80 +','Não definido'];
+
+/* Por DNA: [pico etário, espalhamento, % feminino, peso de aderência alta,
+   ticket médio do DNA]. O pico é o índice em DNA_FAIXAS. */
+const DNA_PERFIL = {
+  'Anticoncepcionais':      {pico:1, esp:1.6, fem:.92, alta:.44, ticket: 62.40},
+  'Beleza':                 {pico:2, esp:2.2, fem:.78, alta:.31, ticket:104.70},
+  'Diabetes':               {pico:5, esp:2.0, fem:.52, alta:.63, ticket: 88.30},
+  'Doenças Cardíacas':      {pico:6, esp:1.8, fem:.48, alta:.66, ticket: 79.10},
+  'Hipertensão':            {pico:5, esp:2.2, fem:.55, alta:.61, ticket: 74.50},
+  'Hormônios Tireoidianos': {pico:3, esp:2.0, fem:.83, alta:.58, ticket: 66.20},
+  'Mães':                   {pico:2, esp:1.5, fem:.94, alta:.37, ticket:118.90},
+  'Sistema Nervoso':        {pico:3, esp:2.4, fem:.66, alta:.54, ticket: 71.80}
+};
+
+const DNA_TIPOS = ['Propagados','Genéricos','Similares','Não medicamentos'];
+
+/* Preferências: as subcategorias que definem o DNA primeiro, depois as que
+   ele leva junto. O rótulo traz o tipo de produto porque é assim que o
+   comprador da farmácia lê o catálogo. */
+const DNA_PREF = {
+  'Anticoncepcionais':      [['Anticoncepcionais',0],['Higiene íntima',3],['Suplementos e vitaminas',3],['Analgésicos',1],['Dermocosméticos',3]],
+  'Beleza':                 [['Dermocosméticos',3],['Proteção solar',3],['Cabelos',3],['Suplementos e vitaminas',3],['Higiene corporal',3]],
+  'Diabetes':               [['Antidiabéticos',0],['Suplementos e vitaminas',3],['Cuidados com os pés',3],['Analgésicos',1],['Vitamina D',3]],
+  'Doenças Cardíacas':      [['Anti-hipertensivos',1],['Ômega 3',3],['Suplementos e vitaminas',3],['Analgésicos',1],['Aferição e monitoramento',3]],
+  'Hipertensão':            [['Anti-hipertensivos',1],['Analgésicos',1],['Suplementos e vitaminas',3],['Higiene bucal',3],['Aferição e monitoramento',3]],
+  'Hormônios Tireoidianos': [['Hormonais',0],['Cálcio e vitamina D',3],['Cabelos',3],['Suplementos e vitaminas',3],['Analgésicos',1]],
+  'Mães':                   [['Fraldas',3],['Leites infantis',3],['Higiene infantil',3],['Sistema digestivo',0],['Analgésicos',1]],
+  'Sistema Nervoso':        [['Psicotrópicos',1],['Magnésio e minerais',3],['Suplementos e vitaminas',3],['Higiene bucal',3],['Analgésicos',1]]
+};
+
+const DNA_GRAUS = [
+  {id:'alta',  rot:'Alta aderência',  cls:'ad-alta',  ltv:1.62, tk:1.34},
+  {id:'media', rot:'Média aderência', cls:'ad-media', ltv:0.84, tk:0.96},
+  {id:'baixa', rot:'Baixa aderência', cls:'ad-baixa', ltv:0.39, tk:0.71}
+];
+
+const dnaNomes = () => GERAL.dnas.map(([n]) => n);
+
+/* Ruído determinístico por chave — dois DNAs não têm a mesma forma, e
+   número redondo demais denuncia dado inventado. */
+function jitterDna(chave, amp){
+  let h = 2166136261;
+  for(const ch of String(chave)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return 1 + (((h >>> 0) % 2000) / 1000 - 1) * (amp || .12);
+}
+
+/* Reparte um inteiro em partes proporcionais que somam exatamente ele.
+   Maior resto: arredonda para baixo e devolve as sobras para quem tem a
+   maior parte decimal. Sem isso a soma dos graus não fecha o total. */
+function reparte(total, pesos){
+  const soma = pesos.reduce((a,b)=>a+b, 0) || 1;
+  const exato = pesos.map(p => p/soma*total);
+  const base  = exato.map(Math.floor);
+  let resto = total - base.reduce((a,b)=>a+b, 0);
+  exato.map((v,i) => [i, v-base[i]]).sort((a,b) => b[1]-a[1])
+    .slice(0, resto).forEach(([i]) => base[i]++);
+  return base;
+}
+
+function dadosDna(nome){
+  const p = DNA_PERFIL[nome] || DNA_PERFIL['Beleza'];
+  const clientes = clientesDna(nome);
+
+  /* Aderência: o peso de alta é próprio do DNA — uso contínuo adere mais
+     que compra por vontade — e os outros dois saem do que sobra. */
+  const pesos = [p.alta, (1-p.alta)*0.42*jitterDna(nome+'|m',.10), 0];
+  pesos[2] = Math.max(.05, 1 - pesos[0] - pesos[1]);
+  const pct = reparte(1000, pesos).map(v => v/10);
+  const cliGrau = reparte(clientes, pesos);
+
+  /* LTV do DNA sai do ticket e de quantas compras por ano o perfil faz.
+     Os graus repartem esse total pelos multiplicadores, e depois tudo é
+     normalizado para o faturamento fechar. */
+  const comprasAno = 3.1 + p.alta * 5.4;
+  const ltvDna = p.ticket * comprasAno * jitterDna(nome+'|l',.08);
+  const faturamento = Math.round(clientes * ltvDna);
+
+  const brutos = DNA_GRAUS.map((g,i) => cliGrau[i] * ltvDna * g.ltv);
+  const fatGrau = reparte(faturamento, brutos);
+
+  const graus = DNA_GRAUS.map((g,i) => ({
+    ...g,
+    clientes: cliGrau[i],
+    pct: pct[i],
+    faturamento: fatGrau[i],
+    ltv: cliGrau[i] ? fatGrau[i]/cliGrau[i] : 0,
+    ticket: p.ticket * g.tk * jitterDna(nome+'|t'+g.id,.05),
+    perfis: mixPerfis(nome, g.id),
+    prefs: prefsGrau(nome, fatGrau[i], g.id)
+  }));
+
+  return {
+    nome, clientes, pct, graus, faturamento,
+    ltv: ltvDna,
+    ticket: p.ticket * jitterDna(nome+'|tk',.04),
+    perfis: perfisDna(nome, clientes, faturamento),
+    faixas: faixasDna(nome, clientes, p)
+  };
+}
+
+/* Distribuição de perfil dentro do DNA. Parte da base inteira e inclina:
+   quem adere muito tem mais Fiel e Valioso, quem adere pouco tem mais
+   Abandonador. É o que dá sentido à barra colorida de cada grau. */
+const PERFIS_DNA = PERFIS_RFV.slice(0,5).map(p => [p[0], p[11]]);
+
+function mixPerfis(nome, grau){
+  const incl = grau==='alta'  ? [2.4,1.8,1.0,0.5,0.2]
+             : grau==='media' ? [1.0,1.1,1.3,1.0,0.6]
+                              : [0.3,0.4,0.9,1.5,2.6];
+  const base = PERFIS_RFV.slice(0,5).map((p,i) => p[2] * incl[i] * jitterDna(nome+grau+i,.10));
+  return reparte(1000, base).map((v,i) => [PERFIS_DNA[i][0], v/10, PERFIS_DNA[i][1]]);
+}
+
+function perfisDna(nome, clientes, faturamento){
+  const base = PERFIS_RFV.slice(0,5).map((p,i) => p[2] * jitterDna(nome+'|p'+i,.22));
+  const pct  = reparte(1000, base).map(v => v/10);
+  /* O faturamento acompanha o LTV de cada perfil, não o tamanho dele —
+     é por isso que Fiel tem barra curta na esquerda e longa na direita. */
+  const fatBase = PERFIS_RFV.slice(0,5).map((p,i) => pct[i] * p[4]);
+  const fat = reparte(faturamento, fatBase);
+  return PERFIS_DNA.map(([n,cls],i) => [n, pct[i], fat[i], cls]);
+}
+
+/* Faixa etária: a forma da base inteira inclinada pelo pico do DNA. Mãe
+   fica jovem e Doenças Cardíacas fica velho porque o desvio diz isso. */
+function faixasDna(nome, clientes, p){
+  const pesos = DNA_FAIXAS.map((f,i) => {
+    if(f === 'Não definido') return 0.06;
+    const d = (i - p.pico) / p.esp;
+    return Math.exp(-d*d) * jitterDna(nome+'|f'+i,.16) + 0.02;
+  });
+  const tot = reparte(clientes, pesos);
+  return DNA_FAIXAS.map((f,i) => {
+    const ind = Math.round(tot[i] * (f==='Não definido' ? .55 : .05));
+    const fem = Math.round((tot[i]-ind) * p.fem);
+    return [f, fem, tot[i]-ind-fem, ind];
+  });
+}
+
+function prefsGrau(nome, faturamento, grau){
+  const lista = DNA_PREF[nome] || DNA_PREF['Beleza'];
+  const pesos = lista.map((_,i) => Math.pow(0.46, i) * jitterDna(nome+grau+'|pr'+i,.18));
+  /* Preferência é uma fatia do faturamento do grau, não o total: sobra o
+     que veio de categoria fora das cinco. */
+  const val = reparte(Math.round(faturamento*0.78), pesos);
+  return lista.map(([cat,tp],i) => [cat + ' — ' + DNA_TIPOS[tp], val[i]]);
+}
+
 function telaGeral(){
   const perfis = perfisGrafico();
   const maxPct = Math.max(...perfis.map(p=>p[1]));
@@ -3450,6 +3727,160 @@ function telaSugestoes(){
       <p class="sug-rodape">${I.info} São padrões de compra observados na sua base.
         Não indicam condição de saúde de ninguém, e não substituem a orientação do farmacêutico.</p>
     </div></div>`);
+}
+
+/* ---------- Tela: DNA ---------- */
+
+function chipsDnaAba(){
+  return `<div class="dna-chips" role="tablist" aria-label="DNA">
+    ${dnaNomes().map(n => {
+      const on = S.dnaAba === n;
+      return `<button class="dna-chip${on?' on':''}" role="tab" aria-selected="${on}"
+        data-act="dnaAba" data-v="${esc(n)}" data-k="dna-${esc(n)}">${esc(n)}</button>`;
+    }).join('')}
+  </div>`;
+}
+
+/* Cartão de aderência: três valores num cartão só, porque são partes de
+   um mesmo todo. Separados em três cartões, pareceriam três métricas
+   independentes e ninguém somaria 100. */
+function cardAderencia(d){
+  return `<div class="gcard gcard-tri">
+    <div class="gcard-top">${I.alta}<span>Aderência</span>${tip('dnaAderencia')}</div>
+    <div class="tri">
+      ${d.graus.map(g => `<div class="tri-col ${g.cls}">
+        <b>${nf1.format(g.pct).replace(',0','')}%</b>
+        <span>${esc(g.rot.split(' ')[0])}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function graficoPerfisDna(d){
+  const maxPct = Math.max(...d.perfis.map(p=>p[1]));
+  const maxFat = Math.max(...d.perfis.map(p=>p[2]));
+  return `<div class="gperfil">
+    ${d.perfis.map(([nome,pct,fat,cls])=>`<div class="gp-lin">
+      <div class="gp-rot">${esc(nome)}</div>
+      <div class="gp-trilho"><div class="gp-fill ${cls}" style="width:${(pct/maxPct*100).toFixed(1)}%"></div>
+        <span class="gp-val">${nf1.format(pct)}%</span></div>
+      <div class="gp-trilho"><div class="gp-fill ${cls}" style="width:${(fat/maxFat*100).toFixed(1)}%"></div>
+        <span class="gp-val">${brlCurto(fat)}</span></div>
+    </div>`).join('')}
+  </div>
+  <div class="g-leg">${d.perfis.map(([n,,,cls])=>`<span><i class="${cls}"></i>${esc(n)}</span>`).join('')}</div>`;
+}
+
+function tabelaPerfisDna(d){
+  return `<div class="gtab-wrap"><table class="gtab">
+    <thead><tr><th>Perfil</th><th>Participação</th><th>Faturamento</th></tr></thead>
+    <tbody>${d.perfis.map(([n,pct,fat])=>`<tr>
+      <td>${esc(n)}</td><td>${nf1.format(pct)}%</td><td>${brl(fat)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function graficoFaixasDna(d){
+  const totais = d.faixas.map(([,f,m,i]) => f+m+i);
+  const {topo, marcas} = escala(Math.max(...totais));
+  return `<div class="grafico">
+    ${eixoY(marcas)}
+    <div class="g-plot">
+      ${d.faixas.map(([nome,f,m,i])=>{
+        const alt = p => (p/topo*100).toFixed(2)+'%';
+        return `<div class="g-col" title="${esc(nome)}: ${nf.format(f+m+i)} clientes">
+          <div class="g-pilha">
+            <span class="g-bar b-ind" style="height:${alt(i)}"></span>
+            <span class="g-bar b-masc" style="height:${alt(m)}"></span>
+            <span class="g-bar b-fem" style="height:${alt(f)}"></span>
+          </div>
+          <div class="g-rot">${esc(nome)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  <div class="g-leg">
+    <span><i class="b-fem"></i>Feminino</span>
+    <span><i class="b-masc"></i>Masculino</span>
+    <span><i class="b-ind"></i>Indeterminado</span>
+  </div>`;
+}
+
+function tabelaFaixasDna(d){
+  return `<div class="gtab-wrap"><table class="gtab">
+    <thead><tr><th>Faixa</th><th>Feminino</th><th>Masculino</th><th>Indeterminado</th><th>Total</th></tr></thead>
+    <tbody>${d.faixas.map(([n,f,m,i])=>`<tr><td>${esc(n)}</td>
+      <td>${nf.format(f)}</td><td>${nf.format(m)}</td><td>${nf.format(i)}</td>
+      <td class="forte">${nf.format(f+m+i)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+/* Cartão de um grau de aderência. A ordem segue a pergunta de quem lê:
+   quanto este grupo rendeu, quanto rende por venda e por cliente, quantos
+   são e como se distribuem, e o que eles compram. */
+function cardGrau(d, g){
+  const maxPref = Math.max(...g.prefs.map(p=>p[1])) || 1;
+  const pctCli = d.clientes ? g.clientes/d.clientes*100 : 0;
+  return `<div class="ad-card ${g.cls}">
+    <h4 class="ad-tit">${esc(g.rot)}</h4>
+
+    <div class="ad-kpi larga">
+      <span>${I.money} Faturamento ${tip('adFat')}</span>
+      <b>${brl(g.faturamento)}</b>
+    </div>
+    <div class="ad-dupla">
+      <div class="ad-kpi"><span>${I.etiqueta} Ticket médio ${tip('adTicket')}</span><b>${brl(g.ticket)}</b></div>
+      <div class="ad-kpi"><span>${I.alta} LTV ${tip('adLtv')}</span><b>${brl(g.ltv)}</b></div>
+    </div>
+
+    <div class="ad-kpi larga">
+      <div class="ad-cli-top">
+        <span>${I.users} Clientes ${tip('adClientes')}</span>
+        <i>${nf1.format(pctCli).replace(',0','')}% do DNA</i>
+      </div>
+      <b>${nf.format(g.clientes)}</b>
+      <div class="ad-mix" role="img"
+        aria-label="Perfil destes clientes: ${g.perfis.map(([n,p])=>n+' '+nf1.format(p)+'%').join(', ')}">
+        ${g.perfis.map(([n,p,cls])=>`<span class="${cls}" style="width:${p}%"
+          title="${esc(n)}: ${nf1.format(p)}%"></span>`).join('')}
+      </div>
+    </div>
+
+    <p class="ad-pref-tit">Preferências ${tip('adPref')}</p>
+    ${g.prefs.map(([nome,val])=>`<div class="ad-pref">
+      <div class="ad-pref-top"><span>${esc(nome)}</span><b>${brl(val)}</b></div>
+      <span class="ad-pref-trilho"><span class="ad-pref-fill" style="width:${(val/maxPref*100).toFixed(1)}%"></span></span>
+    </div>`).join('')}
+  </div>`;
+}
+
+function telaDna(){
+  const d = dadosDna(S.dnaAba);
+  return shell(`<div class="geral">${tabs()}
+  <div class="gfiltros">
+    <div class="gf-esq">
+      ${selGeral('G.E','ge',['12','07','19','23'],GERAL.ge)}
+      ${selGeral('Loja','loja',['Ultrapopular Jardim Paris','Ultrapopular Centro','Todas as lojas do grupo'],GERAL.loja)}
+    </div>
+    <div class="gf-fonte">Fonte de dados PEC · Última atualização: ${GERAL.atualizado} ${tip('fonte')}</div>
+  </div>
+
+  ${chipsDnaAba()}
+
+  <div class="gcards gcards-4">
+    ${cardGeral('users','Total de clientes','dnaClientes', nf.format(d.clientes))}
+    ${cardAderencia(d)}
+    ${cardGeral('etiqueta','Ticket médio','dnaTicket', brl(d.ticket))}
+    ${cardGeral('money','LTV','dnaLtv', brl(d.ltv))}
+  </div>
+
+  ${painelGrafico('dnaPerfil','Informações gerais por perfil de cliente','perfilCliente',
+    () => graficoPerfisDna(d), () => tabelaPerfisDna(d))}
+
+  ${painelGrafico('dnaFaixas','Faixa etária e gênero','faixaGenero',
+    () => graficoFaixasDna(d), () => tabelaFaixasDna(d))}
+
+  <div class="ad-cards">${d.graus.map(g => cardGrau(d, g)).join('')}</div>
+  </div>`);
 }
 
 /* ---------- Tela: lista de segmentações ---------- */
@@ -4959,6 +5390,7 @@ function render(){
            : S.screen==='branco' ? telaBranco()
            : S.screen==='geral' ? telaGeral()
            : S.screen==='sugestoes' ? telaSugestoes()
+           : S.screen==='dna' ? telaDna()
            : S.screen==='resultados' ? telaResultados()
            : telaWizard();
   if(S.modal) html += modalSalvar();
@@ -5083,7 +5515,7 @@ function handle(act, v, el, isInput){
       toast('Código copiado: ' + v); log('motor-copiou', v); return;
 
     case 'irAba': {
-      const destino = {'Visão geral':'geral','Sugestões':'sugestoes','Segmentação':'list'}[v];
+      const destino = {'Visão geral':'geral','DNA':'dna','Sugestões':'sugestoes','Segmentação':'list'}[v];
       if(destino){
         S.screen = destino;
         S.resSeg=null; S.resCamp=null; S.menuSeg=null;   // sair pela aba não deixa estado pendurado
@@ -5140,6 +5572,9 @@ function handle(act, v, el, isInput){
       S.preIni = v2 ? v2.split('-').reverse().join('/') : null;
       log('comparativo-periodo', S.preIni || 'padrão');
       render(); return; }
+
+    case 'dnaAba':
+      S.dnaAba = v; log('dna-aba', v); window.scrollTo(0,0); render(); return;
 
     case 'gAnalise':
       S.gAnalise = S.gAnalise===v ? null : v;
