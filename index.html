@@ -1242,65 +1242,32 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
 
-/* ---------- Vendas do DNA ----------
-   A barra de 100% é o único elemento que carrega cor de verdade neste bloco:
-   azul para o que é do DNA, cinza para o resto. Tudo ao redor fica quieto para
-   ela não competir com nada. */
-.mixbar{position:relative;display:flex;height:24px;border-radius:7px;overflow:visible;background:#EFF4F9}
-.mixbar>.mixseg:first-of-type{border-radius:7px 0 0 7px}
-.mixbar>.mixseg:nth-of-type(2){border-radius:0 7px 7px 0}
-.mixseg{display:block;height:100%;transition:filter .12s}
-.mixseg:hover{filter:brightness(.93)}
-
-/* Marcador do normal: uma régua sobre a barra, não uma segunda barra. A
-   distância entre o fim do azul e a régua é a leitura. */
-.mixmk{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink);
-  border-radius:1px;transform:translateX(-1px);pointer-events:auto}
-.mixmk-rot{position:absolute;bottom:calc(100% + 8px);transform:translateX(-50%);
-  white-space:nowrap;font-size:11.5px;font-weight:600;color:var(--ink-2);
-  background:#fff;padding:0 5px}
-
-/* Legenda: duas faixas mais o marcador. */
-.mixduo{display:flex;gap:24px;flex-wrap:wrap;margin-top:15px}
-.mixduo-i{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
-.mixduo-i i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
-.mixduo-i b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.mixduo-mk{width:2px!important;height:14px!important;border-radius:1px!important;
-  background:var(--ink);margin:0 4px}
-
-/* Resumo do bloco: esta campanha, a distância, a média. Lê-se numa linha. */
-.dnacmp-topo{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:20px;
-  padding-bottom:18px;border-bottom:1px solid var(--border)}
-.dc-par span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
-.dc-par b{font-size:28px;font-weight:700;line-height:1.1;color:var(--ink);
+/* ---------- Faturamento das campanhas ----------
+   Barras na mesma escala, empilhadas entre o que veio do DNA e o resto.
+   Sem marcador de média e sem coluna de variação: o bloco mostra porte e
+   composição, não comparação. */
+.fcamp{display:flex;flex-direction:column;gap:16px;margin-bottom:14px}
+.fc-lin{display:flex;flex-direction:column;gap:6px}
+.fc-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.fc-per{font-size:12.5px;color:var(--ink-2)}
+.fc-per i{font-style:normal;font-size:11px;font-weight:600;color:var(--primary);
+  background:var(--primary-soft);border-radius:99px;padding:2px 8px;margin-left:7px}
+.fc-tot{font-size:16px;font-weight:700;color:var(--ink);flex-shrink:0;
   font-variant-numeric:tabular-nums}
-.dc-par b.pos{color:var(--green)}
-.dc-par b.neg{color:var(--danger)}
-.dc-par b.neutro{color:var(--ink-3)}
-.dc-vs{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--ink-3);
-  padding:0 4px}
-.dc-vs b{font-size:17px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.dc-vs i{font-style:normal}
-
-/* Cabeçalho das colunas: sem ele os dois números da direita são ambíguos. */
-.mixcab{display:grid;grid-template-columns:180px minmax(0,1fr) 62px 66px;gap:14px;
-  margin-bottom:8px;font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--ink-4)}
-.mixcab span:nth-child(3),.mixcab span:nth-child(4){text-align:right}
-
-.mixcmp{display:flex;flex-direction:column;gap:9px}
-.mixlin{display:grid;grid-template-columns:180px minmax(0,1fr) 62px 66px;gap:14px;align-items:center}
-.mixlin-rot{font-size:13px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mixlin.atual .mixlin-rot{color:var(--ink);font-weight:600}
-.mixlin-rot i{font-style:normal;color:var(--primary);font-weight:600}
-.mixlin .mixmk{top:-4px;bottom:-4px}
-.mixlin-val{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;
-  color:var(--ink-2)}
-.mixlin.atual .mixlin-val{color:var(--ink)}
-/* Distância para a média, em percentual relativo — nunca em "pontos". */
-.mixlin-rel{font-size:12.5px;font-weight:700;text-align:right;color:var(--ink-4);
-  font-variant-numeric:tabular-nums}
-.mixlin-rel.pos{color:var(--green)}
-.mixlin-rel.neg{color:var(--danger)}
+/* O trilho tem o tamanho do valor: a largura entre campanhas é a
+   informação, então ele não ocupa a linha inteira. */
+.fc-trilho{height:14px;border-radius:99px;background:var(--g-ref);overflow:hidden;
+  min-width:8px;transition:width .3s ease}
+.fc-dna{display:block;height:100%;border-radius:99px;background:var(--g-atual-h);
+  min-width:4px}
+@media(prefers-reduced-motion:reduce){.fc-trilho{transition:none}}
+.fc-ap{font-size:11.5px;color:var(--ink-3)}
+.fc-lin.atual .fc-per{color:var(--ink);font-weight:600}
+.fc-leg{display:flex;gap:20px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.fc-leg span{display:inline-flex;align-items:center;gap:7px}
+.fc-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.fc-pt.dna{background:#2D8FFC}
+.fc-pt.resto{background:var(--g-ref)}
 
 /* ---------- Funil ---------- */
 /* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
@@ -1352,8 +1319,6 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1080px){
   .herois{grid-template-columns:repeat(2,1fr)}
   .funil-camp{--fun-ind:14px;gap:14px}
-  .mixlin,.mixcab{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
-  .dnacmp-topo{gap:18px}
 }
 
 .maiswrap{position:relative;z-index:20;flex-shrink:0}
@@ -4325,7 +4290,6 @@ function mixDna(s, mix, total){
   return {linhas, pctAlvo};
 }
 
-const COR_DNA = '#0B7BFB', COR_RESTO = '#D5DDE8';
 
 /* ---------- Card: faturamento da campanha dentro do sellout ----------
    Dá escala ao número. R$ 96.400 sozinho não diz se é muito ou pouco; ao lado
@@ -4345,17 +4309,6 @@ function cardFaturamento(s, c){
 
 /* Barra de duas faixas com a média do DNA marcada por uma régua. A régua é o
    que transforma o percentual numa distância que o olho mede sozinho. */
-function barraDna(pctAlvo, marcador, rotulo){
-  const mk = (typeof marcador === 'number') ? `
-    <span class="mixmk" style="left:${marcador.toFixed(2)}%"
-      title="Média dos últimos 12 meses: ${nf1.format(marcador)}%"></span>
-    ${rotulo ? `<span class="mixmk-rot" style="left:${marcador.toFixed(2)}%">média ${nf1.format(marcador)}%</span>` : ''}` : '';
-  return `<div class="mixbar">
-    <span class="mixseg" style="width:${pctAlvo.toFixed(2)}%;background:${COR_DNA}"></span>
-    <span class="mixseg" style="width:${(100-pctAlvo).toFixed(2)}%;background:${COR_RESTO}"></span>
-    ${mk}
-  </div>`;
-}
 
 /* Comparativo do DNA entre campanhas, com a média do DNA como referência.
 
@@ -4363,6 +4316,22 @@ function barraDna(pctAlvo, marcador, rotulo){
    de 49% dá 9 pontos percentuais, mas "9 pontos" é vocabulário de analista.
    Para quem lê no balcão, o número que significa alguma coisa é o relativo:
    58 ÷ 49 = 1,18, ou seja, 18% acima da média. */
+/* Faturamento das campanhas deste público.
+
+   O bloco media em percentual e comparava tudo com tudo: a fatia do DNA
+   contra a média de doze meses, e depois cada campanha contra essa média
+   de novo. Saíram os dois comparativos. Ficou o que o gráfico existe para
+   mostrar — quando cada campanha rodou e quanto ela faturou.
+
+   A TROCA QUE MAIS MUDA A LEITURA é percentual por reais. Em percentual
+   toda barra ia até 100%, e uma campanha de R$ 58 mil parecia do mesmo
+   tamanho de uma de R$ 96 mil: a diferença de porte sumia justamente no
+   gráfico que deveria mostrá-la. Em reais, com as barras na mesma escala,
+   o porte é a primeira coisa que se vê.
+
+   A barra é empilhada — o total da campanha, com a parte que veio de
+   produtos do DNA destacada dentro. Duas informações, nenhum
+   comparativo. */
 function blocoDnaVendas(s, c){
   const {nomes, subs} = subsDoDna(s);
   if(!nomes.length) return '';
@@ -4370,59 +4339,42 @@ function blocoDnaVendas(s, c){
     .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
   if(!camps.length) return '';
 
-  const media = (s.mixHist||[]).reduce((a,[cat,pct]) => a + (subs.has(cat)?pct:0), 0);
   const rotDna = nomes.join(' e ');
-  const desta = mixDna(s, c.mix, c.faturamento).pctAlvo;
-  const rel = media ? (desta - media) / media * 100 : 0;
-  const sobe = rel > 1, desce = rel < -1;
+  const linhas = camps.map(x => {
+    const m = mixDna(s, x.mix, x.faturamento);
+    return {...x, dna: Math.round(x.faturamento * m.pctAlvo / 100)};
+  });
+  const maior = Math.max(...linhas.map(x => x.faturamento)) || 1;
+  const periodo = x => `${x.ini.slice(0,5)} a ${x.fim}`;
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">Quanto das vendas foi de produtos de ${esc(rotDna)}
-      ${tipTexto(`${esc(rotDna)} é o DNA que você escolheu nesta segmentação. Cada DNA reúne
-      categorias de produto: ${esc([...subs].join(', '))}. A média é o quanto este mesmo público
-      comprou dessas categorias nos últimos 12 meses.`)}</h4>
+    <h4 class="bloco-tit">Faturamento das campanhas deste público
+      ${tipTexto(`Cada barra é o que a campanha faturou no período, e a parte destacada é o que
+      veio de produtos de ${esc(rotDna)} — as categorias ${esc([...subs].join(', '))}. As barras
+      estão na mesma escala, então o comprimento mostra o porte de cada campanha.`)}</h4>
 
-    <div class="dnacmp-topo">
-      <div class="dc-par">
-        <span>Nesta campanha</span>
-        <b class="${sobe?'pos':(desce?'neg':'')}">${nf1.format(desta)}%</b>
-      </div>
-      <div class="dc-vs">${sobe?'↑':(desce?'↓':'=')}
-        <b>${nf1.format(Math.abs(rel))}%</b>
-        <i>${sobe?'acima':(desce?'abaixo':'em linha com')} da média</i></div>
-      <div class="dc-par">
-        <span>Média dos últimos 12 meses</span>
-        <b class="neutro">${nf1.format(media)}%</b>
-      </div>
-    </div>
-
-    <div class="mixcab">
-      <span>Campanha</span><span></span>
-      <span>Foi de ${esc(rotDna)}</span><span>Contra a média</span>
-    </div>
-    <div class="mixcmp">
-      ${camps.map(x=>{
-        const m = mixDna(s, x.mix, x.faturamento);
+    <div class="fcamp">
+      ${linhas.map(x => {
         const atual = x.id===c.id;
-        const r = media ? (m.pctAlvo - media) / media * 100 : 0;
-        return `<div class="mixlin${atual?' atual':''}">
-          <div class="mixlin-rot">${x.ini.slice(0,5)} · ${CANAIS[x.canal][0]}${atual?' <i>(esta)</i>':''}</div>
-          ${barraDna(m.pctAlvo, media, atual)}
-          <div class="mixlin-val">${nf1.format(m.pctAlvo)}%</div>
-          <div class="mixlin-rel ${r>1?'pos':(r<-1?'neg':'')}">${r>1?'↑':(r<-1?'↓':'=')} ${nf1.format(Math.abs(r))}%</div>
+        const pctDna = x.faturamento ? x.dna/x.faturamento*100 : 0;
+        return `<div class="fc-lin${atual?' atual':''}">
+          <div class="fc-cab">
+            <span class="fc-per">${periodo(x)}${atual?' <i>esta campanha</i>':''}</span>
+            <b class="fc-tot">${brl(x.faturamento)}</b>
+          </div>
+          <div class="fc-trilho" style="width:${(x.faturamento/maior*100).toFixed(1)}%"
+            title="${esc(periodo(x))}: ${brl(x.faturamento)}, sendo ${brl(x.dna)} de ${esc(rotDna)}">
+            <span class="fc-dna" style="width:${pctDna.toFixed(1)}%"></span>
+          </div>
+          <span class="fc-ap">${brl(x.dna)} de ${esc(rotDna)} · ${CANAIS[x.canal][0]}</span>
         </div>`;
       }).join('')}
     </div>
 
-    <div class="mixduo">
-      <span class="mixduo-i"><i style="background:${COR_DNA}"></i>Produtos de ${esc(rotDna)}</span>
-      <span class="mixduo-i"><i style="background:${COR_RESTO}"></i>Outros produtos</span>
-      <span class="mixduo-i mk"><i class="mixduo-mk"></i>Média dos 12 meses
-        <b>${nf1.format(media)}%</b></span>
+    <div class="fc-leg">
+      <span><i class="fc-pt dna"></i>Produtos de ${esc(rotDna)}</span>
+      <span><i class="fc-pt resto"></i>Outros produtos</span>
     </div>
-    <p class="bloco-nota">A linha escura em cada barra é a média. Quando o azul passa dela, a
-    campanha vendeu mais desses produtos do que este público costuma comprar. A última coluna
-    diz quanto passou.</p>
   </div>`;
 }
 
