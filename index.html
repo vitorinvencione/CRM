@@ -1350,6 +1350,33 @@ tbody tr.sel{background:#F3F8FF}
 }
 .ttip:hover .bubble{opacity:1}
 
+/* Tooltip em lista: título centralizado, pares nas bordas opostas, rodapé
+   com o denominador. A seta embaixo amarra a bolha ao que a disparou —
+   numa barra larga, sem ela não fica claro de qual barra é. */
+.bubble-lista{width:256px;padding:13px 15px 12px;border-radius:11px;
+  box-shadow:0 10px 28px rgba(9,24,44,.26)}
+.bubble-lista::after{content:'';position:absolute;top:100%;left:50%;
+  transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--ink)}
+.bl-tit{display:block;text-align:center;font-size:13px;font-weight:700;
+  margin-bottom:10px;letter-spacing:.01em}
+.bl-lin{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  font-size:12.5px;padding:3px 0}
+.bl-lin>span{color:rgba(255,255,255,.82);min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.bl-lin>i{font-style:normal;font-weight:600;flex-shrink:0;font-variant-numeric:tabular-nums}
+.bl-pe{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14);
+  font-size:11px;color:rgba(255,255,255,.6)}
+
+/* A barra vira o alvo do tooltip: é grande e é onde o olho já está. O
+   overflow tinha que abrir para a bolha caber — o recorte não fazia falta,
+   porque o preenchimento já tem o próprio raio. */
+.fun-trilho.com-tip{overflow:visible;cursor:help;position:relative}
+.fun-trilho.com-tip .bubble{bottom:calc(100% + 10px)}
+.fun-trilho.com-tip:hover .bubble{opacity:1}
+.fun-trilho.com-tip:hover .fun-fill{filter:brightness(1.06)}
+.fun-trilho.com-tip .fun-fill{transition:width .25s ease,filter .12s ease}
+@media(prefers-reduced-motion:reduce){.fun-trilho.com-tip .fun-fill{transition:none}}
+
 /* ---------- Painel do facilitador ---------- */
 #fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
 #fac{position:fixed;top:0;right:0;bottom:0;width:352px;background:#fff;border-left:1px solid var(--border);z-index:75;transform:translateX(100%);transition:.22s;display:flex;flex-direction:column;box-shadow:-8px 0 28px rgba(15,40,70,.1)}
@@ -1900,6 +1927,28 @@ const TIPS = {
 const tip = k => tipTexto(TIPS[k]);
 /* Alguns tooltips dependem do dado da tela (o nome do DNA, as categorias que
    ele reúne) e por isso não cabem num dicionário fixo. */
+/* Tooltip em lista. O de texto corrido serve para explicar; este serve
+   para LER número, e número em frase se perde. Título centralizado, os
+   pares alinhados nas bordas opostas e o rodapé dizendo sobre o que é o
+   percentual — sem ele, "58%" não tem denominador. */
+function tipLista(titulo, linhas, rodape){
+  return `<span class="ttip">${I.info}<span class="bubble bubble-lista">
+    <b class="bl-tit">${esc(titulo)}</b>
+    ${linhas.map(([r,v]) => `<span class="bl-lin"><span>${esc(r)}</span><i>${esc(v)}</i></span>`).join('')}
+    ${rodape ? `<span class="bl-pe">${esc(rodape)}</span>` : ''}
+  </span></span>`;
+}
+
+/* A mesma bolha, presa numa barra do funil em vez de num ícone: a barra é
+   um alvo grande e é onde o olho já está. */
+function tipBarra(titulo, linhas, rodape){
+  return `<span class="bubble bubble-lista">
+    <b class="bl-tit">${esc(titulo)}</b>
+    ${linhas.map(([r,v]) => `<span class="bl-lin"><span>${esc(r)}</span><i>${esc(v)}</i></span>`).join('')}
+    ${rodape ? `<span class="bl-pe">${esc(rodape)}</span>` : ''}
+  </span>`;
+}
+
 const tipTexto = t => `<span class="ttip">${I.info}<span class="bubble">${esc(String(t).replace(/\s+/g,' ').trim())}</span></span>`;
 
 /* =========================================================================
@@ -3879,10 +3928,9 @@ function funilCampanha(s, c){
      e não em "mais compradas", que sugeriria contagem de unidades. */
   const topo = (c.mix || []).slice()
     .sort((a,b) => b[1]-a[1]).slice(0,3)
-    .map(([cat,v]) => `${cat} (${Math.round(v/c.faturamento*100)}%)`);
+    .map(([cat,v]) => [cat, nf1.format(v/c.faturamento*100) + '%']);
   const tipCompraram = topo.length
-    ? tipTexto('Categorias que mais venderam nesta campanha: ' + topo.join(', ') +
-      '. Percentual sobre o faturamento da campanha.')
+    ? tipBarra('Categorias', topo, '% do faturamento desta campanha')
     : '';
   const base = s.pctAcimaHist || 0;
   const dif  = pctAcima - base;
@@ -3892,9 +3940,9 @@ function funilCampanha(s, c){
      usava o público como base e o texto usava quem comprou. Barra que contradiz
      o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
      mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
-  const degrau = (rot, n, largura, apoio, cls) => `<div class="fun-lin ${cls}">
+  const degrau = (rot, n, largura, apoio, cls, bolha) => `<div class="fun-lin ${cls}">
     <div class="fun-rot">${rot}</div>
-    <div class="fun-trilho"><div class="fun-fill" style="width:${largura.toFixed(1)}%"></div></div>
+    <div class="fun-trilho${bolha?' com-tip':''}"><div class="fun-fill" style="width:${largura.toFixed(1)}%"></div>${bolha||''}</div>
     <div class="fun-val"><b>${nf.format(n)}</b><span>${apoio}</span></div>
   </div>`;
 
@@ -3903,7 +3951,8 @@ function funilCampanha(s, c){
     <div class="funil-camp">
       <div class="fun-base">Sobre o público inteiro</div>
       ${degrau('Receberam a campanha', total, 100, '100% do público', 'd1')}
-      ${degrau('Compraram '+tipCompraram, c.clientesComp, pct(c.clientesComp), `${Math.round(pct(c.clientesComp))}% do público`, 'd2')}
+      ${degrau('Compraram', c.clientesComp, pct(c.clientesComp),
+        `${Math.round(pct(c.clientesComp))}% do público`, 'd2', tipCompraram)}
       <div class="fun-ramo">
         <div class="fun-base">Sobre os ${nf.format(c.clientesComp)} que compraram</div>
         ${degrau('Gastaram acima do normal', acima, dosQ(acima),
@@ -4074,19 +4123,16 @@ function telaResultados(){
   /* Ordem por hierarquia, não por ordem de construção:
        1. veredito    — o julgamento numa frase
        2. heróis      — quanto vendeu
-       3. retorno     — valeu a pena. É a pergunta do dono da farmácia, e
-                        estava no rodapé da página, em corpo pequeno.
-       4. antes/durante — contra o que estamos comparando
-       5. funil e DNA — como esses números se formaram
-       6. ressalva    — vale para a página inteira, por isso fecha
-     Campanha sem investimento mostra o estado explicado aqui em cima
-     mesmo: deixar a lacuna visível é o que faz alguém preencher da
-     próxima vez. */
+       3. antes/durante — contra o que estamos comparando
+       4. funil e DNA — como esses números se formaram
+       5. retorno     — fecha a leitura: depois de entender de onde veio o
+                        faturamento, quanto ele custou
+       6. ressalva    — vale para a página inteira, por isso vem por último */
   return shell(`${cabecalho}${frase}${herois}
-    ${blocoInvestimento(c)}
     ${blocoAntesDurante(s, c)}
     ${funilCampanha(s, c)}
     ${blocoDnaVendas(s, c)}
+    ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
 }
 
