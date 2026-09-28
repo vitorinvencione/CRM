@@ -32,6 +32,14 @@
   --res-item:14px;    /* dentro do bloco: título→conteúdo, cartão→cartão */
   --res-bloco:20px;   /* de um bloco para o próximo */
   --res-tier:28px;    /* dos números-herói para o resto da página */
+  /* Paleta dos gráficos da tela de resultado. Uma cor por PAPEL, não por
+     gráfico: referência é sempre o cinza-azulado, o que está sendo medido
+     é sempre o azul do produto, e um recorte de dentro do medido é sempre
+     o azul claro. Assim dois gráficos lado a lado falam a mesma língua. */
+  --g-ref:#C9D6E6;
+  --g-sub:#93C3F5;
+  --g-atual-h:linear-gradient(90deg,#2D8FFC,#0B7BFB);
+  --g-atual-v:linear-gradient(180deg,#2D8FFC,#0B7BFB);
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
   --primary-soft:#E7F1FE;
@@ -880,6 +888,20 @@ tbody tr.sel{background:#F3F8FF}
   color:var(--ink-4);line-height:1.5}
 .sug-rodape svg{flex-shrink:0;margin-top:2px}
 
+/* Dois blocos dividindo a linha. Mesma altura por construção: o grid
+   estica os dois, e a nota de cada um é empurrada para o rodapé, então os
+   dois textos finais alinham em vez de flutuarem em alturas diferentes. */
+.bloco-par{display:grid;grid-template-columns:1fr 1fr;gap:var(--res-bloco);
+  align-items:stretch}
+.bloco-par>.bloco{display:flex;flex-direction:column;margin-bottom:0}
+.bloco-par>.bloco>.bloco-nota{margin-top:auto;padding-top:var(--res-item)}
+.bloco-par{margin-bottom:var(--res-bloco)}
+@media(max-width:1100px){
+  .bloco-par{grid-template-columns:1fr}
+  .bloco-par>.bloco{margin-bottom:0}
+  .bloco-par>.bloco>.bloco-nota{margin-top:var(--res-item);padding-top:0}
+}
+
 /* Antes e durante a campanha.
 
    Uma grade de cinco colunas: rótulo, valor de antes, a seta, valor da
@@ -1181,48 +1203,43 @@ tbody tr.sel{background:#F3F8FF}
 .mixlin-rel.pos{color:var(--green)}
 .mixlin-rel.neg{color:var(--danger)}
 
-/* ---------- Funil ----------
-   Duas decisões de alinhamento que estavam quebradas antes:
-
-   1. O recuo do ramo e a coluna de rótulo tinham que fechar a conta. Com
-      recuo 42px e rótulo 208px contra 230px do pai, o trilho do ramo começava
-      20px fora do trilho de cima. Agora é uma variável só: --fun-rot menos
-      --fun-ind dá a coluna do ramo, e os quatro trilhos nascem no mesmo x.
-   2. O bloco encostava na borda do card. Ganhou respiro em cima e embaixo. */
-.funil-camp{--fun-rot:236px; --fun-ind:32px; --fun-val:150px;
-  display:flex;flex-direction:column;gap:11px;margin:2px 0 18px}
-.fun-lin{display:grid;grid-template-columns:var(--fun-rot) minmax(0,1fr) var(--fun-val);
-  gap:20px;align-items:center}
-.fun-rot{font-size:13.5px;color:var(--ink-2);line-height:1.35}
-.fun-trilho{height:34px;background:#EFF4F9;border-radius:9px;overflow:hidden}
-.fun-fill{height:100%;border-radius:9px;background:var(--primary);min-width:6px;
+/* ---------- Funil ---------- */
+/* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
+   colunas do comparativo, para os dois gráficos lado a lado não parecerem
+   de produtos diferentes. */
+.funil-camp{--fun-ind:18px;display:flex;flex-direction:column;gap:16px;margin:2px 0 16px}
+.fun-lin{display:flex;flex-direction:column;gap:6px}
+.fun-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.fun-rot{font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.fun-num{font-size:16px;font-weight:700;color:var(--ink);line-height:1.15;
+  font-variant-numeric:tabular-nums;flex-shrink:0}
+.fun-trilho{height:12px;border-radius:99px;background:#EFF4F9;overflow:hidden}
+.fun-fill{height:100%;border-radius:99px;background:var(--primary);min-width:6px;
   transition:width .25s ease}
-.fun-lin.d1 .fun-fill{background:linear-gradient(90deg,#DCE7F4,#CCDDEF)}
-.fun-lin.d2 .fun-fill{background:linear-gradient(90deg,#2D8FFC,var(--primary))}
-.fun-lin.d3 .fun-trilho{height:28px;border-radius:8px}
-.fun-lin.d3 .fun-fill{background:#93C3F5;border-radius:8px}
-.fun-lin.d3 .fun-rot{font-size:13px;color:var(--ink-3)}
-.fun-val{text-align:right}
-.fun-val b{display:block;font-size:18px;font-weight:700;color:var(--ink);line-height:1.15;
-  font-variant-numeric:tabular-nums}
-.fun-val span{display:block;font-size:12px;color:var(--ink-3);margin-top:3px}
-.fun-lin.d3 .fun-val b{font-size:16px;color:var(--ink-2)}
-
-/* Legenda de base: cada trecho declara sobre o que a barra está medindo. */
+.fun-ap{font-size:11.5px;color:var(--ink-3);line-height:1.35}
+@media(prefers-reduced-motion:reduce){.fun-fill{transition:none}}
+/* Cor por papel, igual ao comparativo: o público é referência, quem
+   comprou é o que está sendo medido, o recorte é subconjunto do medido. */
+.fun-lin.d1 .fun-fill{background:var(--g-ref)}
+.fun-lin.d2 .fun-fill{background:var(--g-atual-h)}
+.fun-lin.d3 .fun-fill{background:var(--g-sub)}
+.fun-lin.d3 .fun-rot{color:var(--ink-3)}
+.fun-lin.d3 .fun-num{font-size:14px;font-weight:600}
 .fun-base{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
   color:var(--ink-4);margin-bottom:-3px}
 
-/* Ramo: recuo com um fio de árvore em vez de uma borda grossa colada no texto.
-   O fio para antes do fim da última linha, como conector — não como divisória. */
-.fun-ramo{position:relative;padding-left:var(--fun-ind);margin-top:5px;
-  display:flex;flex-direction:column;gap:11px}
-.fun-ramo::before{content:'';position:absolute;left:11px;top:0;bottom:20px;
+/* Ramo: recuo com um fio de árvore em vez de uma borda grossa colada no
+   texto. O fio para antes do fim da última linha — é conector, não
+   divisória. Com o degrau empilhado, o tique horizontal encosta na linha
+   do cabeçalho, que é onde o rótulo mora agora. */
+.fun-ramo{position:relative;padding-left:var(--fun-ind);margin-top:4px;
+  display:flex;flex-direction:column;gap:16px}
+.fun-ramo::before{content:'';position:absolute;left:5px;top:2px;bottom:34px;
   width:1px;background:var(--border-strong)}
-.fun-ramo .fun-lin{grid-template-columns:calc(var(--fun-rot) - var(--fun-ind)) minmax(0,1fr) var(--fun-val)}
-.fun-ramo .fun-rot{position:relative}
-.fun-ramo .fun-rot::before{content:'';position:absolute;left:calc(-1 * var(--fun-ind) + 11px);
-  top:50%;width:14px;height:1px;background:var(--border-strong)}
-.fun-ramo .fun-base{margin-left:calc(-1 * var(--fun-ind) + 25px)}
+.fun-ramo .fun-cab{position:relative}
+.fun-ramo .fun-cab::before{content:'';position:absolute;left:calc(-1 * var(--fun-ind) + 5px);
+  top:9px;width:11px;height:1px;background:var(--border-strong)}
+.fun-ramo .fun-base{margin-left:calc(-1 * var(--fun-ind) + 16px)}
 
 
 .retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
@@ -1235,8 +1252,7 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:1080px){
   .herois{grid-template-columns:repeat(2,1fr)}
-    .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
-  .fun-lin{gap:12px}
+  .funil-camp{--fun-ind:14px;gap:14px}
   .mixlin,.mixcab{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
   .dnacmp-topo{gap:18px}
 }
@@ -4020,10 +4036,17 @@ function funilCampanha(s, c){
      usava o público como base e o texto usava quem comprou. Barra que contradiz
      o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
      mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
+  /* Rótulo e número na mesma linha, barra logo abaixo ocupando a largura
+     toda, apoio embaixo. Antes eram três colunas lado a lado e a do rótulo
+     sozinha comia 236px — com o funil dividindo a tela com o comparativo
+     não sobrava barra para desenhar. Empilhado, a barra fica maior num
+     espaço menor, e o degrau passa a ter a mesma anatomia do grupo de
+     colunas do outro gráfico: identificação em cima, desenho no meio,
+     leitura embaixo. */
   const degrau = (rot, n, largura, apoio, cls, bolha) => `<div class="fun-lin ${cls}">
-    <div class="fun-rot">${rot}</div>
+    <div class="fun-cab"><span class="fun-rot">${rot}</span><b class="fun-num">${nf.format(n)}</b></div>
     <div class="fun-trilho${bolha?' com-tip':''}"><div class="fun-fill" style="width:${largura.toFixed(1)}%"></div>${bolha||''}</div>
-    <div class="fun-val"><b>${nf.format(n)}</b><span>${apoio}</span></div>
+    <span class="fun-ap">${apoio}</span>
   </div>`;
 
   return `<div class="bloco">
@@ -4208,9 +4231,15 @@ function telaResultados(){
        5. retorno     — fecha a leitura: depois de entender de onde veio o
                         faturamento, quanto ele custou
        6. ressalva    — vale para a página inteira, por isso vem por último */
+  /* Os dois gráficos de diagnóstico dividem a linha: respondem perguntas
+     diferentes sobre o mesmo período e ficam na mesma altura de leitura.
+     O de contexto vem à esquerda — em leitura F, é o que se lê primeiro —
+     e o de mecanismo à direita. Abaixo de 1100px eles empilham. */
   return shell(`${cabecalho}${frase}${herois}
-    ${blocoAntesDurante(s, c)}
-    ${funilCampanha(s, c)}
+    <div class="bloco-par">
+      ${blocoAntesDurante(s, c)}
+      ${funilCampanha(s, c)}
+    </div>
     ${blocoDnaVendas(s, c)}
     ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
