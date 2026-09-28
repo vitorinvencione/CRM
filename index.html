@@ -23,6 +23,15 @@
      olho não separa os grupos e a lista vira um bloco só. */
   --fp-item:8px;
   --fp-grupo:28px;
+  /* Ritmo da tela de resultado. Antes tudo era 14: a distância entre dois
+     cartões dentro de um bloco, entre dois blocos e entre um título e o
+     conteúdo dele eram o mesmo número. Com seis blocos seguidos a página
+     virava uma parede. Três degraus resolvem, e a borda dos cartões faz
+     parte do trabalho — por isso o salto não precisa ser tão grande
+     quanto o da filipeta, que não tem borda nenhuma. */
+  --res-item:14px;    /* dentro do bloco: título→conteúdo, cartão→cartão */
+  --res-bloco:20px;   /* de um bloco para o próximo */
+  --res-tier:28px;    /* dos números-herói para o resto da página */
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
   --primary-soft:#E7F1FE;
@@ -1057,7 +1066,7 @@ tbody tr.sel{background:#F3F8FF}
 /* Veredito: mesma casca dos demais blocos (.bloco cuida de fundo, borda, raio e
    sombra). O que o destaca é só o corpo de texto maior — sem traço lateral, que
    nesta interface significa alerta e aqui era ruído. */
-.res-veredito{font-size:17px;line-height:1.5;color:var(--ink-2)}
+.res-veredito{font-size:17px;line-height:1.5;color:var(--ink-2);margin-bottom:var(--res-item)}
 .res-veredito b{color:var(--ink);font-weight:700}
 
 .res-parcial{display:flex;gap:11px;align-items:flex-start;background:var(--warn-bg);
@@ -1067,7 +1076,8 @@ tbody tr.sel{background:#F3F8FF}
 .res-parcial b{font-weight:700}
 
 /* Três heróis, todos com o mesmo peso. O valor é o maior texto da tela. */
-.herois{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.herois{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--res-item);
+  margin-bottom:var(--res-tier)}
 .hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
   box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px}
 .hero-rot{font-size:13px;font-weight:600;color:var(--ink-2)}
@@ -1090,10 +1100,10 @@ tbody tr.sel{background:#F3F8FF}
 .nota-inc b{color:var(--ink-2);font-weight:600}
 
 .bloco{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
-  box-shadow:var(--shadow);margin-bottom:14px}
+  box-shadow:var(--shadow);margin-bottom:var(--res-bloco)}
 .bloco-vazio{background:#FAFCFE;box-shadow:none}
-.bloco-tit{margin:0 0 14px;font-size:14px;font-weight:600;color:var(--ink-2)}
-.bloco-nota{margin:var(--tit,14px) 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-4)}
+.bloco-tit{margin:0 0 var(--res-item);font-size:14px;font-weight:600;color:var(--ink-2)}
+.bloco-nota{margin:var(--res-item) 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-4)}
 .bloco-vazio .bloco-nota{margin-top:0;font-size:13.5px;color:var(--ink-3)}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
@@ -1201,14 +1211,6 @@ tbody tr.sel{background:#F3F8FF}
   top:50%;width:14px;height:1px;background:var(--border-strong)}
 .fun-ramo .fun-base{margin-left:calc(-1 * var(--fun-ind) + 25px)}
 
-/* Comparação de ticket: três colunas de mesmo peso, a leitura é lado a lado. */
-.tkcmp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tk-col{background:#FAFCFE;border:1px solid var(--border);border-radius:10px;padding:15px 17px}
-.tk-col span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:6px;line-height:1.4}
-.tk-col b{display:block;font-size:22px;font-weight:700;color:var(--ink);line-height:1.2}
-.tk-col b.pos{color:var(--green)}
-.tk-col b.neg{color:var(--danger)}
-.tk-col i{display:block;font-style:normal;font-size:12px;color:var(--ink-4);margin-top:5px;line-height:1.4}
 
 .retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
 .ret-num b{display:block;font-size:31px;font-weight:700;color:var(--ink);line-height:1.15}
@@ -1220,8 +1222,7 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:1080px){
   .herois{grid-template-columns:repeat(2,1fr)}
-  .tkcmp{grid-template-columns:1fr}
-  .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
+    .funil-camp{--fun-rot:160px; --fun-ind:22px; --fun-val:108px}
   .fun-lin{gap:12px}
   .mixlin,.mixcab{grid-template-columns:110px minmax(0,1fr) 52px 56px;gap:8px}
   .dnacmp-topo{gap:18px}
@@ -3564,12 +3565,20 @@ function veredito(s, c, ant){
     return `Ainda não há compra registrada neste público desde o início da campanha. ${
       fase==='andamento' ? 'A campanha segue no ar até '+c.fim+'.' : ''}`;
 
-  const base = `Esta campanha trouxe <b>${brl(c.faturamento)}</b> em vendas de <b>${nf.format(c.clientesComp)}</b> clientes`;
-  if(!ant) return `${base}. É a primeira campanha deste público — a partir da próxima dá para comparar.`;
+  /* O veredito julga; os números-herói logo abaixo dizem o tamanho. Antes
+     ele repetia faturamento e clientes em 17px, e os mesmos dois valores
+     apareciam em seguida em 26px — a página abria dizendo a mesma coisa
+     duas vezes, com a repetição em corpo menor que o original.
+
+     É também o único lugar da tela que compara CAMPANHA COM CAMPANHA. Os
+     números do topo comparam com o ano passado e o bloco de baixo com o
+     período anterior; sem esta frase, o aprendizado entre campanhas do
+     mesmo público se perderia. */
+  if(!ant) return `É a <b>primeira campanha</b> deste público — a partir da próxima dá para comparar uma com a outra.`;
   const d = delta(c.faturamento, ant.faturamento);
-  const cmp = d.dir==='flat' ? 'praticamente o mesmo faturamento da campanha anterior'
-    : `<b>${nf1.format(Math.abs(d.pct))}% ${d.dir==='up'?'a mais':'a menos'}</b> que a campanha anterior deste público`;
-  return `${base} — ${cmp}.`;
+  if(d.dir==='flat') return `Esta campanha vendeu <b>praticamente o mesmo</b> que a campanha anterior deste público.`;
+  return `Esta campanha vendeu <b>${nf1.format(Math.abs(d.pct))}% ${
+    d.dir==='up'?'a mais':'a menos'}</b> que a campanha anterior deste público.`;
 }
 
 /* =========================================================================
@@ -3897,12 +3906,15 @@ function funilCampanha(s, c){
       ${degrau('Compraram '+tipCompraram, c.clientesComp, pct(c.clientesComp), `${Math.round(pct(c.clientesComp))}% do público`, 'd2')}
       <div class="fun-ramo">
         <div class="fun-base">Sobre os ${nf.format(c.clientesComp)} que compraram</div>
-        ${degrau('Gastaram acima do normal', acima, dosQ(acima), `${pctAcima}% de quem comprou`, 'd3')}
+        ${degrau('Gastaram acima do normal', acima, dosQ(acima),
+          `${pctAcima}% de quem comprou · num período normal são ${base}%`, 'd3')}
       </div>
     </div>
     <p class="bloco-nota">A última barra muda de base: ela mede sobre quem comprou, não sobre o
     público inteiro. “Acima do normal” é gastar mais de ${brl(s.ticketHist||0)} por compra, que é o
-    que este público costuma gastar.</p>
+    que este público costuma gastar fora de campanha. <b>Ela importa tanto quanto o ticket médio lá
+    em cima</b>: a média sobe se poucos clientes gastarem muito, e só a contagem mostra se o aumento
+    se espalhou.</p>
   </div>`;
 }
 
@@ -3910,42 +3922,22 @@ function funilCampanha(s, c){
    Numa distribuição de ticket, que é torta para a direita, cerca de 35% a 40%
    das compras já ficam acima da média em mês NORMAL. Mostrar "46% acima" sem
    dizer que o normal é 38% faria qualquer campanha parecer um sucesso. */
-function blocoTicket(s, c){
-  if(!c.clientesComp) return '';
-  const ticket = c.compras ? c.faturamento/c.compras : 0;
-  const hist = s.ticketHist || 0;
-  const pctAcima = Math.round((c.clientesAcima||0)/c.clientesComp*100);
-  const base = s.pctAcimaHist || 0;
-  const dif = pctAcima - base;
-  const dTk = hist ? (ticket-hist)/hist*100 : 0;
-  const bom = dif > 2, ruim = dif < -2;
+/* O bloco "Estamos aumentando o ticket deste público?" foi desmontado.
 
-  return `<div class="bloco">
-    <h4 class="bloco-tit">Estamos aumentando o ticket deste público?</h4>
-    <div class="tkcmp">
-      <div class="tk-col">
-        <span>Ticket nesta campanha</span>
-        <b class="${dTk>1?'pos':(dTk<-1?'neg':'')}">${brl(ticket)}</b>
-        <i>${dTk>1?'acima':(dTk<-1?'abaixo':'em linha com')} do normal do público</i>
-      </div>
-      <div class="tk-col">
-        <span>O que este público costuma gastar</span>
-        <b>${brl(hist)}</b>
-        <i>média por compra fora de campanha</i>
-      </div>
-      <div class="tk-col">
-        <span>Clientes que gastaram acima disso</span>
-        <b class="${bom?'pos':(ruim?'neg':'')}">${pctAcima} em cada 100</b>
-        <i>num período normal são ${base} em cada 100</i>
-      </div>
-    </div>
-    <p class="bloco-nota">As duas leituras juntas importam: a média sobe se poucos clientes gastam
-    muito, e a contagem mostra se o aumento foi de fato espalhado. ${
-      bom  ? '<b>Aqui subiram as duas</b> — mais gente gastando mais, não só alguns.' :
-      ruim ? '<b>Aqui a contagem caiu</b> — mesmo que a média tenha subido, menos gente passou do valor de sempre.' :
-             'Aqui a contagem ficou perto do normal do público.'}</p>
-  </div>`;
-}
+   Tinha três colunas e nenhuma sobreviveu à auditoria:
+   · "Ticket nesta campanha" repetia, em corpo menor, o número-herói que
+     está logo acima na mesma tela;
+   · "Clientes que gastaram acima disso" era o mesmo fato da terceira
+     barra do funil — 46 de cada 100 nos dois lugares;
+   · "O que este público costuma gastar" era a única informação nova, e
+     virou a linha de apoio do próprio herói de ticket.
+
+   A pergunta do título continua respondida, e agora no topo da página em
+   vez do meio: R$ 118,43 contra um normal de R$ 96,00. A ressalva sobre
+   média versus contagem foi para a nota do funil, que é onde a contagem
+   mora. Um bloco cuja única informação própria cabe numa linha de apoio
+   não é um bloco. */
+
 
 /* Investimento e retorno: nível 2, e com estado próprio quando não informado.
    Mostrar "R$ 0,00" seria dizer que a campanha foi de graça, o que é diferente
@@ -4071,6 +4063,7 @@ function telaResultados(){
         selo(delta(c.clientesComp, anoAnt.clientesComp), anoRot))}
     ${heroi('Ticket médio', brl(ticket),
         'valor médio de cada compra',
+        (s.ticketHist ? `<span class="hero-nota">${I.alta} normal deste público: ${brl(s.ticketHist)}</span>` : '') +
         selo(delta(ticket, tkAnoAnt), anoRot))}
     ${cardFaturamento(s, c)}
   </div>`;
@@ -4078,12 +4071,22 @@ function telaResultados(){
   // Ordem: veredito → números → como esses números se formaram → contexto.
   // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
   // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
+  /* Ordem por hierarquia, não por ordem de construção:
+       1. veredito    — o julgamento numa frase
+       2. heróis      — quanto vendeu
+       3. retorno     — valeu a pena. É a pergunta do dono da farmácia, e
+                        estava no rodapé da página, em corpo pequeno.
+       4. antes/durante — contra o que estamos comparando
+       5. funil e DNA — como esses números se formaram
+       6. ressalva    — vale para a página inteira, por isso fecha
+     Campanha sem investimento mostra o estado explicado aqui em cima
+     mesmo: deixar a lacuna visível é o que faz alguém preencher da
+     próxima vez. */
   return shell(`${cabecalho}${frase}${herois}
+    ${blocoInvestimento(c)}
     ${blocoAntesDurante(s, c)}
     ${funilCampanha(s, c)}
-    ${blocoTicket(s, c)}
     ${blocoDnaVendas(s, c)}
-    ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
 }
 
