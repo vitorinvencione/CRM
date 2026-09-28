@@ -900,27 +900,37 @@ tbody tr.sel{background:#F3F8FF}
   border-radius:9px;background:#FEF6F2;border:1px solid #F6D9CC;font-size:12.5px;
   line-height:1.5;color:#8A3B18}
 .cmp-choque svg{flex-shrink:0;margin-top:2px;color:var(--danger)}
-.cmp-grade{display:flex;flex-direction:column;gap:18px}
-.cmp-item{display:flex;flex-direction:column;gap:6px}
-.cmp-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  margin-bottom:2px}
-.cmp-rot{font-size:13px;font-weight:600;color:var(--ink)}
-/* rótulo, barra e valor: a coluna do valor é fixa para os números
-   alinharem à direita entre as duas linhas do par */
-.cmp-par{display:grid;grid-template-columns:92px minmax(0,1fr) 116px;gap:12px;
-  align-items:center}
-.cmp-leg{font-size:11.5px;color:var(--ink-3)}
-.cmp-trilho{height:12px;border-radius:99px;background:#EFF4F9;overflow:hidden}
-.cmp-fill{display:block;height:100%;border-radius:99px;transition:width .3s ease}
-.cmp-fill.antes{background:#C9D6E6}
-.cmp-fill.agora{background:linear-gradient(90deg,#2D8FFC,var(--primary))}
-@media(prefers-reduced-motion:reduce){.cmp-fill{transition:none}}
-.cmp-v{font-size:12.5px;text-align:right;color:var(--ink-3);
+/* Três grupos de duas colunas. A altura do gráfico é fixa para o bloco não
+   pular quando os números mudam; as colunas crescem de baixo para cima. */
+.cmpv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}
+.cmpv-grupo{display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:0 4px;border-radius:10px}
+.cmpv-delta{min-height:18px;font-size:12px}
+.cmpv-cols{display:flex;align-items:flex-end;justify-content:center;gap:10px;
+  width:100%;height:132px}
+.cmpv-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  gap:6px;height:100%;flex:0 1 62px;min-width:0}
+.cmpv-v{font-size:11.5px;color:var(--ink-3);white-space:nowrap;
   font-variant-numeric:tabular-nums}
-.cmp-v.forte{color:var(--ink);font-weight:600;font-size:13.5px}
+.cmpv-v.forte{color:var(--ink);font-weight:700;font-size:12.5px}
+.cmpv-trilho{display:flex;align-items:flex-end;width:100%;flex:1;min-height:0}
+.cmpv-fill{display:block;width:100%;border-radius:7px 7px 3px 3px;
+  transition:height .3s ease}
+.cmpv-fill.antes{background:#C9D6E6}
+.cmpv-fill.agora{background:linear-gradient(180deg,#2D8FFC,var(--primary))}
+@media(prefers-reduced-motion:reduce){.cmpv-fill{transition:none}}
+.cmpv-rot{font-size:12px;color:var(--ink-2);text-align:center;line-height:1.3;
+  padding-top:8px;border-top:1px solid var(--border);width:100%}
+.cmpv-legenda{display:flex;justify-content:center;gap:20px;margin-top:14px;
+  font-size:12px;color:var(--ink-3)}
+.cmpv-legenda span{display:inline-flex;align-items:center;gap:7px}
+.cmpv-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.cmpv-pt.antes{background:#C9D6E6}
+.cmpv-pt.agora{background:var(--primary)}
 @media(max-width:700px){
-  .cmp-par{grid-template-columns:76px minmax(0,1fr) 92px;gap:8px}
-  .cmp-leg{font-size:11px}
+  .cmpv{grid-template-columns:1fr;gap:20px}
+  .cmpv-cols{height:108px}
+  .cmpv-col{flex-basis:76px}
 }
 .gp-periodo{font-style:normal;font-size:12.5px;font-weight:400;color:var(--ink-3)}
 
@@ -1940,6 +1950,30 @@ function tipLista(titulo, linhas, rodape){
     ${linhas.map(([r,v]) => `<span class="bl-lin"><span>${esc(r)}</span><i>${esc(v)}</i></span>`).join('')}
     ${rodape ? `<span class="bl-pe">${esc(rodape)}</span>` : ''}
   </span></span>`;
+}
+
+/* Reparte um mix em fatias que somam exatamente 100%.
+
+   Arredondar cada fatia isolada quase nunca fecha: seis fatias a uma casa
+   decimal costumam dar 99,9% ou 100,1%, e o leitor fica procurando o
+   décimo que falta. Maior resto resolve — arredonda tudo para baixo e
+   distribui as sobras para quem tem a maior parte decimal. O que passa do
+   teto vira uma fatia só, para a bolha não virar uma tabela. */
+function fatias(mix, total, teto){
+  const ord = mix.slice().sort((a,b) => b[1]-a[1]);
+  const itens = ord.length > teto
+    ? ord.slice(0, teto-1).concat([['Outras categorias',
+        ord.slice(teto-1).reduce((a,x) => a+x[1], 0)]])
+    : ord;
+  const soma = itens.reduce((a,x) => a+x[1], 0) || 1;
+  const exato = itens.map(([n,v]) => [n, v/soma*1000]);
+  const base  = exato.map(([n,v]) => [n, Math.floor(v)]);
+  let resto = 1000 - base.reduce((a,x) => a+x[1], 0);
+  exato.map((x,i) => [i, x[1]-base[i][1]])
+    .sort((a,b) => b[1]-a[1])
+    .slice(0, resto)
+    .forEach(([i]) => base[i][1]++);
+  return base.map(([n,v]) => [n, nf1.format(v/10) + '%']);
 }
 
 /* A mesma bolha, presa numa barra do funil em vez de num ícone: a barra é
@@ -3715,36 +3749,36 @@ const campanhasNaJanela = (s, c, j) => (s.campanhas||[])
   .filter(x => x.id !== c.id && x.compras > 0 &&
     brDate(x.ini) <= j.fim && brDate(x.fim) >= j.ini);
 
-/* Duas barras por métrica em vez de dois números com uma seta no meio.
-   "Antes e durante" é comparação de dois estados, e barra pareada é a
-   forma que mostra o tamanho da diferença em vez de obrigar o leitor a
-   fazer a conta de cabeça.
+/* Colunas verticais, os dois estados lado a lado.
+
+   "Antes e durante" é comparação de dois estados, e coluna pareada é a
+   forma que mostra o tamanho da diferença sem obrigar o leitor a fazer a
+   conta de cabeça.
 
    CADA MÉTRICA TEM A PRÓPRIA ESCALA, porque as unidades são diferentes —
-   reais, clientes e compras não cabem num eixo comum. Por isso o par fica
-   agrupado e rotulado: o comprimento só é comparável dentro do bloco, e
-   nunca entre blocos. As duas barras de um par sempre dividem o mesmo
-   máximo, senão a comparação mentiria. */
-function linhaComp(rot, antes, agora, fmt){
+   reais, clientes e compras não cabem num eixo comum. Por isso cada par
+   fica num grupo fechado, com o nome embaixo: a altura só se compara
+   dentro do grupo. As duas colunas de um par sempre dividem o mesmo
+   máximo, senão a comparação mentiria.
+
+   Sem eixo Y de propósito: o valor está escrito em cima de cada coluna,
+   que é mais direto do que obrigar o olho a ir até uma régua lateral para
+   três escalas diferentes. */
+const vCurto = v => v >= 1e6 ? 'R$ ' + nf1.format(v/1e6) + ' Mi' : 'R$ ' + nf.format(Math.round(v));
+
+function grupoComp(rot, antes, agora, fmt){
   const d = delta(agora, antes);
   const max = Math.max(antes, agora) || 1;
-  const larg = v => Math.max(2, v / max * 100);
-  return `<div class="cmp-item">
-    <div class="cmp-top">
-      <span class="cmp-rot">${esc(rot)}</span>
-      ${d ? `<span class="dlt ${d.dir}">${d.dir==='flat' ? 'sem mudança'
-        : `${d.dir==='up'?'▲':'▼'} ${nf1.format(Math.abs(d.pct))}%`}</span>` : ''}
-    </div>
-    <div class="cmp-par">
-      <span class="cmp-leg">Antes</span>
-      <span class="cmp-trilho"><span class="cmp-fill antes" style="width:${larg(antes).toFixed(1)}%"></span></span>
-      <span class="cmp-v">${fmt(antes)}</span>
-    </div>
-    <div class="cmp-par">
-      <span class="cmp-leg">Na campanha</span>
-      <span class="cmp-trilho"><span class="cmp-fill agora" style="width:${larg(agora).toFixed(1)}%"></span></span>
-      <span class="cmp-v forte">${fmt(agora)}</span>
-    </div>
+  const alt = v => Math.max(4, v / max * 100);
+  const col = (cls, val) => `<div class="cmpv-col">
+      <span class="cmpv-v${cls==='agora'?' forte':''}">${fmt(val)}</span>
+      <span class="cmpv-trilho"><span class="cmpv-fill ${cls}" style="height:${alt(val).toFixed(1)}%"></span></span>
+    </div>`;
+  return `<div class="cmpv-grupo">
+    ${d ? `<span class="dlt ${d.dir} cmpv-delta">${d.dir==='flat' ? 'sem mudança'
+      : `${d.dir==='up'?'▲':'▼'} ${nf1.format(Math.abs(d.pct))}%`}</span>` : '<span class="cmpv-delta"></span>'}
+    <div class="cmpv-cols">${col('antes', antes)}${col('agora', agora)}</div>
+    <span class="cmpv-rot">${esc(rot)}</span>
   </div>`;
 }
 
@@ -3770,14 +3804,18 @@ function blocoAntesDurante(s, c){
     ${choque.length ? `<p class="cmp-choque">${I.alert} Esta janela pega a campanha
       de ${esc(fmtBr(choque[0].ini.split('/').reverse().join('-')) || choque[0].ini)} deste mesmo público.
       A comparação vira campanha contra campanha e o ganho desaparece. Escolha outra data.</p>` : ''}
-    <div class="cmp-grade">
-      ${linhaComp('Faturamento', pre.faturamento, c.faturamento, brl)}
-      ${linhaComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
-      ${linhaComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
+    <div class="cmpv">
+      ${grupoComp('Faturamento', pre.faturamento, c.faturamento, vCurto)}
+      ${grupoComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
+      ${grupoComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
+    </div>
+    <div class="cmpv-legenda">
+      <span><i class="cmpv-pt antes"></i>Antes</span>
+      <span><i class="cmpv-pt agora"></i>Na campanha</span>
     </div>
     <p class="bloco-nota">A duração dos dois períodos é sempre a mesma — ${j.dias} dias contra
     ${j.dias} dias. Comparar janelas de tamanhos diferentes não diz nada, então só a data de
-    início é escolhida. <b>As barras só se comparam dentro de cada métrica</b>: reais, clientes e
+    início é escolhida. <b>As colunas só se comparam dentro de cada grupo</b>: reais, clientes e
     compras não cabem na mesma escala.</p>
   </div>`;
 }
@@ -3962,12 +4000,17 @@ function funilCampanha(s, c){
 
   /* O mix vem por subcategoria e em valor, não em quantidade de itens.
      Então o tooltip fala em "mais venderam", que é o que o dado sustenta,
-     e não em "mais compradas", que sugeriria contagem de unidades. */
-  const topo = (c.mix || []).slice()
-    .sort((a,b) => b[1]-a[1]).slice(0,3)
-    .map(([cat,v]) => [cat, nf1.format(v/c.faturamento*100) + '%']);
-  const tipCompraram = topo.length
-    ? tipBarra('Categorias', topo, '% do faturamento desta campanha')
+     e não em "mais compradas", que sugeriria contagem de unidades.
+
+     E AS FATIAS TÊM QUE FECHAR 100%: todas as categorias juntas são a
+     venda inteira, então uma lista que soma 82% faz o leitor procurar os
+     18% que faltam. Duas coisas garantem isso — o que não cabe na lista
+     vira "Outras categorias", e o arredondamento usa maior resto, que
+     devolve a sobra de décimo para a maior fatia em vez de deixar
+     99,9%. */
+  const tipCompraram = (c.mix || []).length
+    ? tipBarra('Categorias', fatias(c.mix, c.faturamento, 5),
+               'do faturamento desta campanha')
     : '';
   const base = s.pctAcimaHist || 0;
   const dif  = pctAcima - base;
