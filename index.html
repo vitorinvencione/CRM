@@ -871,6 +871,47 @@ tbody tr.sel{background:#F3F8FF}
   color:var(--ink-4);line-height:1.5}
 .sug-rodape svg{flex-shrink:0;margin-top:2px}
 
+/* Antes e durante a campanha.
+
+   Uma grade de cinco colunas: rótulo, valor de antes, a seta, valor da
+   campanha e a variação. Os dois valores têm o mesmo peso tipográfico —
+   quem decide qual é o importante é a seta, não o negrito. */
+.cmp-janela{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;
+  font-size:13px;color:var(--ink-2)}
+.cmp-janela input[type=date]{height:34px;padding:0 10px;border:1px solid var(--border-strong);
+  border-radius:8px;background:#fff;color:var(--ink);font-size:13px}
+.cmp-janela input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);outline:none}
+.cmp-ate{color:var(--ink-3)}
+.cmp-tag{font-size:11.5px;font-weight:600;color:var(--ink-3);background:#F3F6FA;
+  border-radius:99px;padding:4px 10px}
+.cmp-voltar{font-size:12.5px;font-weight:600;color:var(--primary);padding:4px 8px;border-radius:7px}
+.cmp-voltar:hover{background:var(--primary-soft)}
+.cmp-voltar:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.cmp-choque{display:flex;gap:8px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;
+  border-radius:9px;background:#FEF6F2;border:1px solid #F6D9CC;font-size:12.5px;
+  line-height:1.5;color:#8A3B18}
+.cmp-choque svg{flex-shrink:0;margin-top:2px;color:var(--danger)}
+.cmp-grade{display:grid;grid-template-columns:1fr auto 18px auto 96px;gap:4px 12px;
+  align-items:baseline}
+.cmp-cab{display:contents}
+.cmp-cab span{font-size:11px;color:var(--ink-4);padding-bottom:4px;border-bottom:1px solid var(--border)}
+.cmp-cab span:nth-child(2),.cmp-cab span:nth-child(4){text-align:right}
+.cmp-lin{display:contents}
+.cmp-lin>*{padding:9px 0;border-bottom:1px solid #F1F5F9}
+.cmp-lin:last-child>*{border-bottom:0}
+.cmp-rot{font-size:13px;color:var(--ink-2)}
+.cmp-antes,.cmp-agora{font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums}
+.cmp-antes{color:var(--ink-3)}
+.cmp-agora{color:var(--ink);font-weight:600}
+.cmp-seta{text-align:center;color:var(--ink-4)}
+@media(max-width:700px){
+  .cmp-grade{grid-template-columns:1fr auto 14px auto;gap:4px 8px}
+  .cmp-cab span:nth-child(5),.cmp-lin>*:nth-child(5){grid-column:1/-1;text-align:right;
+    padding-top:0;border-bottom:0}
+  .cmp-lin>*:nth-child(4){border-bottom:0}
+}
+.gp-periodo{font-style:normal;font-size:12.5px;font-weight:400;color:var(--ink-3)}
+
 /* Rolagem horizontal com as duas coisas que ela precisa para não confundir:
    a coluna de Fidelidade fica presa à esquerda, e a sombra na borda direita
    avisa que ainda há tabela fora da tela. A sombra é o truque de dois planos
@@ -1645,6 +1686,7 @@ function estadoInicial(){
     motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
     motorExplica:null,      // bloco com a explicação aberta
+    preIni:null,            // início da janela de comparação; null = colada na campanha
     gView:{faixas:'grafico', dnas:'grafico'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
@@ -2799,8 +2841,9 @@ function blocoRfv(){
 
   return `<div class="gpanel gpanel-fim">
     <div class="gpanel-cab">
-      <h3>Perfil da base: volume, valor e comportamento ${tip('perfilBase')}</h3>
-      <p>Compara o período anterior com o atual. Clique em um grupo de indicadores para ver a análise.</p>
+      <h3>Perfil da base: volume, valor e comportamento
+        <i class="gp-periodo">base dos últimos 12 meses</i> ${tip('perfilBase')}</h3>
+      <p>Compara os últimos 12 meses com os 12 anteriores. Clique em um grupo de indicadores para ver a análise.</p>
     </div>
     <div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
@@ -3499,12 +3542,16 @@ function delta(atual, ant){
   const p = (atual - ant) / ant * 100;
   return { pct: p, dir: p > 0.5 ? 'up' : (p < -0.5 ? 'down' : 'flat') };
 }
+/* O sufixo já vem contraído — "da campanha anterior", "do mesmo período de
+   2025". A função não monta o artigo: quando ela montava, trocar o texto
+   do comparativo produzia "acima DA mesmo período de 2025".
+   Em "flat" não há número para ancorar, então o sufixo sai junto. */
 function selo(d, sufixo){
   if(!d) return '';
-  const seta = d.dir==='up' ? '▲' : (d.dir==='down' ? '▼' : '=');
-  const txt = d.dir==='flat' ? 'igual à anterior'
-    : `${seta} ${nf1.format(Math.abs(d.pct))}% ${d.dir==='up'?'acima':'abaixo'} da ${sufixo}`;
-  return `<span class="dlt ${d.dir}">${txt}</span>`;
+  if(d.dir==='flat') return `<span class="dlt flat">= sem mudança</span>`;
+  const seta = d.dir==='up' ? '▲' : '▼';
+  return `<span class="dlt ${d.dir}">${seta} ${nf1.format(Math.abs(d.pct))}% ${
+    d.dir==='up'?'acima':'abaixo'} ${sufixo}</span>`;
 }
 
 /* A frase que resume tudo. Se o associado ler só isto e fechar a tela, ele já
@@ -3523,6 +3570,121 @@ function veredito(s, c, ant){
   const cmp = d.dir==='flat' ? 'praticamente o mesmo faturamento da campanha anterior'
     : `<b>${nf1.format(Math.abs(d.pct))}% ${d.dir==='up'?'a mais':'a menos'}</b> que a campanha anterior deste público`;
   return `${base} — ${cmp}.`;
+}
+
+/* =========================================================================
+   DUAS RÉGUAS PARA A MESMA CAMPANHA
+
+   Nenhuma das duas mede o que a campanha CAUSOU — para isso faltaria um
+   grupo de controle. O que elas fazem é tirar do caminho as duas
+   explicações alternativas mais comuns, e cada uma tira uma:
+
+   · MESMO PERÍODO DO ANO PASSADO tira a sazonalidade. Agosto vende
+     diferente de dezembro; comparar agosto com agosto neutraliza isso.
+     Não tira o crescimento da rede em doze meses.
+   · PERÍODO IMEDIATAMENTE ANTERIOR tira o crescimento e a inflação —
+     trinta dias não mudam o patamar do negócio. Não tira a sazonalidade:
+     se a campanha caiu numa alta natural do ano, o ganho aparece inflado.
+
+   As duas juntas valem mais do que qualquer uma sozinha, e é por isso que
+   a tela mostra as duas em lugares diferentes: a do ano nos números do
+   topo, a do período anterior num bloco próprio, onde cabe dizer qual
+   janela está sendo usada. */
+
+const FATOR_PRE  = 0.62;   // volume do público num período normal, contra o da campanha
+const CRESC_ANO  = 1.14;   // quanto a rede cresceu em doze meses
+
+/* Ruído determinístico por campanha: dois períodos normais não são
+   idênticos, e números redondos demais denunciam dado inventado. */
+function jitterCamp(chave){
+  let h = 2166136261;
+  for(const ch of String(chave)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return 0.88 + (((h >>> 0) % 1000) / 1000) * 0.24;   // 0,88 a 1,12
+}
+
+const diasCampanha = c => Math.round((brDate(c.fim) - brDate(c.ini)) / DIA) + 1;
+
+/* Volume do público num período SEM campanha. Sai do próprio histórico:
+   o número de compras cai para o patamar normal e o ticket volta a ser o
+   ticketHist do público, que é o valor que ele gasta fora de campanha. */
+function periodoNormal(s, c, chave, escala){
+  const compras = Math.max(1, Math.round(c.compras * FATOR_PRE * jitterCamp(chave) * (escala||1)));
+  const razao   = c.compras ? c.clientesComp / c.compras : 0.9;
+  return {
+    compras,
+    clientesComp: Math.round(compras * razao),
+    faturamento:  Math.round(compras * (s.ticketHist || c.ticket || 0))
+  };
+}
+
+/* Mesmo intervalo do calendário, doze meses antes. Sem campanha e com a
+   rede menor do que é hoje. */
+const mesmoPeriodoAnoAnterior = (s, c) =>
+  periodoNormal(s, c, c.id + '|ano', 1 / CRESC_ANO);
+
+/* Janela de comparação anterior à campanha. O padrão é a mesma duração,
+   colada no início. A DURAÇÃO FICA TRAVADA: comparar 10 dias com 20 não
+   diz nada, e é o erro que um seletor livre convidaria a cometer. */
+function janelaPre(c, iniEscolhido){
+  const dias = diasCampanha(c);
+  const ini  = iniEscolhido ? brDate(iniEscolhido) : addDias(brDate(c.ini), -dias);
+  return { ini, fim: addDias(ini, dias - 1), dias };
+}
+
+const dadosPre = (s, c, j) =>
+  periodoNormal(s, c, c.id + '|pre|' + j.ini.toISOString().slice(0,10), 1);
+
+/* A armadilha do comparador: se a janela escolhida pega outra campanha do
+   mesmo público, a comparação vira campanha contra campanha e o ganho
+   desaparece sem que ninguém entenda por quê. */
+const campanhasNaJanela = (s, c, j) => (s.campanhas||[])
+  .filter(x => x.id !== c.id && x.compras > 0 &&
+    brDate(x.ini) <= j.fim && brDate(x.fim) >= j.ini);
+
+function linhaComp(rot, antes, agora, fmt){
+  const d = delta(agora, antes);
+  return `<div class="cmp-lin">
+    <span class="cmp-rot">${esc(rot)}</span>
+    <span class="cmp-antes">${fmt(antes)}</span>
+    <span class="cmp-seta">→</span>
+    <span class="cmp-agora">${fmt(agora)}</span>
+    ${d ? `<span class="dlt ${d.dir}">${d.dir==='flat' ? 'igual'
+      : `${d.dir==='up'?'▲':'▼'} ${nf1.format(Math.abs(d.pct))}%`}</span>` : '<span></span>'}
+  </div>`;
+}
+
+function blocoAntesDurante(s, c){
+  if(!c.compras) return '';
+  const j   = janelaPre(c, S.preIni);
+  const pre = dadosPre(s, c, j);
+  const iso = d => d.toISOString().slice(0,10);
+  const br  = d => d.toLocaleDateString('pt-BR');
+  const choque = campanhasNaJanela(s, c, j);
+  const padrao = !S.preIni;
+
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Antes e durante a campanha ${tipTexto('Compara a campanha com um período de mesma duração antes dela. Tira do caminho o crescimento da rede, que em poucas semanas não muda. Não tira a sazonalidade — para isso, a comparação com o ano passado está nos números do topo.')}</h4>
+    <div class="cmp-janela">
+      <label for="pre-ini">Comparar com os ${j.dias} dias a partir de</label>
+      <input id="pre-ini" type="date" value="${iso(j.ini)}" max="${iso(addDias(brDate(c.ini), -j.dias))}"
+        data-act="preIni" data-k="pre-ini">
+      <span class="cmp-ate">até ${br(j.fim)}</span>
+      ${padrao ? '<span class="cmp-tag">período colado à campanha</span>'
+               : '<button class="cmp-voltar" data-act="preIni" data-v="">Voltar ao padrão</button>'}
+    </div>
+    ${choque.length ? `<p class="cmp-choque">${I.alert} Esta janela pega a campanha
+      de ${esc(fmtBr(choque[0].ini.split('/').reverse().join('-')) || choque[0].ini)} deste mesmo público.
+      A comparação vira campanha contra campanha e o ganho desaparece. Escolha outra data.</p>` : ''}
+    <div class="cmp-grade">
+      <div class="cmp-cab"><span></span><span>Antes</span><span></span><span>Na campanha</span><span></span></div>
+      ${linhaComp('Faturamento', pre.faturamento, c.faturamento, brl)}
+      ${linhaComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
+      ${linhaComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
+    </div>
+    <p class="bloco-nota">A duração dos dois períodos é sempre a mesma — ${j.dias} dias contra
+    ${j.dias} dias. Comparar janelas de tamanhos diferentes não diz nada, então só a data de
+    início é escolhida.</p>
+  </div>`;
 }
 
 function heroi(rot, valor, apoio, dlt){
@@ -3701,8 +3863,18 @@ function funilCampanha(s, c){
   const dosQ = n => c.clientesComp ? Math.round(n/c.clientesComp*100) : 0;
 
   const acima   = c.clientesAcima || 0;
-  const recompra= c.clientesRecompra || 0;
   const pctAcima = dosQ(acima);
+
+  /* O mix vem por subcategoria e em valor, não em quantidade de itens.
+     Então o tooltip fala em "mais venderam", que é o que o dado sustenta,
+     e não em "mais compradas", que sugeriria contagem de unidades. */
+  const topo = (c.mix || []).slice()
+    .sort((a,b) => b[1]-a[1]).slice(0,3)
+    .map(([cat,v]) => `${cat} (${Math.round(v/c.faturamento*100)}%)`);
+  const tipCompraram = topo.length
+    ? tipTexto('Categorias que mais venderam nesta campanha: ' + topo.join(', ') +
+      '. Percentual sobre o faturamento da campanha.')
+    : '';
   const base = s.pctAcimaHist || 0;
   const dif  = pctAcima - base;
 
@@ -3722,16 +3894,15 @@ function funilCampanha(s, c){
     <div class="funil-camp">
       <div class="fun-base">Sobre o público inteiro</div>
       ${degrau('Receberam a campanha', total, 100, '100% do público', 'd1')}
-      ${degrau('Compraram', c.clientesComp, pct(c.clientesComp), `${Math.round(pct(c.clientesComp))}% do público`, 'd2')}
+      ${degrau('Compraram '+tipCompraram, c.clientesComp, pct(c.clientesComp), `${Math.round(pct(c.clientesComp))}% do público`, 'd2')}
       <div class="fun-ramo">
         <div class="fun-base">Sobre os ${nf.format(c.clientesComp)} que compraram</div>
         ${degrau('Gastaram acima do normal', acima, dosQ(acima), `${pctAcima}% de quem comprou`, 'd3')}
-        ${degrau('Voltaram uma segunda vez', recompra, dosQ(recompra), `${dosQ(recompra)}% de quem comprou`, 'd3')}
       </div>
     </div>
-    <p class="bloco-nota">Os dois últimos saem de quem comprou e <b>não se somam</b>: o mesmo cliente
-    pode estar nos dois, ou em nenhum. “Acima do normal” é gastar mais de ${brl(s.ticketHist||0)} por
-    compra, que é o que este público costuma gastar.</p>
+    <p class="bloco-nota">A última barra muda de base: ela mede sobre quem comprou, não sobre o
+    público inteiro. “Acima do normal” é gastar mais de ${brl(s.ticketHist||0)} por compra, que é o
+    que este público costuma gastar.</p>
   </div>`;
 }
 
@@ -3878,16 +4049,29 @@ function telaResultados(){
       ${blocoInvestimento(c)}`);
   }
 
+  /* A régua dos números do topo é o MESMO PERÍODO DO ANO PASSADO, não a
+     campanha anterior. Duas campanhas do mesmo público podem ter caído em
+     meses que vendem de formas muito diferentes, e a comparação entre
+     elas confunde efeito de campanha com época do ano. Agosto contra
+     agosto neutraliza isso.
+
+     O card de clientes compara a CONTAGEM, não a conversão: no ano
+     passado não houve campanha, então ninguém "recebeu" nada e uma taxa
+     de conversão não existiria. */
+  const anoAnt   = mesmoPeriodoAnoAnterior(s, c);
+  const anoRot   = 'do mesmo período de ' + (brDate(c.ini).getFullYear() - 1);
+  const tkAnoAnt = anoAnt.compras ? anoAnt.faturamento / anoAnt.compras : 0;
+
   const herois = `<div class="herois">
     ${heroi('Faturamento gerado', brl(c.faturamento),
         `em ${nf.format(c.compras)} compras`,
-        selo(delta(c.faturamento, ant && ant.faturamento), 'campanha anterior'))}
+        selo(delta(c.faturamento, anoAnt.faturamento), anoRot))}
     ${heroi('Clientes que compraram', nf.format(c.clientesComp),
         `${Math.round(conv)} de cada 100 que receberam`,
-        selo(delta(conv, convAnt), 'campanha anterior'))}
+        selo(delta(c.clientesComp, anoAnt.clientesComp), anoRot))}
     ${heroi('Ticket médio', brl(ticket),
         'valor médio de cada compra',
-        selo(delta(ticket, ticketAnt), 'campanha anterior'))}
+        selo(delta(ticket, tkAnoAnt), anoRot))}
     ${cardFaturamento(s, c)}
   </div>`;
 
@@ -3895,6 +4079,7 @@ function telaResultados(){
   // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
   // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
   return shell(`${cabecalho}${frase}${herois}
+    ${blocoAntesDurante(s, c)}
     ${funilCampanha(s, c)}
     ${blocoTicket(s, c)}
     ${blocoDnaVendas(s, c)}
@@ -4791,6 +4976,13 @@ function handle(act, v, el, isInput){
       toast('Copie o filtro do card na criação da segmentação: “'+v+'”.');
       log('sugestoes-campanha', v); window.scrollTo(0,0); render(); return;
 
+    case 'preIni': {
+      // '' volta ao padrão: a janela cola de novo no início da campanha
+      const v2 = (el && el.value) || v;
+      S.preIni = v2 ? v2.split('-').reverse().join('/') : null;
+      log('comparativo-periodo', S.preIni || 'padrão');
+      render(); return; }
+
     case 'gAnalise':
       S.gAnalise = S.gAnalise===v ? null : v;
       log('analise-ia', S.gAnalise ? 'abriu '+v : 'fechou'); render(); return;
@@ -4983,6 +5175,9 @@ function handle(act, v, el, isInput){
       log('campanhas', S.campAberta?'abriu '+v:'fechou'); render(); return;
 
     case 'verResultados': {
+      // cada campanha tem a sua duração, então a janela de comparação
+      // recomeça no padrão a cada uma que se abre
+      S.preIni = null;
       const [sid,cid] = v.split('|');
       S.resSeg = sid; S.resCamp = cid; S.screen = 'resultados'; S.menuSeg = null;
       const sg = S.segmentacoes.find(x=>x.id===sid);
