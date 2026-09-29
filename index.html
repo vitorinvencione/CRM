@@ -1282,7 +1282,26 @@ tbody tr.sel{background:#F3F8FF}
   min-width:4px}
 @media(prefers-reduced-motion:reduce){.fc-trilho{transition:none}}
 .fc-ap{font-size:11.5px;color:var(--ink-3)}
-.fc-lin.atual .fc-per{color:var(--ink);font-weight:600}
+
+/* A campanha analisada, destacada por elevação e escala — não por cor.
+
+   Trocar a cor da barra dela quebraria a leitura: aqui a cor significa
+   "produto do DNA" contra "resto", e uma terceira cor faria o leitor
+   procurar um terceiro significado. Então o destaque vem de outro lugar:
+   a linha ganha um painel claro com um filete na lateral, o valor sobe de
+   corpo e a barra engrossa. As outras linhas continuam exatamente como
+   estavam — nada é apagado, o que evita que contexto pareça desativado.
+
+   A margem negativa compensa o recuo do painel: sem ela a barra da linha
+   destacada começaria 14px à direita das outras, e comprimento de barra
+   que não parte do mesmo x deixa de ser comparável. */
+.fc-lin.atual{position:relative;margin:0 -14px;padding:12px 14px;border-radius:10px;
+  background:#F4F8FD;box-shadow:inset 3px 0 0 var(--primary)}
+.fc-lin.atual .fc-per{color:var(--ink);font-weight:700;font-size:13px}
+.fc-lin.atual .fc-per i{background:var(--primary);color:#fff}
+.fc-lin.atual .fc-tot{font-size:19px}
+.fc-lin.atual .fc-trilho{height:18px}
+.fc-lin.atual .fc-ap{color:var(--ink-2)}
 .fc-leg{display:flex;gap:20px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
 .fc-leg span{display:inline-flex;align-items:center;gap:7px}
 .fc-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
@@ -4440,7 +4459,7 @@ function blocoDnaVendas(s, c){
       ${linhas.map(x => {
         const atual = x.id===c.id;
         const pctDna = x.faturamento ? x.dna/x.faturamento*100 : 0;
-        return `<div class="fc-lin${atual?' atual':''}">
+        return `<div class="fc-lin${atual?' atual':''}"${atual?' aria-current="true"':''}>
           <div class="fc-cab">
             <span class="fc-per">${periodo(x)}${atual?' <i>esta campanha</i>':''}</span>
             <b class="fc-tot">${brl(x.faturamento)}</b>
