@@ -1213,17 +1213,29 @@ tbody tr.sel{background:#F3F8FF}
 /* Três heróis, todos com o mesmo peso. O valor é o maior texto da tela. */
 .herois{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--res-item);
   margin-bottom:var(--res-tier)}
-.hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;
-  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px}
-.hero-rot{font-size:13px;font-weight:600;color:var(--ink-2)}
-.hero-val{font-size:31px;font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
-.hero-ap{font-size:13px;color:var(--ink-3)}
+.hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column}
+/* Anatomia fixa nos quatro cartões, de cima para baixo:
+     rótulo + info · período · ícone + valor · divisor · uma linha de leitura.
+   A disciplina é ter UMA linha de rodapé só. Quando sobra informação ela vai
+   para o tooltip, não para uma segunda linha — foi o que encheu o cartão
+   antigo, que empilhava apoio, nota e selo embaixo do número. */
+.hero-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.hero-rot{font-size:13.5px;font-weight:600;color:var(--ink-2);line-height:1.3}
+.hero-topo .ttip{flex-shrink:0;line-height:0;color:var(--ink-4)}
+.hero-per{display:flex;align-items:center;gap:6px;margin-top:7px;
+  font-size:12px;color:var(--ink-3)}
+.hero-per b{font-weight:600;color:var(--primary);background:#EAF3FE;
+  border-radius:20px;padding:3px 9px;white-space:nowrap}
+.hero-linha{display:flex;align-items:center;gap:9px;margin-top:12px}
+.hero-linha svg{color:var(--ink-3);flex-shrink:0}
+.hero-val{font-size:27px;font-weight:700;color:var(--ink);line-height:1.1;letter-spacing:-.01em}
+.hero-pe{margin-top:12px;padding-top:11px;border-top:1px solid var(--border);
+  font-size:12.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;
+  align-items:baseline;gap:5px}
+.hero-pe b{font-weight:600;color:var(--ink-2)}
+.hero-pe .dlt{margin:0;font-size:12px}
 .dlt{margin-top:5px;font-size:12.5px;font-weight:600}
-/* Quarta linha do cartão: mesma posição do selo de variação, outro papel —
-   aqui não há campanha anterior para comparar, há o recorte do número. */
-.hero-nota{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:12.5px;
-  font-weight:600;color:var(--ink-2)}
-.hero-nota svg{color:var(--ink-4);flex-shrink:0}
 .dlt.up{color:var(--green)}
 .dlt.down{color:var(--danger)}
 .dlt.flat{color:var(--ink-4)}
@@ -1913,9 +1925,9 @@ function segmentacoesDemo(){
      clientes:8420, mixHist:[['Anti-hipertensivos',49.0],['Banho',12.6],['Minerais',12.0],['Analgésicos',9.6],['Multivitamínicos',9.4],['Bucal',7.4]], ticketHist:96.00, pctAcimaHist:38, prods:14, disponivelAte:'30/11/2026',
      rfv:'Fiel, Valioso', dna:'Hipertensão', demo:'Feminino · 36 - 45 anos',
      campanhas:[
-       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, ticket:118.40, compras:814, clientesComp:733, clientesAcima:337, clientesRecompra:69, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], sellout:3255000, investimento:5410},
-       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, ticket:96.10,  compras:741, clientesComp:667, clientesAcima:253, clientesRecompra:63, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], sellout:3197250, investimento:2210},
-       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, ticket:88.75,  compras:664, clientesComp:598, clientesAcima:191, clientesRecompra:56, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], sellout:3189900, investimento:0}
+       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, compras:814, clientesComp:688, clientesAcima:337, clientesRecompra:112, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], sellout:3255000, investimento:5410},
+       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, compras:741, clientesComp:631, clientesAcima:253, clientesRecompra:98, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], sellout:3197250, investimento:2210},
+       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, compras:664, clientesComp:561, clientesAcima:191, clientesRecompra:91, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], sellout:3189900, investimento:0}
      ]},
 
     {id:'s2', titulo:'Mães de bebês — recompra de fraldas',
@@ -1923,8 +1935,8 @@ function segmentacoesDemo(){
      clientes:3175, mixHist:[['Higiene infantil',23.5],['Leites infantis',20.7],['Bucal',11.9],['Fraldas',10.8],['Multivitamínicos',10.0],['Analgésicos',8.4],['Banho',8.3],['Minerais',6.4]], ticketHist:118.00, pctAcimaHist:36, prods:22, disponivelAte:'31/12/2026',
      rfv:'Fiel', dna:'Mãe', demo:'Feminino · 26 - 35 anos',
      campanhas:[
-       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, ticket:132.20, compras:320, clientesComp:288, clientesAcima:127, clientesRecompra:27, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], sellout:3255000, investimento:2788},
-       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, ticket:110.60, compras:344, clientesComp:310, clientesAcima:102, clientesRecompra:29, mix:[['Fraldas',11601],['Higiene infantil',5275],['Leites infantis',4841],['Minerais',4536],['Banho',3298],['Analgésicos',3293],['Multivitamínicos',2888],['Bucal',2368]], sellout:3320100, investimento:0}
+       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, compras:320, clientesComp:261, clientesAcima:127, clientesRecompra:52, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], sellout:3255000, investimento:2788},
+       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, compras:344, clientesComp:284, clientesAcima:102, clientesRecompra:53, mix:[['Fraldas',11601],['Higiene infantil',5275],['Leites infantis',4841],['Minerais',4536],['Banho',3298],['Analgésicos',3293],['Multivitamínicos',2888],['Bucal',2368]], sellout:3320100, investimento:0}
      ]},
 
     {id:'s3', titulo:'Diabéticos com alta aderência em cuidado diário',
@@ -1932,7 +1944,7 @@ function segmentacoesDemo(){
      clientes:2640, mixHist:[['Antidiabéticos',43.8],['Suplementos',17.2],['Analgésicos',10.8],['Bucal',9.0],['Multivitamínicos',8.1],['Banho',6.4],['Minerais',4.7]], ticketHist:131.00, pctAcimaHist:39, prods:9, disponivelAte:'30/11/2026',
      rfv:'Fiel', dna:'Diabetes', demo:'Todos · +65 anos',
      campanhas:[
-       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, ticket:142.90, compras:362, clientesComp:326, clientesAcima:143, clientesRecompra:31, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], sellout:3255000, investimento:4368}
+       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, compras:362, clientesComp:287, clientesAcima:143, clientesRecompra:66, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], sellout:3255000, investimento:4368}
      ]},
 
     {id:'s4', titulo:'Dermocosméticos — ticket alto, baixa frequência',
@@ -1952,8 +1964,8 @@ function segmentacoesDemo(){
      clientes:12480, mixHist:[['Corporal',21.9],['Banho',15.0],['Minerais',11.7],['Proteção solar',11.1],['Cabelo',9.6],['Facial',9.4],['Bucal',7.5],['Analgésicos',7.3],['Multivitamínicos',6.5]], ticketHist:71.00, pctAcimaHist:37, prods:18, disponivelAte:'28/02/2026',
      rfv:'Ocasional, Potencial', dna:'Beleza', demo:'Todos · 26 - 35 anos',
      campanhas:[
-       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, ticket:74.20, compras:2484, clientesComp:2236, clientesAcima:939, clientesRecompra:211, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], sellout:3696000, investimento:1574},
-       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, ticket:66.50, compras:1907, clientesComp:1716, clientesAcima:549, clientesRecompra:162, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], sellout:4068750, investimento:2698}
+       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, compras:2484, clientesComp:2351, clientesAcima:939, clientesRecompra:118, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], sellout:3696000, investimento:1574},
+       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, compras:1907, clientesComp:1791, clientesAcima:549, clientesRecompra:103, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], sellout:4068750, investimento:2698}
      ]},
 
     {id:'s7', titulo:'Gripe e resfriado — inverno 2026',
@@ -1961,8 +1973,8 @@ function segmentacoesDemo(){
      clientes:21050, ticketHist:58.00, pctAcimaHist:40, prods:27, disponivelAte:'30/06/2026',
      rfv:'Todos os perfis', dna:'Nenhum', demo:'Todos · Todas as idades',
      campanhas:[
-       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, ticket:52.80, compras:4581, clientesComp:4123, clientesAcima:1278, clientesRecompra:389, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], sellout:3417750, investimento:11725},
-       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, ticket:61.30, compras:2581, clientesComp:2323, clientesAcima:999, clientesRecompra:219, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], sellout:3150000, investimento:26460}
+       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, compras:4581, clientesComp:4462, clientesAcima:1278, clientesRecompra:105, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], sellout:3417750, investimento:11725},
+       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, compras:2581, clientesComp:2498, clientesAcima:999, clientesRecompra:74, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], sellout:3150000, investimento:26460}
      ]}
   ];
 }
@@ -2265,11 +2277,19 @@ function calcular(){
 
   const n = out.length;
   const fat = out.reduce((s,o)=> s + o.c.ticket*o.cp.length, 0) * SCALE;
+  const comprasTot = out.reduce((s,o)=> s + o.cp.length, 0) * SCALE;
   return {
     clientes: Math.round(n*SCALE),
     pct: n/baseN,
     faturamento: fat,
-    ticket: out.reduce((s,o)=>s+o.c.ticket,0)/n,
+    /* MÉDIA PONDERADA, NÃO MÉDIA DAS MÉDIAS. Somar o ticket de cada cliente
+       e dividir por n dava R$ 114,29 contra R$ 144,16 da conta certa — 21%
+       abaixo — porque tratava quem compra uma vez e quem compra dez com o
+       mesmo peso. Pior: a campanha calcula faturamento÷compras, então o
+       associado estimava 114, rodava a campanha, via 144 e concluía que a
+       campanha superou a estimativa quando nada tinha acontecido.
+       Mesmo denominador nas duas telas: COMPRA. */
+    ticket: comprasTot ? fat / comprasTot : 0,
     ltv: out.reduce((s,o)=>s+o.c.ltv,0)/n,
     prods: S.produtos.length,
     funil
@@ -3977,6 +3997,18 @@ const campanhaAtiva = c => brDate(c.ini) <= HOJE && brDate(c.fim) >= HOJE;
    uma de 320 — e sempre puxa o resultado para a campanha pequena. O certo é
    faturamento total ÷ total de compras. Na s1 a diferença é R$ 101,08 (errado)
    contra R$ 102,07 (certo); com campanhas de tamanhos mais distantes, cresce. */
+/* TICKET MÉDIO: UMA CONTA SÓ, EM TODA A APLICAÇÃO.
+   O dado da campanha guardava um campo `ticket` e a tela de resultado calculava
+   faturamento÷compras. Os dois divergiam (c5: 110,60 guardado contra 110,76
+   calculado; c6: 142,90 contra 142,82), então o associado via um número na
+   listagem e outro ao clicar na mesma campanha.
+
+   O campo guardado foi removido do dado. Denominador declarado: COMPRA, não
+   cliente e não visita — as três dão números diferentes e a tela diz qual usa. */
+function ticketCamp(c){
+  return c && c.compras ? c.faturamento / c.compras : 0;
+}
+
 function totaisSeg(s){
   const c = s.campanhas || [];
   const faturamento = c.reduce((a,x)=>a+(x.faturamento||0),0);
@@ -4073,7 +4105,7 @@ function cardCampanha(s, c){
     </div>
     <div class="cpc-col cpc-canal">${pillCanal(c.canal)}</div>
     <div class="cpc-col"><span class="vdado" title="Faturamento da campanha">${I.moeda} ${brl(c.faturamento)}</span></div>
-    <div class="cpc-col"><span class="vdado" title="Ticket médio da campanha">${I.etiqueta} ${brl(c.ticket)}</span></div>
+    <div class="cpc-col"><span class="vdado" title="Ticket médio da campanha: faturamento dividido pelo número de compras">${I.etiqueta} ${brl(ticketCamp(c))}</span></div>
     <button class="btn-res" data-act="verResultados" data-v="${s.id}|${c.id}"
       aria-label="Ver resultados da campanha de ${c.ini} a ${c.fim}"
       title="Ver resultados da campanha">${I.fwd}</button>
@@ -4154,8 +4186,10 @@ function selo(d, sufixo){
   if(!d) return '';
   if(d.dir==='flat') return `<span class="dlt flat">= sem mudança</span>`;
   const seta = d.dir==='up' ? '▲' : '▼';
+  /* Sem sufixo o cartão-herói já diz no texto contra o que compara, então o
+     selo fecha em "acima" e não sobra espaço pendurado antes da tag. */
   return `<span class="dlt ${d.dir}">${seta} ${nf1.format(Math.abs(d.pct))}% ${
-    d.dir==='up'?'acima':'abaixo'} ${sufixo}</span>`;
+    d.dir==='up'?'acima':'abaixo'}${sufixo ? ' '+sufixo : ''}</span>`;
 }
 
 /* A frase que resume tudo. Se o associado ler só isto e fechar a tela, ele já
@@ -4216,7 +4250,7 @@ function periodoNormal(s, c, chave, escala){
   return {
     compras,
     clientesComp: Math.round(compras * razao),
-    faturamento:  Math.round(compras * (s.ticketHist || c.ticket || 0))
+    faturamento:  Math.round(compras * (s.ticketHist || ticketCamp(c)))
   };
 }
 
@@ -4315,12 +4349,20 @@ function blocoAntesDurante(s, c){
   </div>`;
 }
 
-function heroi(rot, valor, apoio, dlt){
+/* Cartão-herói no padrão da referência: rótulo com o tooltip alinhado à
+   direita, o período do recorte numa pílula, o ícone colado no número e uma
+   linha de leitura embaixo de um divisor.
+
+   O período aparece nos quatro, mesmo já estando no cabeçalho da página, para
+   o cartão continuar verdadeiro quando sai dali sozinho — e ele sai: o
+   associado recorta um cartão e manda no WhatsApp do grupo. Sem a data, o
+   número não significa nada do outro lado. */
+function heroi(rot, icone, valor, periodo, rodape){
   return `<div class="hero">
-    <span class="hero-rot">${rot}</span>
-    <b class="hero-val">${valor}</b>
-    ${apoio ? `<span class="hero-ap">${apoio}</span>` : ''}
-    ${dlt || ''}
+    <div class="hero-topo"><span class="hero-rot">${rot}</span>${rodape.tip || ''}</div>
+    <div class="hero-per">Período: <b>${periodo}</b></div>
+    <div class="hero-linha">${icone}<b class="hero-val">${valor}</b></div>
+    <div class="hero-pe">${rodape.txt}${rodape.selo || ''}</div>
   </div>`;
 }
 
@@ -4382,12 +4424,14 @@ function mixDna(s, mix, total){
    segmentado comprou na janela. Um valor só chamado "faturamento" na página
    inteira. O recorte por DNA continua existindo, mas com outro nome e em
    outro bloco, justamente para não virar um segundo "faturamento". */
-function cardFaturamento(s, c){
+function cardFaturamento(s, c, periodo){
   if(!c.sellout || !c.compras) return '';
   const pct = c.faturamento / c.sellout * 100;
-  return heroi('Participação nas lojas', nf1.format(pct)+'%',
-    `de ${brl(c.sellout)} faturados no período`,
-    `<span class="hero-nota">${I.users} ${brl(c.faturamento)} vieram deste público</span>`);
+  return heroi('Participação nas lojas', I.chart, nf1.format(pct)+'%',
+    periodo || `${c.ini} - ${c.fim}`, {
+      tip: tipTexto(`Quanto do que as lojas faturaram no período veio deste público. O
+        denominador é o sellout da rede inteira, todos os produtos — não só os da campanha.`),
+      txt: `<b>${brl(c.faturamento)}</b> de ${brlCurto(c.sellout)} na rede`});
 }
 
 /* Barra de duas faixas com a média do DNA marcada por uma régua. A régua é o
@@ -4627,8 +4671,9 @@ function blocoInvestimento(c){
   const r = retornoCamp(c);
   if(r === null) return `<div class="bloco bloco-vazio">
     <h4 class="bloco-tit">Retorno sobre o investimento</h4>
-    <p class="bloco-nota">Nenhum investimento foi informado para esta campanha, então não dá para
-    calcular o retorno. O valor é preenchido na criação da campanha.</p>
+    <p class="bloco-nota">Nenhum investimento foi <b>informado</b> para esta campanha — o que é
+    diferente de ter custado zero. Sem esse valor não há retorno para calcular. Ele é preenchido
+    na criação da campanha.</p>
   </div>`;
   const cpc = c.clientesComp ? c.investimento / c.clientesComp : 0;
   return `<div class="bloco">
@@ -4669,7 +4714,7 @@ function telaResultados(){
 
   const fase = faseCampanha(c);
   const conv = s.clientes ? c.clientesComp / s.clientes * 100 : 0;
-  const ticket = c.compras ? c.faturamento / c.compras : 0;
+  const ticket = ticketCamp(c);
 
   const SELOS = {
     futura:    ['Ainda não começou','sf'],
@@ -4736,18 +4781,42 @@ function telaResultados(){
   const anoRot   = 'do mesmo período de ' + (brDate(c.ini).getFullYear() - 1);
   const tkAnoAnt = anoAnt.compras ? anoAnt.faturamento / anoAnt.compras : 0;
 
+  /* O cartão de clientes passou a mostrar o ALCANCE, não os compradores.
+     Antes dizia "Clientes que compraram: 688" — e 688 é quem comprou, de um
+     público de 8.420. Com o rótulo falando de impactados, o número grande
+     tem que ser o impactado, senão o cartão afirma uma coisa e mostra outra.
+     Quem comprou continua no funil, que é onde a queda de um degrau para o
+     outro é o assunto. */
+  const perCamp = `${c.ini} - ${c.fim}`;
+  const porCem  = Math.round(conv);
+
   const herois = `<div class="herois">
-    ${heroi('Faturamento gerado', brl(c.faturamento),
-        `em ${nf.format(c.compras)} compras`,
-        selo(delta(c.faturamento, anoAnt.faturamento), anoRot))}
-    ${heroi('Clientes que compraram', nf.format(c.clientesComp),
-        `${Math.round(conv)} de cada 100 que receberam`,
-        selo(delta(c.clientesComp, anoAnt.clientesComp), anoRot))}
-    ${heroi('Ticket médio', brl(ticket),
-        'valor médio de cada compra',
-        (s.ticketHist ? `<span class="hero-nota">${I.alta} normal deste público: ${brl(s.ticketHist)}</span>` : '') +
-        selo(delta(ticket, tkAnoAnt), anoRot))}
-    ${cardFaturamento(s, c)}
+    ${heroi('Faturamento gerado', I.moeda, brl(c.faturamento), perCamp, {
+      tip: tipTexto(`Soma do que o público impactado comprou entre ${c.ini} e ${c.fim}, em
+        ${nf.format(c.compras)} compras. A comparação é com o mesmo período do ano anterior,
+        que neutraliza a época do ano.`),
+      txt: `Mesmo período de ${brDate(c.ini).getFullYear()-1}: <b>${brl(anoAnt.faturamento)}</b>`,
+      selo: selo(delta(c.faturamento, anoAnt.faturamento), '')})}
+
+    ${heroi('Clientes que foram impactados', I.users, nf.format(s.clientes), perCamp, {
+      tip: tipTexto(`Todo o público da segmentação recebeu a mensagem. Destes,
+        ${nf.format(c.clientesComp)} compraram no período — é essa fração que a linha de baixo
+        mostra. Comprar sem ter recebido não entra nesta conta.`),
+      txt: `<b>${porCem} a cada 100</b> compraram · <b>${nf1.format(conv)}%</b>`})}
+
+    ${heroi('Ticket médio', I.etiqueta, brl(ticket), perCamp, {
+      tip: tipTexto(`Faturamento dividido pelo número de compras — não por cliente e não por
+        visita, que dariam números diferentes. ${s.ticketHist
+          ? `O normal deste público é ${brl(s.ticketHist)}.` : ''}`),
+      txt: s.ticketHist
+        ? `Normal deste público: <b>${brl(s.ticketHist)}</b>`
+        : `Em <b>${nf.format(c.compras)}</b> compras`,
+      // o selo mede contra o MESMO número que o texto declara, por definição
+      selo: s.ticketHist ? selo(delta(ticket, s.ticketHist), '')
+                         : selo(delta(ticket, tkAnoAnt), 'do mesmo período de '
+                             + (brDate(c.ini).getFullYear()-1))})}
+
+    ${cardFaturamento(s, c, perCamp)}
   </div>`;
 
   /* Ordem por hierarquia, não por ordem de construção:
@@ -5927,7 +5996,7 @@ function handle(act, v, el, isInput){
       const nova = {
         id:'c'+Date.now(),
         ini: fmtBr(S.campIni), fim: fmtBr(S.campFim), criadaEm: fmtD(HOJE.getTime()),
-        canal: S.campCanal, faturamento: 0, ticket: 0, compras: 0, clientesComp: 0,
+        canal: S.campCanal, faturamento: 0, compras: 0, clientesComp: 0,
         investimento: parseBrl(S.campInvest)
       };
       s.campanhas = [nova, ...(s.campanhas||[])];
