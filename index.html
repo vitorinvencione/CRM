@@ -1145,66 +1145,91 @@ tbody tr.sel{background:#F3F8FF}
 .rv-wrap::-webkit-scrollbar-track{background:transparent}
 
 /* separate em vez de collapse: com collapse a borda da coluna presa some. */
-.rvtab{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:880px}
-.rvtab th{font-weight:600;color:var(--ink-3);font-size:12px;padding:0;
+/* table-layout FIXO. É o que garante que "Atual" do Fiel caia sob "Atual" do
+   Novos: a largura vem do colgroup, não do conteúdo. Sem isso R$ 3.906,00
+   alargaria a coluna do Fiel e desalinharia a grade inteira. */
+.rvtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
+  font-size:12.5px;min-width:1540px}
+.rv-c-ind{width:196px}
+.rv-c-ant{width:68px}
+.rv-c-at{width:84px}
+.rv-c-var{width:72px}
+.rvtab th{font-weight:600;color:var(--ink-3);font-size:11.5px;padding:0;
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+
+/* A coluna do indicador fica presa: com 1.540px de tabela, rolar até o
+   Abandonador sem ela é perder de vista qual linha se está lendo. */
+.rv-canto,.rv-ind{position:sticky;left:0;z-index:2;background:#fff}
+/* O canto é o cruzamento de todos os indicadores com todos os perfis, então
+   é ele que abre a leitura da base inteira. No formato anterior esse gatilho
+   morava no cabeçalho "Fidelidade"; sem dar casa nova a ele, a análise geral
+   ficaria inalcançável na tabela. */
+.rv-canto{text-align:left;background:var(--rv-cab);color:var(--ink-2);
+  font-size:12.5px;padding:0;vertical-align:top;
+  border-right:1px solid var(--border)}
+.rv-canto button{display:grid;gap:3px;justify-items:start;width:100%;
+  padding:12px 14px 10px;text-align:left;transition:.12s}
+.rv-canto-rot{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.rv-canto button:hover{background:#EDF4FC}
+.rv-canto button:hover .rv-ia,.rv-canto.on .rv-ia{opacity:1}
+.rv-canto.on{background:#E4EFFC}
+.rv-canto-b{padding:0;border-bottom:1px solid var(--border)}
 .rvtab thead tr:first-child th{border-bottom:0}
-.rv-grupo.primeira,.rv-perfil,.rv-subvazia{position:sticky;left:0;z-index:2;background:#fff}
-/* O cabeçalho da coluna presa é um bloco só.
 
-   Fidelidade é a coluna que fica fixa na rolagem, e o cabeçalho dela
-   tinha três pedaços de cor diferente: a cartela do botão em cinza, o
-   respiro em volta em branco e a célula vazia de baixo em branco. Em vez
-   de uma cartela, parecia uma cartela com remendos. Os três agora usam a
-   mesma cor e a coluna fecha de cima até a primeira linha de dado.
-
-   A célula vazia existe porque Fidelidade é a única coluna sem
-   Antes/Atual/Variação embaixo — ela segura a borda e o sticky. */
-.rv-subvazia{background:var(--rv-cab)}
-.rv-grupo{text-align:center!important;padding:0 4px 10px!important;vertical-align:bottom;
-  border-bottom:0!important}
-.rv-grupo.primeira{padding-right:14px!important;min-width:132px;background:var(--rv-cab)}
-
-/* Uma régua vertical na primeira coluna de cada grupo, do cabeçalho até a
-   última linha. Sem ela o olho lê seis números em fila e não percebe onde
-   termina Clientes e começa LTV — o par "Variação | Antes" fica colado. */
-.rvtab .sep{border-left:1px solid var(--border)}
-
-/* Três linhas de altura fixa: rótulo, unidade, ação. A unidade reserva duas
-   linhas mesmo quando usa uma, então "LTV" e "Recência" terminam com a mesma
-   altura sem depender do tamanho do texto. */
-.rv-grupo button{display:grid;grid-template-rows:auto 2.6em auto;justify-items:center;
-  align-items:center;gap:2px;width:100%;height:100%;padding:10px 10px 9px;border-radius:10px;
-  background:var(--rv-cab);border:1px solid transparent;transition:.12s}
-.rv-grupo button:hover{background:var(--primary-soft);border-color:#BFD9F5}
-.rv-grupo button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-.rv-grupo.on button{background:var(--primary-soft);border-color:var(--primary)}
-.rv-g-rot{font-size:13px;font-weight:600;color:var(--ink);line-height:1.25;text-align:center}
-.rv-g-un{display:flex;align-items:center;font-size:11px;color:var(--ink-3);line-height:1.3;
-  text-align:center;text-wrap:balance}
+/* Cabeçalho de perfil: nome com o ponto da cor e o gatilho da análise. Duas
+   linhas fixas para os seis terminarem com a mesma altura. */
+.rv-pcab{background:var(--rv-cab);padding:0;border-bottom:0}
+.rv-pcab button{display:grid;grid-template-rows:auto auto;justify-items:center;gap:3px;
+  width:100%;padding:12px 10px 10px;transition:.12s}
+.rv-pnome{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+  color:var(--ink)}
+.rv-pcab button:hover{background:#EDF4FC}
+.rv-pcab.on{background:#E4EFFC}
 .rv-ia{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
   color:var(--primary);opacity:.5;transition:.12s}
-.rv-grupo button:hover .rv-ia,.rv-grupo.on .rv-ia{opacity:1}
-.rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11.5px}
-.rvtab thead tr:nth-child(2) th.on{background:#F3F8FE}
+.rv-pcab button:hover .rv-ia,.rv-pcab.on .rv-ia{opacity:1}
+.rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11px;
+  background:var(--rv-cab)}
+.rvtab thead tr:nth-child(2) th.on{background:#E4EFFC}
+.rvtab .sep{border-left:1px solid var(--border)}
 
-.rvtab td{padding:11px 10px;text-align:right;border-bottom:1px solid #F1F5F9;
+/* Linha do indicador: rótulo, unidade e gatilho. A unidade reserva altura
+   fixa para as cinco linhas fecharem iguais. */
+.rv-ind{text-align:left;padding:0;border-right:1px solid var(--border);
+  border-bottom:1px solid #F1F5F9}
+.rv-ind button{display:grid;grid-template-rows:auto 1.5em auto;gap:1px;width:100%;
+  padding:11px 14px;text-align:left;transition:.12s}
+.rv-ind-rot{font-size:13px;font-weight:700;color:var(--ink)}
+.rv-ind-un{font-size:11px;color:var(--ink-4);line-height:1.35}
+.rv-ind button:hover{background:#F5F9FE}
+.rv-ind button:hover .rv-ia,.rv-ind.on .rv-ia{opacity:1}
+.rv-ind.on{background:#F3F8FE}
+
+.rvtab td{padding:13px 10px;text-align:right;border-bottom:1px solid #F1F5F9;
   color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
-.rvtab tbody tr:last-child td{border-bottom:0}
+.rvtab tbody tr:last-child td,.rvtab tbody tr:last-child .rv-ind{border-bottom:0}
+/* Realce da linha inteira no hover: com dezoito colunas, é o que impede o
+   olho de pular de linha no meio da comparação. */
 .rvtab tbody tr:hover td{background:#FAFCFE}
-/* A coluna presa precisa repintar o fundo em cada estado, senão o conteúdo
-   rolando por baixo aparece através dela. */
-.rvtab tbody tr:hover .rv-perfil{background:#FAFCFE}
-.rv-perfil{text-align:left!important;font-weight:600;color:var(--ink)!important;
-  padding-right:18px!important;white-space:nowrap}
-.rv-perfil span.rv-dot{display:inline-block;margin-right:9px;vertical-align:1px}
+.rvtab tbody tr:hover .rv-ind{background:#F5F9FE}
 .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .p-novos{background:#7C89A0}
-.rv-num.forte{color:var(--ink);font-weight:600}
+.rv-num.forte{color:var(--ink);font-weight:700}
 .rvtab td.on{background:#F3F8FE}
-.rvtab tbody tr:hover td.on{background:#EAF3FD}
+.rvtab tbody tr.on td{background:#F3F8FE}
+.rvtab tbody tr:hover td.on,.rvtab tbody tr.on:hover td{background:#EAF3FD}
 .rv-sin{padding-left:4px!important}
-.rv-var{font-weight:700;font-size:12.5px}
+.rv-var{font-weight:700;font-size:12px}
+/* Os quatro gatilhos da tabela são botões e precisam de foco visível: quem
+   navega por teclado atravessa dezoito colunas aqui. outline-offset negativo
+   porque o botão preenche a célula e um anel externo seria cortado. */
+.rv-canto button:focus-visible,.rv-pcab button:focus-visible,
+.rv-ind button:focus-visible{outline:2px solid var(--primary);outline-offset:-2px;
+  border-radius:6px}
+.rvc-vol:focus-visible,.rvc-lin dt button:focus-visible,
+.rvc-chip:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){
+  .rv-pcab button,.rv-ind button,.rv-canto button,.rv-ia{transition:none}}
 .rv-var.bom{color:var(--green)}
 .rv-var.ruim{color:var(--danger)}
 .rv-nulo{color:var(--ink-4)}
@@ -3210,6 +3235,59 @@ function analiseRfv(id, base){
    Não pinta o cartão inteiro com a cor do perfil: a cor é identidade
    categórica, não elogio nem alerta, e no tamanho de um ponto ela já
    identifica. */
+/* ANÁLISE DE UM PERFIL, não de um indicador.
+
+   Com os perfis virando coluna, cada um ganhou gatilho próprio — e a pergunta
+   que ele responde é outra: a do indicador é "quem tem o maior LTV?", a do
+   perfil é "quem é o Fiel?".
+
+   A ESTRATÉGIA é regra de negócio (proteger, desenvolver, reconquistar,
+   ativar) e está escrita aqui; a EVIDÊNCIA que a sustenta sai da tabela toda
+   vez. Assim a recomendação não muda sozinha quando o dado muda, mas os
+   números que a justificam nunca ficam velhos. */
+const ESTRATEGIA_PERFIL = {
+  'Fiel':        ['Proteger', 'Eles já vêm. O risco aqui é perder por descuido, não por falta de oferta — vale acompanhar quem começar a espaçar as compras.'],
+  'Valioso':     ['Proteger', 'Gastam acima da média quando vêm. Perder um destes custa o equivalente a vários clientes comuns.'],
+  'Potencial':   ['Desenvolver', 'Já compram, mas pouco. É o grupo onde uma compra a mais por ano muda o resultado.'],
+  'Ocasional':   ['Desenvolver', 'Aparecem de vez em quando. O caminho é dar motivo para voltar antes, não para gastar mais.'],
+  'Abandonador': ['Reconquistar', 'Já foram clientes. Campanha de reativação aqui vale mais que desconto para quem já compra.'],
+  'Novos':       ['Ativar', 'A segunda compra é a que decide se viram base. Se não vier, todo o custo de trazer este cliente se perde.']
+};
+
+function analisePerfil(nome, base){
+  const B = base || PERFIS_RFV;
+  const p = B.find(x => x[0] === nome);
+  if(!p) return [];
+  const g = id => GRUPOS_RFV.find(x => x.id === id);
+  const pc = x => nf1.format(Math.abs(x)) + '%';
+  const share = p[2] / (totalCli(2, B) || 1) * 100;
+  const dCli = varPct(p[1], p[2]), dLtv = varPct(p[3], p[4]);
+  const dFq  = varPct(p[7], p[8]), dRc = varPct(p[9], p[10]);
+  const cresceu = dCli > 0;
+  // em Abandonador a regra se inverte: menos gente aqui é vitória
+  const bomCrescer = !g('clientes').inverte.includes(nome);
+  const ltvMedio = B.reduce((a,x)=>a+x[4]*x[2],0) / (totalCli(2,B) || 1);
+  const [estr, porque] = ESTRATEGIA_PERFIL[nome] || ['Acompanhar',''];
+
+  return [
+    ['Quanta gente tem neste grupo?',
+     `<b>${nf.format(p[2])} clientes, ${nf1.format(share)}% da base.</b> ${
+       Math.abs(dCli) < 0.05 ? 'O tamanho não mudou em doze meses.'
+       : `${cresceu ? 'Cresceu' : 'Encolheu'} ${pc(dCli)} em doze meses — eram ${nf.format(p[1])}.${
+           cresceu === bomCrescer ? '' : ' Aqui isso é a favor: quanto menos gente neste grupo, melhor.'}`}`],
+    ['Cada cliente daqui vale quanto?',
+     `<b>${brl(p[4])} por ano</b>, ${p[4] >= ltvMedio ? 'acima' : 'abaixo'} da média da base (${brl(ltvMedio)}). ${
+       Math.abs(dLtv) < 0.05 ? 'Não mudou em relação ao período anterior.'
+       : `${dLtv > 0 ? 'Subiu' : 'Caiu'} ${pc(dLtv)} — era ${brl(p[3])}.`}`],
+    ['Com que frequência eles voltam?',
+     `<b>${nf.format(p[8])} ${p[8] === 1 ? 'compra' : 'compras'} por ano</b>, e a última foi há ${nf.format(p[10])} dias. ${
+       Math.abs(dFq) < 0.05 ? 'A frequência ficou igual' : `A frequência ${dFq > 0 ? 'subiu' : 'caiu'} ${pc(dFq)}`} e o intervalo entre compras ${
+       Math.abs(dRc) < 0.05 ? 'não mudou' : (dRc < 0 ? 'encurtou ' + pc(dRc) : 'esticou ' + pc(dRc))}.`],
+    ['O que fazer com este grupo?',
+     `<b>${estr}.</b> ${porque}`]
+  ];
+}
+
 function cardsRfv(B, aberto){
   const totalAt = totalCli(2, B) || 1;
   const gCli = GRUPOS_RFV[0];
@@ -3250,43 +3328,75 @@ function blocoRfv(base, contexto){
   const B = base || PERFIS_RFV;
   const aberto = S.gAnaliseEm === S.screen ? S.gAnalise : null;
   const cartao = S.gView.rfv === 'cartao';
-  // Um botão só, para os seis cabeçalhos. Três linhas fixas — rótulo, unidade,
-  // ação — então todos têm a mesma altura por construção, independente do
-  // tamanho do texto. Antes a altura vinha do conteúdo e cada um tinha a sua.
-  const linhasCab = CAB_RFV.map(c=>{
-    const on = aberto===c.id;
-    const cls = ['rv-grupo', c.span===1?'primeira':'', c.span===3?'sep':'', on?'on':'']
-      .filter(Boolean).join(' ');
-    // Sem rowspan: com ele o botão de Fidelidade esticava sobre a linha de
-    // Antes/Atual/Variação e a cartela cinza ficava mais alta que as outras
-    // cinco. Agora os seis ocupam a mesma linha e a coluna de Fidelidade
-    // recebe uma célula vazia embaixo, só para segurar a borda e o sticky.
-    return `<th colspan="${c.span}" class="${cls}">
-      <button data-act="gAnalise" data-v="${c.id}" aria-expanded="${on}"
-        title="Ver as perguntas sobre ${esc(c.id==='geral'?'todos os indicadores':c.rot.toLowerCase())}">
-        <span class="rv-g-rot">${esc(c.rot)}</span>
-        <span class="rv-g-un">${esc(c.un)}</span>
-        <span class="rv-ia">${I.spark} perguntas</span>
+  /* TABELA TRANSPOSTA: indicador na linha, perfil na coluna.
+
+     O eixo mudou porque a pergunta principal mudou. Antes era "me fale do
+     Fiel" e a resposta estava numa linha atravessando quinze colunas. Agora é
+     "quem tem o melhor LTV?", e a resposta é uma linha só, os seis perfis
+     lado a lado na mesma régua.
+
+     ALINHAMENTO É O REQUISITO, NÃO O ACABAMENTO. São dezoito colunas de
+     número, e "Atual" do Fiel precisa cair exatamente sob "Atual" do Novos,
+     senão a comparação exige contar colunas. Três coisas garantem isso e
+     nenhuma é opcional:
+
+     · table-layout fixo com colgroup de largura explícita. Sem ele a coluna
+       se ajusta ao conteúdo, e "R$ 3.906,00" no Fiel empurraria a grade
+       inteira para fora do lugar em relação a "R$ 143,00" no Abandonador.
+     · tabular-nums e alinhamento à direita em todo número, então a vírgula
+       dos seis perfis cai na mesma vertical.
+     · a coluna do indicador é presa na rolagem. Com 1.540px de tabela, sem
+       isso o associado rola até o Abandonador e não sabe mais qual linha
+       está lendo. */
+  const cabPerfis = B.map(x=>{
+    const on = aberto === 'perfil:'+x[0];
+    return `<th colspan="3" class="rv-pcab${on?' on':''}">
+      <button data-act="gAnalise" data-v="perfil:${esc(x[0])}" aria-expanded="${on}"
+        title="Ver as perguntas sobre ${esc(x[0])}">
+        <span class="rv-pnome"><i class="rv-dot ${x[11]}"></i>${esc(x[0])}</span>
+        <span class="rv-ia">${I.spark} análise</span>
       </button></th>`;
   }).join('');
 
-  const geralOn = aberto==='geral';
-  const corpo = B.map(p=>`<tr>
-    <td class="rv-perfil${geralOn?' on':''}"><span class="rv-dot ${p[11]}"></span>${esc(p[0])}</td>
-    ${GRUPOS_RFV.map(g=>{
-      const on = aberto===g.id, i = g.i;
-      return `<td class="rv-num sep${on?' on':''}">${g.fmt(p[i])}</td>
-        <td class="rv-num forte${on?' on':''}">${g.fmt(p[i+1])}</td>
-        <td class="rv-sin${on?' on':''}">${sinalRfv(g, p[0], p[i], p[i+1])}</td>`;
-    }).join('')}
-  </tr>`).join('');
+  const subCab = B.map(x=>{
+    const on = aberto === 'perfil:'+x[0];
+    return `<th class="sep${on?' on':''}">Antes</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
+  }).join('');
 
-  const c = CAB_RFV.find(x=>x.id===aberto);
-  const analise = c ? `<div class="rv-painel">
+  const corpo = GRUPOS_RFV.map(g=>{
+    const on = aberto === g.id;
+    return `<tr class="${on?'on':''}">
+      <th scope="row" class="rv-ind${on?' on':''}">
+        <button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
+          title="Ver as perguntas sobre ${esc(g.rot.toLowerCase())}">
+          <span class="rv-ind-rot">${esc(g.rot)}</span>
+          <span class="rv-ind-un">${esc(g.un)}</span>
+          <span class="rv-ia">${I.spark} análise</span>
+        </button>
+      </th>
+      ${B.map(x=>{
+        const onP = aberto === 'perfil:'+x[0], oo = (on||onP)?' on':'';
+        return `<td class="rv-num sep${oo}">${g.fmt(x[g.i])}</td>
+          <td class="rv-num forte${oo}">${g.fmt(x[g.i+1])}</td>
+          <td class="rv-sin${oo}">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+
+  /* Dois eixos de pergunta, um painel só. O que muda é o título e de onde
+     as perguntas vêm — nunca dois painéis abertos ao mesmo tempo. */
+  const perfilAberto = aberto && aberto.startsWith('perfil:') ? aberto.slice(7) : null;
+  const c = perfilAberto ? null : CAB_RFV.find(x=>x.id===aberto);
+  const qa = perfilAberto ? analisePerfil(perfilAberto, B) : (c ? analiseRfv(c.id, B) : []);
+  const tituloQa = perfilAberto
+    ? 'O que o perfil ' + esc(perfilAberto) + ' está dizendo'
+    : (c ? (c.id==='geral' ? 'O que a base inteira está dizendo'
+                           : 'O que ' + esc(c.rot.toLowerCase()) + ' está dizendo') : '');
+  const analise = qa.length ? `<div class="rv-painel">
     <div class="rv-painel-top">${I.spark}
-      <h4>${c.id==='geral' ? 'O que a base inteira está dizendo' : 'O que ' + esc(c.rot.toLowerCase()) + ' está dizendo'}</h4>
-      <button class="rv-fechar" data-act="gAnalise" data-v="${c.id}">Fechar</button></div>
-    ${analiseRfv(c.id, B).map(([perg,resp])=>`<div class="rv-item">
+      <h4>${tituloQa}</h4>
+      <button class="rv-fechar" data-act="gAnalise" data-v="${esc(aberto)}">Fechar</button></div>
+    ${qa.map(([perg,resp])=>`<div class="rv-item">
       <p class="rv-q">${esc(perg)}</p>
       <p class="rv-a">${resp}</p></div>`).join('')}
     <p class="rv-disclaimer">${I.info} Respostas montadas a partir dos números desta tabela.
@@ -3325,11 +3435,19 @@ function blocoRfv(base, contexto){
     ${chips}
     ${cartao ? cardsRfv(B, aberto) : `<div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
+        <colgroup>
+          <col class="rv-c-ind">
+          ${B.map(()=>'<col class="rv-c-ant"><col class="rv-c-at"><col class="rv-c-var">').join('')}
+        </colgroup>
         <thead>
-          <tr>${linhasCab}</tr>
-          <tr><th class="rv-subvazia${geralOn?' on':''}"></th>${GRUPOS_RFV.map(g=>{const on=aberto===g.id;
-            return `<th class="sep${on?' on':''}">Antes</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
-          }).join('')}</tr>
+          <tr><th class="rv-canto${aberto==='geral'?' on':''}" scope="col">
+            <button data-act="gAnalise" data-v="geral" aria-expanded="${aberto==='geral'}"
+              title="Ver as perguntas sobre todos os indicadores">
+              <span class="rv-canto-rot">Indicador</span>
+              <span class="rv-ia">${I.spark} análise</span>
+            </button>
+          </th>${cabPerfis}</tr>
+          <tr><th class="rv-canto rv-canto-b"></th>${subCab}</tr>
         </thead>
         <tbody>${corpo}</tbody>
       </table>
