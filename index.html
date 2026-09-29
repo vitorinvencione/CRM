@@ -39,6 +39,9 @@
   --g-ref:#C9D6E6;
   --g-sub:#93C3F5;
   --g-atual-h:linear-gradient(90deg,#2D8FFC,#0B7BFB);
+  /* a mesma barra em segundo plano: contexto, não outra informação */
+  --g-atual-fraco:linear-gradient(90deg,#AFD2F9,#8FBCF5);
+  --g-ref-fraco:#DFE8F2;
   --g-atual-v:linear-gradient(180deg,#2D8FFC,#0B7BFB);
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
@@ -1283,20 +1286,26 @@ tbody tr.sel{background:#F3F8FF}
 @media(prefers-reduced-motion:reduce){.fc-trilho{transition:none}}
 .fc-ap{font-size:11.5px;color:var(--ink-3)}
 
-/* A campanha analisada, destacada por elevação e escala — não por cor.
+/* A campanha analisada, destacada por profundidade — não por outra cor.
 
-   Trocar a cor da barra dela quebraria a leitura: aqui a cor significa
-   "produto do DNA" contra "resto", e uma terceira cor faria o leitor
-   procurar um terceiro significado. Então o destaque vem de outro lugar:
-   a linha ganha um painel claro com um filete na lateral, o valor sobe de
-   corpo e a barra engrossa. As outras linhas continuam exatamente como
-   estavam — nada é apagado, o que evita que contexto pareça desativado.
+   Nenhuma cor nova entra aqui: azul continua sendo "produto do DNA" e
+   cinza continua sendo "o resto". O que muda é a INTENSIDADE. A linha
+   analisada fica no tom cheio, as outras recuam para a mesma cor mais
+   clara. Duas camadas da mesma paleta em vez de duas paletas.
+
+   Isso é diferente de apagar as outras: elas continuam legíveis e
+   comparáveis, só não disputam o primeiro olhar. O contraste entre as
+   duas faixas dentro de cada barra é preservado nos dois níveis, senão a
+   leitura de DNA contra resto se perderia justamente nas linhas de
+   contexto.
 
    A margem negativa compensa o recuo do painel: sem ela a barra da linha
    destacada começaria 14px à direita das outras, e comprimento de barra
    que não parte do mesmo x deixa de ser comparável. */
+.fc-lin:not(.atual) .fc-trilho{background:var(--g-ref-fraco)}
+.fc-lin:not(.atual) .fc-dna{background:var(--g-atual-fraco)}
 .fc-lin.atual{position:relative;margin:0 -14px;padding:12px 14px;border-radius:10px;
-  background:#F4F8FD;box-shadow:inset 3px 0 0 var(--primary)}
+  background:#F4F8FD}
 .fc-lin.atual .fc-per{color:var(--ink);font-weight:700;font-size:13px}
 .fc-lin.atual .fc-per i{background:var(--primary);color:#fff}
 .fc-lin.atual .fc-tot{font-size:19px}
