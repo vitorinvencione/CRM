@@ -42,6 +42,20 @@
   /* a mesma barra em segundo plano: contexto, não outra informação */
   --g-atual-fraco:linear-gradient(90deg,#AFD2F9,#8FBCF5);
   --g-ref-fraco:#DFE8F2;
+  /* FORA DO DNA. Era o mesmo cinza da referência, então a parte da barra que
+     não é do DNA parecia trilho vazio em vez de venda de verdade — e ela é
+     metade do faturamento da campanha.
+
+     Por que teal e não outra cor: âmbar já é aviso nesta mesma tela (o alerta
+     de números parciais), verde e vermelho já são alta e queda nos selos, e
+     azul é o próprio DNA. Teal é o que sobra sem carregar juízo de bom ou
+     ruim — "outro produto" não é problema nenhum.
+
+     Matiz sozinha não basta: quem não distingue azul de teal veria uma barra
+     só. Por isso a fatia do DNA leva um fio branco na borda, e a separação
+     passa a existir mesmo sem cor. */
+  --g-fora:#7FB3B2;
+  --g-fora-fraco:#C3DCDB;
   --g-atual-v:linear-gradient(180deg,#2D8FFC,#0B7BFB);
   --primary:#0B7BFB;
   --primary-hover:#0A6BDB;
@@ -690,7 +704,10 @@ tbody tr.sel{background:#F3F8FF}
   box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;gap:12px}
 .gcard-top{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.3}
 .gcard-top>svg{flex-shrink:0;color:var(--ink-3);margin-top:1px}
-.gcard-top span{flex:1;min-width:0}
+.gcard-rot{flex:1;min-width:0;font-weight:600}
+.gcard-rot .ttip{color:var(--ink-4)}
+.gcard-sub{display:block;margin-top:3px;font-size:11.5px;font-style:normal;
+  font-weight:400;color:var(--ink-4);line-height:1.35}
 .gcard b{font-size:21px;font-weight:700;color:var(--ink);line-height:1.15;align-self:end;
   font-variant-numeric:tabular-nums}
 
@@ -1289,9 +1306,10 @@ tbody tr.sel{background:#F3F8FF}
   font-variant-numeric:tabular-nums}
 /* O trilho tem o tamanho do valor: a largura entre campanhas é a
    informação, então ele não ocupa a linha inteira. */
-.fc-trilho{height:14px;border-radius:99px;background:var(--g-ref);overflow:hidden;
+.fc-trilho{height:14px;border-radius:99px;background:var(--g-fora);overflow:hidden;
   min-width:8px;transition:width .3s ease}
 .fc-dna{display:block;height:100%;border-radius:99px;background:var(--g-atual-h);
+  box-shadow:1px 0 0 1px #fff;
   min-width:4px}
 @media(prefers-reduced-motion:reduce){.fc-trilho{transition:none}}
 .fc-ap{font-size:11.5px;color:var(--ink-3)}
@@ -1312,7 +1330,7 @@ tbody tr.sel{background:#F3F8FF}
    A margem negativa compensa o recuo do painel: sem ela a barra da linha
    destacada começaria 14px à direita das outras, e comprimento de barra
    que não parte do mesmo x deixa de ser comparável. */
-.fc-lin:not(.atual) .fc-trilho{background:var(--g-ref-fraco)}
+.fc-lin:not(.atual) .fc-trilho{background:var(--g-fora-fraco)}
 .fc-lin:not(.atual) .fc-dna{background:var(--g-atual-fraco)}
 .fc-lin.atual{position:relative;margin:0 -14px;padding:12px 14px;border-radius:10px;
   background:#F4F8FD}
@@ -1325,7 +1343,7 @@ tbody tr.sel{background:#F3F8FF}
 .fc-leg span{display:inline-flex;align-items:center;gap:7px}
 .fc-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 .fc-pt.dna{background:#2D8FFC}
-.fc-pt.resto{background:var(--g-ref)}
+.fc-pt.resto{background:var(--g-fora)}
 
 /* ---------- Funil ---------- */
 /* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
@@ -2070,17 +2088,17 @@ const TIPS = {
   adLtv:'Faturamento dividido pelo número de clientes deste grau.',
   adClientes:'Quantos clientes do DNA estão neste grau, e como eles se distribuem entre os perfis de fidelidade.',
   adPref:'As cinco categorias que mais pesam no faturamento deste grau. Não somam o total: sobra o que veio de fora dessas cinco.',
-  ltv:'Quanto cada cliente já gerou de receita desde a primeira compra.',
+  ltv:'Receita média acumulada por cliente nos últimos 12 meses. É o faturamento IDENTIFICADO dividido pelo número de clientes identificados — usar o faturamento total inflaria o número, porque 37% das vendas não têm dono conhecido.',
   prodsel:'Quantos produtos você marcou para filtrar o público.',
   periodoCompra:'Os períodos que você escolheu na etapa Produtos. Só entram clientes que compraram dentro deles.',
   aderencia:'O quanto esse comportamento aparece nas compras do cliente. Baixa, Média e Alta são faixas separadas — pode marcar mais de uma, e o público soma as faixas marcadas.',
   painel:'Aqui você acompanha seus clientes e cria públicos para campanhas.',
   fonte:'De onde vêm os números e quando foram atualizados pela última vez.',
-  transacoes:'Quantas vendas foram feitas no período, com ou sem o cliente identificado.',
-  clientesGeral:'Clientes diferentes que compraram no período. Só conta quem foi identificado na venda.',
-  identificadas:'De cada 100 vendas, quantas saíram com o cliente identificado. É esse pedaço da base que alimenta o CRM.',
-  faturamentoGeral:'Tudo que entrou no período, identificado ou não.',
-  ticketGeral:'Faturamento dividido pelo número de transações.',
+  transacoes:'Número de vendas registradas no PEC no período, com ou sem o cliente identificado na compra.',
+  clientesGeral:'Total de clientes identificados via CPF no momento da compra. Quem comprou sem se identificar não entra.',
+  identificadas:'Percentual de transações registradas no PEC com o cliente identificado, sobre o total de transações realizadas. É esse pedaço da base que alimenta o CRM — o resto não dá para segmentar nem impactar.',
+  faturamentoGeral:'Total de vendas registradas no PEC no período, com ou sem o cliente identificado na compra.',
+  ticketGeral:'Soma do faturamento dividida pelo número de transações registradas no PEC. O denominador é a TRANSAÇÃO, não o cliente e não a visita — as três dariam números diferentes.',
   perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
   faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
   perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
@@ -2861,9 +2879,20 @@ function selGeral(label, campo, opts, valor){
 /* Ordem dos parâmetros igual à ordem em que aparecem na tela: ícone, rótulo,
    ajuda, valor. Com o valor antes da ajuda, as chamadas passavam a chave do
    tooltip onde o número devia ir — e o cartão imprimia "transacoes". */
-function cardGeral(ic, rot, tk, val){
+/* Cartão da Visão geral: ícone, título com o tooltip colado, uma linha de
+   escopo e o valor.
+
+   A LINHA DE ESCOPO NÃO É DECORATIVA e não é a mesma nos seis. Metade destes
+   números é o movimento inteiro da loja e metade é só a fatia com cliente
+   identificado — e a diferença é grande: 63% das transações têm CPF. Escrever
+   "identificados no PEC" em todos faria o cartão de Transações (188.420, o
+   total) contradizer o de Transações identificadas (63,0%) parado ao lado. */
+function cardGeral(ic, rot, sub, tk, val){
   return `<div class="gcard">
-    <div class="gcard-top">${I[ic]}<span>${rot}</span>${tk?tip(tk):''}</div>
+    <div class="gcard-top">${I[ic]}
+      <span class="gcard-rot">${rot}${tk?' '+tip(tk):''}
+        ${sub ? `<em class="gcard-sub">${sub}</em>` : ''}</span>
+    </div>
     <b>${val}</b>
   </div>`;
 }
@@ -3319,12 +3348,12 @@ function telaGeral(){
   </div>
 
   <div class="gcards">
-    ${cardGeral('refresh','Transações','transacoes', nf.format(GERAL.transacoes))}
-    ${cardGeral('users','Clientes','clientesGeral', nf.format(clientesGeral()))}
-    ${cardGeral('checkc','Transações identificadas','identificadas', nf1.format(pctIdGeral())+'%')}
-    ${cardGeral('moeda','Faturamento','faturamentoGeral', brl(GERAL.faturamento))}
-    ${cardGeral('etiqueta','Ticket Médio','ticketGeral', brl(ticketGeral()))}
-    ${cardGeral('money','LTV','ltv', brl(ltvGeral()))}
+    ${cardGeral('moeda','Faturamento','registrado no PEC','faturamentoGeral', brl(GERAL.faturamento))}
+    ${cardGeral('refresh','Transações','registradas no PEC','transacoes', nf.format(GERAL.transacoes))}
+    ${cardGeral('users','Clientes','identificados no PEC','clientesGeral', nf.format(clientesGeral()))}
+    ${cardGeral('checkc','Transações identificadas','sobre o total de transações','identificadas', nf1.format(pctIdGeral())+'%')}
+    ${cardGeral('etiqueta','Ticket Médio','registrado no PEC','ticketGeral', brl(ticketGeral()))}
+    ${cardGeral('money','LTV','identificados no PEC','ltv', brl(ltvGeral()))}
   </div>
 
   <div class="gpanel">
@@ -3949,10 +3978,10 @@ function telaDna(){
   ${chipsDnaAba()}
 
   <div class="gcards gcards-4">
-    ${cardGeral('users','Total de clientes','dnaClientes', nf.format(d.clientes))}
+    ${cardGeral('users','Total de clientes','com este DNA','dnaClientes', nf.format(d.clientes))}
     ${cardAderencia(d)}
-    ${cardGeral('etiqueta','Ticket médio','dnaTicket', brl(d.ticket))}
-    ${cardGeral('money','LTV','dnaLtv', brl(d.ltv))}
+    ${cardGeral('etiqueta','Ticket médio','por compra','dnaTicket', brl(d.ticket))}
+    ${cardGeral('money','LTV','por cliente, 12 meses','dnaLtv', brl(d.ltv))}
   </div>
 
   ${painelGrafico('dnaPerfil','Informações gerais por perfil de cliente','perfilCliente',
@@ -4532,16 +4561,20 @@ function blocoDnaVendas(s, c){
   const rotDna = nomes.join(' e ');
   const linhas = camps.map(x => {
     const m = mixDna(s, x.mix, x.faturamento);
-    return {...x, dna: Math.round(x.faturamento * m.pctAlvo / 100)};
+    const dna = Math.round(x.faturamento * m.pctAlvo / 100);
+    // as duas partes somam o faturamento por subtração, nunca por arredondamento
+    return {...x, dna, fora: x.faturamento - dna};
   });
   const maior = Math.max(...linhas.map(x => x.faturamento)) || 1;
   const periodo = x => `${x.ini.slice(0,5)} a ${x.fim}`;
 
   return `<div class="bloco">
     <h4 class="bloco-tit">Faturamento das campanhas deste público
-      ${tipTexto(`Cada barra é o que a campanha faturou no período, e a parte destacada é o que
-      veio de produtos de ${esc(rotDna)} — as categorias ${esc([...subs].join(', '))}. As barras
-      estão na mesma escala, então o comprimento mostra o porte de cada campanha.`)}</h4>
+      ${tipTexto(`Cada barra é o que a campanha faturou no período, repartida em duas cores: o
+      azul é o que veio de produtos de ${esc(rotDna)} — as categorias
+      ${esc([...subs].join(', '))} — e o verde-azulado é tudo que o cliente levou fora desse
+      DNA. As duas somam o faturamento inteiro da campanha. As barras estão na mesma escala,
+      então o comprimento mostra o porte de cada uma.`)}</h4>
 
     <div class="fcamp">
       ${linhas.map(x => {
@@ -4553,17 +4586,17 @@ function blocoDnaVendas(s, c){
             <b class="fc-tot">${brl(x.faturamento)}</b>
           </div>
           <div class="fc-trilho" style="width:${(x.faturamento/maior*100).toFixed(1)}%"
-            title="${esc(periodo(x))}: ${brl(x.faturamento)}, sendo ${brl(x.dna)} de ${esc(rotDna)}">
+            title="${esc(periodo(x))}: ${brl(x.faturamento)} — ${brl(x.dna)} de ${esc(rotDna)} e ${brl(x.fora)} fora">
             <span class="fc-dna" style="width:${pctDna.toFixed(1)}%"></span>
           </div>
-          <span class="fc-ap">${brl(x.dna)} de ${esc(rotDna)} · ${CANAIS[x.canal][0]}</span>
+          <span class="fc-ap">${brl(x.dna)} de ${esc(rotDna)} · ${brl(x.fora)} fora · ${CANAIS[x.canal][0]}</span>
         </div>`;
       }).join('')}
     </div>
 
     <div class="fc-leg">
       <span><i class="fc-pt dna"></i>Produtos de ${esc(rotDna)}</span>
-      <span><i class="fc-pt resto"></i>Outros produtos</span>
+      <span><i class="fc-pt resto"></i>Fora de ${esc(rotDna)}</span>
     </div>
   </div>`;
 }
@@ -4780,12 +4813,19 @@ function telaResultados(){
   const anoRot   = 'do mesmo período de ' + (brDate(c.ini).getFullYear() - 1);
   const tkAnoAnt = anoAnt.compras ? anoAnt.faturamento / anoAnt.compras : 0;
 
-  /* O cartão de clientes passou a mostrar o ALCANCE, não os compradores.
-     Antes dizia "Clientes que compraram: 688" — e 688 é quem comprou, de um
-     público de 8.420. Com o rótulo falando de impactados, o número grande
-     tem que ser o impactado, senão o cartão afirma uma coisa e mostra outra.
-     Quem comprou continua no funil, que é onde a queda de um degrau para o
-     outro é o assunto. */
+  /* CARTÃO DE CLIENTES: rótulo fala de impactados, número mostra quem
+     comprou (688 de 8.420), rodapé traz só o percentual.
+
+     Com o rodapé reduzido ao percentual, o DENOMINADOR não está mais escrito
+     no cartão — "8,2% de quê" não se lê ali. Quem segura isso é o tooltip e o
+     primeiro degrau do funil, que continua mostrando os 8.420 que receberam.
+     Se o funil sair da tela um dia, este cartão fica sem base e o percentual
+     vira número solto.
+
+     ATENÇÃO AO ESCREVER AQUI: o trecho abaixo monta uma template string.
+     Comentário de bloco dentro das crases não é comentário, é texto — e vai
+     parar na tela do associado. Só comente fora da string, ou dentro de uma
+     interpolação, que é JS de verdade. Já aconteceu uma vez. */
   const perCamp = `${c.ini} - ${c.fim}`;
 
   const herois = `<div class="herois">
@@ -4796,11 +4836,6 @@ function telaResultados(){
       txt: `Mesmo período de ${brDate(c.ini).getFullYear()-1}: <b>${brl(anoAnt.faturamento)}</b>`,
       selo: selo(delta(c.faturamento, anoAnt.faturamento), '')})}
 
-    /* O rodapé ficou só com o percentual, então o DENOMINADOR não está mais
-       escrito no cartão — 8,2% de quê não se lê ali. Quem segura isso é o
-       tooltip e o primeiro degrau do funil, que continua mostrando os 8.420
-       que receberam. Se o funil sair da tela um dia, este cartão fica sem
-       base e o percentual vira número solto. */
     ${heroi('Clientes que foram impactados', I.users, nf.format(c.clientesComp), perCamp, {
       tip: tipTexto(`${nf.format(c.clientesComp)} clientes compraram no período, de
         ${nf.format(s.clientes)} que receberam a mensagem — os ${nf1.format(conv)}% da linha de
