@@ -1242,6 +1242,26 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
 
+/* Onde a venda aconteceu: uma barra repartida em duas, e as duas somam o
+   faturamento inteiro. O percentual fica dentro da fatia quando cabe; o
+   valor em reais fica embaixo, junto do nome. */
+.cv-barra{display:flex;height:40px;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.cv-seg{display:flex;align-items:center;justify-content:center;font-size:13.5px;
+  font-weight:700;color:#fff;min-width:4px;transition:width .3s ease;
+  font-variant-numeric:tabular-nums}
+.cv-seg.pdv{background:var(--g-atual-h)}
+.cv-seg.online{background:#6F86A8}
+@media(prefers-reduced-motion:reduce){.cv-seg{transition:none}}
+.cv-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cv-col span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3);
+  margin-bottom:4px}
+.cv-col b{display:block;font-size:16px;font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.cv-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.cv-pt.pdv{background:#2D8FFC}
+.cv-pt.online{background:#6F86A8}
+@media(max-width:520px){.cv-duo{grid-template-columns:1fr;gap:10px}}
+
 /* ---------- Faturamento das campanhas ----------
    Barras na mesma escala, empilhadas entre o que veio do DNA e o resto.
    Sem marcador de média e sem coluna de variação: o bloco mostra porte e
@@ -4316,6 +4336,69 @@ function cardFaturamento(s, c){
    de 49% dá 9 pontos percentuais, mas "9 pontos" é vocabulário de analista.
    Para quem lê no balcão, o número que significa alguma coisa é o relativo:
    58 ÷ 49 = 1,18, ou seja, 18% acima da média. */
+/* Onde a venda aconteceu: balcão ou delivery.
+
+   As duas somam o faturamento inteiro da campanha, então o gráfico é uma
+   barra única repartida — não dois números soltos que o leitor teria que
+   somar para descobrir que fecham 100%.
+
+   BARRA E NÃO ROSCA. Duas fatias cabem numa rosca, e a regra de gráfico
+   diria que sim. Mas esta tela é toda de barra — funil, comparativo,
+   faturamento por campanha — e uma rosca seria a única coisa redonda da
+   página. Consistência aqui vale mais que variedade.
+
+   A PROPORÇÃO SAI DO PÚBLICO, NÃO DE UM NÚMERO SOLTO. Público mais velho
+   compra mais no balcão; campanha por WhatsApp empurra mais para o
+   delivery do que uma ligação. As duas coisas entram na conta, e é por
+   isso que Hipertensão fica mais presencial que Mãe. */
+const CANAL_VENDA = {whatsapp:1.25, email:1.10, sms:1.00, ligacao:0.80};
+
+function fatiaOnline(s, c){
+  const p = DNA_PERFIL[String(s.dna||'').split(',')[0].trim()] ||
+            DNA_PERFIL[String(s.dna||'').trim()+'s'] || {pico:3};
+  /* quanto mais velho o pico etário do público, menos delivery */
+  const base = p.pico <= 2 ? .30 : p.pico === 3 ? .24 : p.pico === 4 ? .19 : .13;
+  const pct = base * (CANAL_VENDA[c.canal] || 1) * jitterCamp(c.id + '|on');
+  return Math.min(.45, Math.max(.08, pct));
+}
+
+function blocoCanais(s, c){
+  if(!c.faturamento) return '';
+  const online = Math.round(c.faturamento * fatiaOnline(s, c));
+  const pdv    = c.faturamento - online;
+  const pctOn  = online / c.faturamento * 100;
+  const pctPdv = 100 - pctOn;   // as duas somam 100 por construção, não por arredondamento
+
+  return `<div class="bloco">
+    <h4 class="bloco-tit">Onde a venda aconteceu
+      ${tipTexto(`Divide o faturamento da campanha entre a venda no balcão da loja e a venda
+      online com entrega. As duas somam o faturamento inteiro: ${brl(c.faturamento)}.`)}</h4>
+
+    <div class="cv-barra" role="img"
+      aria-label="Balcão ${nf1.format(pctPdv)}%, online ${nf1.format(pctOn)}%">
+      <span class="cv-seg pdv" style="width:${pctPdv.toFixed(1)}%"
+        title="Balcão: ${brl(pdv)}">${pctPdv >= 14 ? nf1.format(pctPdv)+'%' : ''}</span>
+      <span class="cv-seg online" style="width:${pctOn.toFixed(1)}%"
+        title="Online: ${brl(online)}">${pctOn >= 14 ? nf1.format(pctOn)+'%' : ''}</span>
+    </div>
+
+    <div class="cv-duo">
+      <div class="cv-col">
+        <span><i class="cv-pt pdv"></i>Balcão da loja</span>
+        <b>${brl(pdv)}</b>
+      </div>
+      <div class="cv-col">
+        <span><i class="cv-pt online"></i>Online com entrega</span>
+        <b>${brl(online)}</b>
+      </div>
+    </div>
+
+    <p class="bloco-nota">Os dois valores somam ${brl(c.faturamento)}, que é o faturamento desta
+    campanha. O canal da mensagem não obriga o canal da compra: quem recebe no WhatsApp pode
+    aparecer na loja.</p>
+  </div>`;
+}
+
 /* Faturamento das campanhas deste público.
 
    O bloco media em percentual e comparava tudo com tudo: a fatia do DNA
@@ -4614,17 +4697,28 @@ function telaResultados(){
        5. retorno     — fecha a leitura: depois de entender de onde veio o
                         faturamento, quanto ele custou
        6. ressalva    — vale para a página inteira, por isso vem por último */
-  /* Os dois gráficos de diagnóstico dividem a linha: respondem perguntas
-     diferentes sobre o mesmo período e ficam na mesma altura de leitura.
-     O de contexto vem à esquerda — em leitura F, é o que se lê primeiro —
-     e o de mecanismo à direita. Abaixo de 1100px eles empilham. */
+  /* Duas linhas de dois gráficos, e cada par responde uma pergunta:
+
+       quantos compraram e contra o que isso se compara
+       onde a venda aconteceu e quanto ela custou
+
+     Em leitura F o olho pega a esquerda primeiro, então à esquerda fica
+     sempre o mecanismo — o funil, o canal — e à direita o julgamento —
+     a comparação, o retorno. Abaixo de 1100px os pares empilham.
+
+     O histórico de faturamento fecha a página: é o único bloco que olha
+     para fora desta campanha, e por isso vem depois de tudo que é sobre
+     ela. */
   return shell(`${cabecalho}${frase}${herois}
     <div class="bloco-par">
-      ${blocoAntesDurante(s, c)}
       ${funilCampanha(s, c)}
+      ${blocoAntesDurante(s, c)}
+    </div>
+    <div class="bloco-par">
+      ${blocoCanais(s, c)}
+      ${blocoInvestimento(c)}
     </div>
     ${blocoDnaVendas(s, c)}
-    ${blocoInvestimento(c)}
     ${avisoIncremental()}`);
 }
 
