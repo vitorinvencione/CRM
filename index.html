@@ -2858,6 +2858,12 @@ const GERAL = {
 const clientesGeral = () => totalCli(2);
 const fatIdent      = () => PERFIS_RFV.reduce((a,p)=>a+fatPerfil(p), 0);
 const pctIdGeral    = () => fatIdent() / GERAL.faturamento * 100;
+/* UMA TAXA DE IDENTIFICAÇÃO SÓ, aplicada a faturamento e a transação. O mock
+   não guarda a contagem de transações com CPF separada, então ela sai da
+   mesma taxa — o que assume ticket igual entre quem se identifica e quem não
+   se identifica. Na base real os dois números virão separados, e aí a taxa de
+   transação pode divergir da de faturamento. */
+const transIdent    = () => Math.round(GERAL.transacoes * pctIdGeral() / 100);
 const ticketGeral   = () => GERAL.faturamento / GERAL.transacoes;
 const ltvGeral      = () => fatIdent() / clientesGeral();
 /* O gráfico de perfil sai da mesma tabela: participação = clientes do perfil
@@ -2882,11 +2888,17 @@ function selGeral(label, campo, opts, valor){
 /* Cartão da Visão geral: ícone, título com o tooltip colado, uma linha de
    escopo e o valor.
 
-   A LINHA DE ESCOPO NÃO É DECORATIVA e não é a mesma nos seis. Metade destes
-   números é o movimento inteiro da loja e metade é só a fatia com cliente
-   identificado — e a diferença é grande: 63% das transações têm CPF. Escrever
-   "identificados no PEC" em todos faria o cartão de Transações (188.420, o
-   total) contradizer o de Transações identificadas (63,0%) parado ao lado. */
+   A LINHA DE ESCOPO É A MESMA NOS SEIS, e por isso os NÚMEROS também têm que
+   ser. O painel mostra o universo que o CRM consegue endereçar: só a venda
+   com CPF. Faturamento e Transações mostram a fatia identificada
+   (R$ 8,09 Mi de R$ 12,85 Mi; 118.693 de 188.420), não o total da loja.
+
+   O cartão de Transações identificadas é a ponte: diz que fatia do movimento
+   inteiro é essa. É o único que fala do que ficou de fora.
+
+   Se um dia algum destes voltar a ser o total da loja, a linha de escopo dele
+   tem que mudar junto — rótulo igual com denominador diferente é o erro que
+   essa regra existe para evitar. */
 function cardGeral(ic, rot, sub, tk, val){
   return `<div class="gcard">
     <div class="gcard-top">${I[ic]}
@@ -3348,11 +3360,11 @@ function telaGeral(){
   </div>
 
   <div class="gcards">
-    ${cardGeral('moeda','Faturamento','registrado no PEC','faturamentoGeral', brl(GERAL.faturamento))}
-    ${cardGeral('refresh','Transações','registradas no PEC','transacoes', nf.format(GERAL.transacoes))}
+    ${cardGeral('moeda','Faturamento','identificados no PEC','faturamentoGeral', brl(fatIdent()))}
+    ${cardGeral('refresh','Transações','identificados no PEC','transacoes', nf.format(transIdent()))}
     ${cardGeral('users','Clientes','identificados no PEC','clientesGeral', nf.format(clientesGeral()))}
-    ${cardGeral('checkc','Transações identificadas','sobre o total de transações','identificadas', nf1.format(pctIdGeral())+'%')}
-    ${cardGeral('etiqueta','Ticket Médio','registrado no PEC','ticketGeral', brl(ticketGeral()))}
+    ${cardGeral('checkc','Transações identificadas','identificados no PEC','identificadas', nf1.format(pctIdGeral())+'%')}
+    ${cardGeral('etiqueta','Ticket Médio','identificados no PEC','ticketGeral', brl(ticketGeral()))}
     ${cardGeral('money','LTV','identificados no PEC','ltv', brl(ltvGeral()))}
   </div>
 
