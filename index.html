@@ -723,6 +723,58 @@ tbody tr.sel{background:#F3F8FF}
 /* Último bloco da tela: respiro maior antes do rodapé. */
 .gpanel-fim{margin-bottom:28px}
 
+/* O toggle dentro do cabeçalho com linha de apoio: o gpanel-top solto já
+   traz respiro embaixo, e aqui quem dá esse respiro é o gpanel-cab. */
+.gpanel-top-cab{margin-bottom:0}
+
+/* ---------- Perfil da base em cartão ----------
+   Seis cartões, três por linha no desktop. minmax(248px) e não colunas fixas:
+   o painel divide largura com a navegação e, espremido, é melhor cair para
+   duas colunas do que apertar cinco indicadores num cartão de 180px. */
+.rvc{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:12px}
+.rvc-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px 6px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.rvc-topo{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.rvc-nome{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;
+  color:var(--ink)}
+.rvc-share{font-size:11.5px;color:var(--ink-4);white-space:nowrap}
+
+/* O volume é o cabeçalho do cartão e o primeiro gatilho de pergunta: antes de
+   qualquer comportamento, quanta gente tem aqui. */
+.rvc-vol{display:flex;align-items:baseline;gap:7px;width:100%;margin-top:9px;
+  padding:6px 8px 7px;margin-left:-8px;border-radius:8px;text-align:left;transition:.12s}
+.rvc-vol b{font-size:22px;font-weight:700;color:var(--ink);line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.rvc-vol-un{font-size:12px;color:var(--ink-3)}
+.rvc-vol .rv-var,.rvc-vol .rv-nulo{margin-left:auto}
+.rvc-vol:hover{background:#F5F9FE}
+.rvc-vol.on{background:#EAF3FE}
+
+.rvc-lista{margin:8px 0 0;border-top:1px solid var(--border);padding-top:2px}
+.rvc-lin{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:5px 8px;margin:0 -8px;border-radius:7px;transition:.12s}
+.rvc-lin dt{margin:0;min-width:0}
+.rvc-lin dt button{font-size:12.5px;color:var(--ink-2);text-align:left;
+  border-bottom:1px dashed transparent;transition:.12s}
+.rvc-lin dd{margin:0;display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.rvc-lin dd b{font-size:13.5px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.rvc-lin:hover{background:#F5F9FE}
+.rvc-lin:hover dt button{color:var(--primary);border-bottom-color:var(--primary)}
+/* A linha aberta acende nos SEIS cartões ao mesmo tempo — é o equivalente ao
+   realce da coluna na tabela: o indicador é o mesmo, o perfil é que muda. */
+.rvc-lin.on{background:#EAF3FE}
+.rvc-lin.on dt button{color:var(--primary);font-weight:600}
+
+/* A fileira de chips é o thead da tabela, reformatado. */
+.rvc-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+.rvc-chip{font-size:12.5px;padding:6px 13px;border:1px solid var(--border);
+  border-radius:20px;background:#fff;color:var(--ink-2);transition:.12s}
+.rvc-chip:hover{border-color:var(--primary);color:var(--primary)}
+.rvc-chip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+@media(prefers-reduced-motion:reduce){
+  .rvc-vol,.rvc-lin,.rvc-chip,.rvc-lin dt button{transition:none}}
+
 .gtoggle{display:flex;gap:4px;background:#F1F5F9;border-radius:9px;padding:3px}
 .gtoggle button{width:34px;height:30px;border-radius:7px;display:flex;align-items:center;
   justify-content:center;color:var(--ink-4);transition:.12s}
@@ -1169,13 +1221,19 @@ tbody tr.sel{background:#F3F8FF}
 .rv-fechar:hover{background:#E7F1FE;color:var(--primary)}
 /* Rótulo curto à esquerda, texto à direita: a estrutura fixa deixa a pessoa
    pular direto para "O que fazer" na segunda vez que lê. */
-.rv-item{display:grid;grid-template-columns:148px 1fr;gap:16px;padding:11px 0;
-  border-bottom:1px solid #E4EEF9}
+/* Pergunta e resposta empilhadas, não duas colunas. A pergunta é uma frase
+   inteira — numa coluna de 148px ela quebrava em quatro linhas enquanto a
+   resposta ocupava uma. O recuo da resposta é o que mantém o par junto sem
+   precisar de moldura. */
+.rv-item{padding:13px 0;border-bottom:1px solid #E4EEF9}
 .rv-item:last-of-type{border-bottom:0;padding-bottom:4px}
 .rv-item:first-of-type{padding-top:0}
-.rv-item-rot{font-size:12.5px;font-weight:700;color:var(--primary);line-height:1.5}
+.rv-q{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.5;
+  display:flex;gap:8px}
+.rv-q::before{content:"—";color:var(--primary);flex-shrink:0;font-weight:700}
+.rv-a{margin-top:5px!important;padding-left:19px}
 .rv-painel p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
-@media(max-width:820px){.rv-item{grid-template-columns:1fr;gap:3px}}
+@media(max-width:820px){.rv-a{padding-left:0}}
 .rv-painel b{color:var(--ink);font-weight:700}
 .rv-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:14px!important;
   padding-top:12px;border-top:1px solid #DCEAF9;font-size:12px!important;color:var(--ink-4)!important}
@@ -1885,7 +1943,9 @@ function estadoInicial(){
     motorExplica:null,      // bloco com a explicação aberta
     dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
     preIni:null,            // início da janela de comparação; null = colada na campanha
-    gView:{faixas:'grafico', dnas:'grafico', dnaPerfil:'grafico', dnaFaixas:'grafico'},
+    // 'rfv' não é por tela: a tabela de perfil aparece na Visão geral e no DNA,
+    // e quem prefere ler em cartão prefere nas duas.
+    gView:{faixas:'grafico', dnas:'grafico', dnaPerfil:'grafico', dnaFaixas:'grafico', rfv:'tabela'},
     // Aba Sugestões. sugDnas vazio = todos os DNAs, que é o estado inicial:
     // a aba abre COM conteúdo, e é isso que a separa de Segmentação, que
     // abre com um formulário esperando input.
@@ -2058,6 +2118,7 @@ const I = {
   megafone:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16 9a4 4 0 010 6"/><path d="M19 6.5a8 8 0 010 11"/></svg>',
   users:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/></svg>',
   spin:'<svg class="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3a9 9 0 019 9" opacity=".9"/><circle cx="12" cy="12" r="9" opacity=".22"/></svg>',
+  grade:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
   sheet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
   pen:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
   copy:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>',
@@ -2094,11 +2155,11 @@ const TIPS = {
   aderencia:'O quanto esse comportamento aparece nas compras do cliente. Baixa, Média e Alta são faixas separadas — pode marcar mais de uma, e o público soma as faixas marcadas.',
   painel:'Aqui você acompanha seus clientes e cria públicos para campanhas.',
   fonte:'De onde vêm os números e quando foram atualizados pela última vez.',
-  transacoes:'Número de vendas registradas no PEC no período, com ou sem o cliente identificado na compra.',
+  transacoes:'Número de vendas do período que saíram com o cliente identificado por CPF. As vendas sem identificação não entram aqui — o cartão ao lado mostra que fatia do movimento elas representam.',
   clientesGeral:'Total de clientes identificados via CPF no momento da compra. Quem comprou sem se identificar não entra.',
-  identificadas:'Percentual de transações registradas no PEC com o cliente identificado, sobre o total de transações realizadas. É esse pedaço da base que alimenta o CRM — o resto não dá para segmentar nem impactar.',
-  faturamentoGeral:'Total de vendas registradas no PEC no período, com ou sem o cliente identificado na compra.',
-  ticketGeral:'Soma do faturamento dividida pelo número de transações registradas no PEC. O denominador é a TRANSAÇÃO, não o cliente e não a visita — as três dariam números diferentes.',
+  identificadas:'Que fatia de TODAS as vendas do período saiu com o cliente identificado. É o único cartão desta linha que fala do movimento inteiro da loja: os outros cinco já mostram só a parte identificada. O resto não dá para segmentar nem impactar.',
+  faturamentoGeral:'Total vendido no período para clientes identificados por CPF. É a parte do movimento que o CRM consegue endereçar; a venda sem identificação fica de fora.',
+  ticketGeral:'Faturamento identificado dividido pelo número de transações identificadas. O denominador é a TRANSAÇÃO, não o cliente e não a visita — as três dariam números diferentes.',
   perfilCliente:'Como os clientes se distribuem entre os perfis de relacionamento e quanto cada perfil gera de faturamento.',
   faixaGenero:'Quantos clientes em cada faixa de idade, separados por gênero.',
   perfilBase:'Compara o período anterior com o atual em cinco grupos de indicador. Clique em um grupo para ver a análise dos números.',
@@ -3017,6 +3078,22 @@ function sinalRfv(g, perfil, ant, at){
    variação: se na base inteira o Fiel cresceu, ele cresce em todo DNA.
    Sem essa regra, "Fiel e Valioso até cresceram" viraria mentira em
    algum DNA e ninguém perceberia. Há um teste que trava isso. */
+/* PERGUNTA E RESPOSTA, não laudo.
+
+   Antes cada bloco abria com um rótulo de tópico — "O que aconteceu", "Por
+   que acontece", "O que fazer". Funciona para quem já sabe o que procurar,
+   mas o associado não chega na tabela com um tópico na cabeça: ele chega com
+   uma dúvida. "Perdi cliente?" "O pessoal está gastando menos?" "Isso é bom?"
+
+   Duas consequências práticas do formato:
+
+   · a resposta tem que ABRIR respondendo. "Encolheu." antes da explicação,
+     não depois. Quem lê só a primeira palavra já sai sabendo.
+   · dá para incluir a pergunta incômoda — "esse número pode estar me
+     enganando?" — que num laudo soaria como o sistema se defendendo, e em
+     Q&A soa como o que é: a dúvida que a pessoa teria de qualquer forma.
+
+   Os números continuam saindo da tabela. Mudou a porta de entrada. */
 function analiseRfv(id, base){
   const B = base || PERFIS_RFV;
   const p = n => B.find(x=>x[0]===n);
@@ -3025,76 +3102,154 @@ function analiseRfv(id, base){
   const cliAnt = totalCli(1, B), cliAt = totalCli(2, B);
   const abd = p('Abandonador');
 
+  /* CONTAGEM NUNCA ESCRITA À MÃO. "Quatro dos seis perfis variaram menos de
+     10%" era verdade na Visão geral e mentira em seis dos oito DNAs, que
+     reutilizam estes mesmos textos com dados escalados. "Nenhum perfil
+     escapou" era falso até na Visão geral — o Abandonador já comprava uma vez
+     por ano e continuou comprando uma. Tudo que conta linha agora sai da
+     tabela na hora. */
+  const numExt = n => ['nenhum','um','dois','três','quatro','cinco','seis'][n] ?? String(n);
+  const estaveis = (c, lim) => B.filter(x => Math.abs(varPct(x[c], x[c+1])) < lim).length;
+  const caiuEm   = c => B.filter(x => x[c+1] < x[c]);
+  const naoCaiu  = c => B.filter(x => x[c+1] >= x[c]);
+  const maiorVar = c => Math.max(...B.map(x => Math.abs(varPct(x[c], x[c+1]))));
+  const freqLidera = maiorVar(7) >= maiorVar(3) && maiorVar(7) >= maiorVar(5);
+  const nQ = estaveis(5, 10);
+  const fParados = naoCaiu(7);
+
   const T = {
     geral: [
-      ['O que aconteceu',
-       `Você tinha <b>${nf.format(cliAnt)} clientes</b>. Agora tem <b>${nf.format(cliAt)}</b>. São ${nf.format(cliAnt-cliAt)} a menos, ${pc(varPct(cliAnt,cliAt))} da base.`],
-      ['Por que acontece',
-       `Não é que estejam gastando menos. O ticket quase não mudou. O que mudou foi a <b>quantidade de vezes que vêm à loja</b>. Um cliente Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]}. Um Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
-      ['Quem saiu',
-       `Os melhores ficaram: Fiel e Valioso até cresceram. Quem sumiu foi quem estava começando — Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))}. E entrou pouca gente nova para repor.`],
-      ['Cuidado com um número',
-       `Os clientes parecem estar voltando mais cedo. Mas isso pode ser ilusão: quando alguém some da base, ele para de contar, e a conta melhora sozinha. Confirme com o time de dados antes de comemorar.`],
-      ['O que fazer',
-       `<b>Trazer gente nova e fazer quem já compra voltar mais vezes.</b> Não vale investir em aumentar o valor da compra — esse número já está bom.`]
+      ['Minha base de clientes cresceu ou encolheu?',
+       `<b>Encolheu.</b> Você tinha ${nf.format(cliAnt)} clientes e agora tem <b>${nf.format(cliAt)}</b> — são ${nf.format(cliAnt-cliAt)} a menos, ${pc(varPct(cliAnt,cliAt))} da base.`],
+      ['O cliente está gastando menos ou vindo menos vezes?',
+       `<b>Vindo menos vezes.</b> O ticket mexeu bem menos que a frequência: um Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]}; um Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
+      ['Perdi os melhores clientes ou os que compravam pouco?',
+       `<b>Os que compravam pouco.</b> Fiel e Valioso até cresceram. Quem sumiu foi quem estava começando — Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))} — e entrou pouca gente nova para repor.`],
+      ['Tem algum número aqui que pode estar me enganando?',
+       `<b>Tem: a recência.</b> Parece que os clientes estão voltando mais cedo, mas quando alguém some da base ele para de contar e a média melhora sozinha. Confirme com o time de dados antes de comemorar.`],
+      ['Onde eu devo investir agora?',
+       `<b>Em trazer gente nova e em fazer quem já compra voltar mais vezes.</b> Não vale investir em aumentar o valor da compra — esse número já está bom.`]
     ],
     clientes: [
-      ['O que aconteceu',
-       `A base caiu de ${nf.format(cliAnt)} para <b>${nf.format(cliAt)} clientes</b>, ${pc(varPct(cliAnt,cliAt))} a menos.`],
-      ['Quem cresceu, quem sumiu',
-       `Fiel subiu ${pc(v('Fiel',1))} e Valioso ${pc(v('Valioso',1))} — seus melhores clientes continuam aí. Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))}. A perda foi toda de quem comprava pouco.`],
-      ['A boa notícia escondida',
-       `Abandonador caiu ${pc(v('Abandonador',1))}. É o melhor número da tabela. Mas ainda é o maior grupo: <b>${nf1.format(abd[2]/cliAt*100)}% dos seus clientes</b> estão nele.`],
-      ['O que fazer',
-       `<b>O problema é entrada, não saída.</b> Com poucos clientes novos, não tem de onde sair o próximo Fiel. Campanha para fidelizar quem já é fiel resolve pouco aqui.`]
+      ['Quantos clientes eu tenho hoje, comparado com antes?',
+       `<b>${nf.format(cliAt)}</b>, contra ${nf.format(cliAnt)} no período anterior — ${pc(varPct(cliAnt,cliAt))} a menos.`],
+      ['Quem cresceu e quem sumiu?',
+       `<b>Cresceram os melhores.</b> Fiel subiu ${pc(v('Fiel',1))} e Valioso ${pc(v('Valioso',1))}. Sumiu quem comprava pouco: Potencial caiu ${pc(v('Potencial',1))} e Ocasional ${pc(v('Ocasional',1))}.`],
+      ['O grupo Abandonador melhorou. Já posso comemorar?',
+       `<b>Ainda não.</b> Ele caiu ${pc(v('Abandonador',1))}, o melhor número da tabela — mas continua sendo o maior grupo: <b>${nf1.format(abd[2]/cliAt*100)}% dos seus clientes</b> estão nele.`],
+      ['Devo fazer campanha para reter ou para atrair?',
+       `<b>Para atrair — o problema é entrada, não saída.</b> Com poucos clientes novos não tem de onde sair o próximo Fiel, e campanha para fidelizar quem já é fiel resolve pouco aqui.`]
     ],
     ltv: [
-      ['O que aconteceu',
-       `Cada cliente está gerando menos dinheiro. <b>Caiu em todos os seis perfis.</b> O tombo maior foi no Valioso: de ${brl(p('Valioso')[3])} para ${brl(p('Valioso')[4])}, ${pc(v('Valioso',3))} a menos.`],
-      ['Por que acontece',
-       `Não é o valor da compra. Esse ficou quase igual. É a <b>quantidade de compras</b> que caiu. Menos idas à loja, menos dinheiro por cliente no fim do ano.`],
-      ['Uma coisa estranha',
-       `Tem mais gente classificada como Fiel (${pc(v('Fiel',1))} a mais), mas cada Fiel vale menos. Pode ser que a regra que define quem é Fiel esteja deixando entrar cliente que compra pouco. Vale conferir com o time de dados antes de usar esse grupo numa campanha.`],
-      ['O que fazer',
-       `<b>Trazer o cliente de volta mais vezes.</b> É a única alavanca que mexe neste número.`]
+      ['Cada cliente está me dando mais ou menos dinheiro?',
+       `<b>Menos, e caiu nos seis perfis.</b> O tombo maior foi no Valioso: de ${brl(p('Valioso')[3])} para ${brl(p('Valioso')[4])}, ${pc(v('Valioso',3))} a menos.`],
+      ['É porque ele gasta menos por compra ou porque vem menos?',
+       `<b>Porque vem menos.</b> O valor da compra ficou quase igual. Menos idas à loja, menos dinheiro por cliente no fim do ano.`],
+      ['Tenho mais clientes Fiéis e mesmo assim o LTV caiu. Como?',
+       `<b>Pode ser a régua, não o cliente.</b> Entrou ${pc(v('Fiel',1))} mais gente no grupo Fiel, mas cada Fiel vale menos — sinal de que a regra que define quem é Fiel talvez esteja deixando entrar quem compra pouco. Confira com o time de dados antes de usar esse grupo numa campanha.`],
+      ['O que faz esse número subir?',
+       `<b>Trazer o cliente de volta mais vezes.</b> É a única alavanca que mexe aqui.`]
     ],
     ticket: [
-      ['O que aconteceu',
-       `Quase nada. <b>É o número mais estável da tabela.</b> Quatro dos seis perfis variaram menos de 10%, e o Ocasional ficou parado em ${brl(p('Ocasional')[6])}.`],
-      ['As duas exceções',
-       `Potencial subiu ${pc(v('Potencial',5))} — está gastando mais por compra. Valioso caiu ${pc(v('Valioso',5))}.`],
-      ['O que isso significa',
-       `Seu cliente não empobreceu. Quando ele vem, gasta o mesmo de antes. <b>O problema é que ele vem menos vezes.</b>`],
-      ['O que fazer',
-       `<b>Nada aqui.</b> Promoção para aumentar o valor da compra ia gastar dinheiro no lugar errado.`]
+      ['O valor de cada compra mudou?',
+       // "Quase nada" ao lado de "um perfil variou menos de 10%" se contradiz
+       // na leitura. A abertura acompanha a contagem; as duas são verdade.
+       `<b>${nQ >= 4 ? 'Quase nada' : 'Menos que os outros números'} — é a coluna mais estável da tabela.</b> ${numExt(nQ).replace(/^./,m=>m.toUpperCase())} ${nQ===1?'perfil variou':'perfis variaram'} menos de 10%, e o Ocasional ficou parado em ${brl(p('Ocasional')[6])}.`],
+      ['Algum perfil fugiu do padrão?',
+       `<b>Sim, dois, em direções opostas.</b> Potencial subiu ${pc(v('Potencial',5))} e está gastando mais por compra; Valioso caiu ${pc(v('Valioso',5))}.`],
+      ['Meu cliente empobreceu?',
+       `<b>Não.</b> Quando ele vem, gasta o mesmo de antes. <b>O problema é que ele vem menos vezes.</b>`],
+      ['Vale fazer promoção para aumentar o valor da compra?',
+       `<b>Não.</b> Seria gastar dinheiro no lugar errado: este número já está bom e não é ele que está derrubando o resultado.`]
     ],
     freq: [
-      ['O que aconteceu',
-       `<b>A maior queda da tabela.</b> Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]} — ${pc(v('Valioso',7))} a menos. Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
-      ['Todos caíram',
-       `Nenhum perfil escapou. Todo mundo está indo menos vezes à farmácia.`],
-      ['O que isso explica',
-       `Este é o número que derruba os outros. Ticket parado + menos visitas = menos dinheiro por cliente. <b>Resolvendo aqui, o LTV sobe junto.</b>`],
-      ['O que fazer',
+      ['Meu cliente está vindo menos à loja?',
+       `<b>Sim${freqLidera ? ', e é a maior queda da tabela' : ''}.</b> Valioso comprava ${p('Valioso')[7]} vezes e agora compra ${p('Valioso')[8]}, ${pc(v('Valioso',7))} a menos. Fiel caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]}.`],
+      ['Isso acontece em todos os perfis ou só em alguns?',
+       fParados.length === 0
+         ? `<b>Em todos os seis.</b> A base inteira está indo menos vezes à farmácia.`
+         : `<b>Em ${numExt(6-fParados.length)} dos seis.</b> ${fParados.map(x=>x[0]).join(' e ')} ${fParados.length>1?'ficaram':'ficou'} no mesmo lugar — quem já comprava ${fParados[0][7]} vez por ano não tem como cair mais.`],
+      ['Por que essa linha importa mais que as outras?',
+       `<b>Porque é ela que derruba as outras.</b> Ticket parado somado a menos visitas dá menos dinheiro por cliente. <b>Resolvendo aqui, o LTV sobe junto.</b>`],
+      ['O que faz o cliente voltar mais vezes?',
        `<b>Lembrete de recompra e campanha de reativação.</b> Um Fiel que caiu de ${p('Fiel')[7]} para ${p('Fiel')[8]} compras não foi embora — só precisa de um motivo para voltar antes.`]
     ],
     rec: [
-      ['O que aconteceu',
-       `<b>O único grupo que melhorou.</b> Cinco dos seis perfis estão voltando mais cedo. Cliente novo voltava em ${p('Novos')[9]} dias e agora volta em ${p('Novos')[10]}. Abandonador caiu de ${p('Abandonador')[9]} para ${p('Abandonador')[10]} dias.`],
-      ['A exceção',
-       `Só o Potencial piorou: demora ${pc(v('Potencial',9))} mais para voltar do que antes.`],
-      ['Antes de comemorar',
-       `Este número melhora sozinho quando a base encolhe. Quem não compra há muito tempo sai da conta, e a média dos que sobraram fica melhor — sem ninguém ter voltado mais cedo de verdade. <b>E sua base encolheu ${pc(varPct(cliAnt,cliAt))} no período.</b>`],
-      ['O que fazer',
-       `<b>Pergunte ao time de dados se a regra de quem entra na base mudou.</b> Se mudou, a melhora é da conta, não do cliente.`]
+      ['O cliente está voltando mais rápido?',
+       `<b>Pelos números, sim — é o único grupo que melhorou.</b> Cinco dos seis perfis voltam mais cedo. Cliente novo voltava em ${p('Novos')[9]} dias e agora volta em ${p('Novos')[10]}; Abandonador caiu de ${p('Abandonador')[9]} para ${p('Abandonador')[10]} dias.`],
+      ['Algum perfil piorou?',
+       `<b>Só o Potencial</b>, que demora ${pc(v('Potencial',9))} mais para voltar do que antes.`],
+      ['Essa melhora é real?',
+       `<b>Pode não ser.</b> Este número melhora sozinho quando a base encolhe: quem não compra há muito tempo sai da conta e a média dos que sobraram fica melhor, sem ninguém ter voltado mais cedo. <b>E sua base encolheu ${pc(varPct(cliAnt,cliAt))} no período.</b>`],
+      ['O que eu faço com essa informação?',
+       `<b>Pergunte ao time de dados se a regra de quem entra na base mudou.</b> Se mudou, a melhora é da conta e não do cliente.`]
     ]
   };
   return T[id] || [];
 }
 
+/* VISTA EM CARTÃO: o MESMO dado com o eixo virado.
+
+   A tabela é uma matriz — seis perfis por cinco indicadores — e serve para
+   percorrer uma coluna: "quem tem o maior LTV?". Para responder "quem é o
+   Fiel?" ela obriga a varrer uma linha atravessando quinze colunas, e nesse
+   caminho o olho se perde.
+
+   O cartão vira o eixo e responde a segunda pergunta. Três consequências de
+   projeto, não de estilo:
+
+   · O VOLUME SOBE PARA O CABEÇALHO. Antes de qualquer comportamento, a
+     pergunta é quanta gente tem aqui. Os outros quatro indicadores viram
+     corpo.
+   · GANHA A PARTICIPAÇÃO NA BASE, que a tabela não tem. Num cartão só,
+     "2.623 clientes" sem denominador não diz se é muito ou pouco.
+   · PERDE A COLUNA "ANTES". A variação já diz o tamanho e a direção da
+     mudança; o valor anterior fica no title e continua inteiro na tabela.
+     Esse é o preço do formato, e é por isso que o outro existe.
+
+   Não pinta o cartão inteiro com a cor do perfil: a cor é identidade
+   categórica, não elogio nem alerta, e no tamanho de um ponto ela já
+   identifica. */
+function cardsRfv(B, aberto){
+  const totalAt = totalCli(2, B) || 1;
+  const gCli = GRUPOS_RFV[0];
+  const resto = GRUPOS_RFV.slice(1);
+
+  return `<div class="rvc">
+    ${B.map(p=>{
+      const share = p[2] / totalAt * 100;
+      const onCli = aberto === gCli.id;
+      return `<article class="rvc-card">
+        <header class="rvc-topo">
+          <span class="rvc-nome"><i class="rv-dot ${p[11]}"></i>${esc(p[0])}</span>
+          <span class="rvc-share">${nf1.format(share)}% da base</span>
+        </header>
+        <button class="rvc-vol${onCli?' on':''}" data-act="gAnalise" data-v="${gCli.id}"
+          aria-expanded="${onCli}"
+          title="${esc(gCli.rot)}: era ${gCli.fmt(p[1])}, agora ${gCli.fmt(p[2])}">
+          <b>${gCli.fmt(p[2])}</b>
+          <span class="rvc-vol-un">clientes</span>
+          ${sinalRfv(gCli, p[0], p[1], p[2])}
+        </button>
+        <dl class="rvc-lista">
+          ${resto.map(g=>{
+            const on = aberto===g.id;
+            return `<div class="rvc-lin${on?' on':''}">
+              <dt><button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
+                title="${esc(g.rot)}: era ${g.fmt(p[g.i])}, agora ${g.fmt(p[g.i+1])}">${esc(g.rot)}</button></dt>
+              <dd><b>${g.fmt(p[g.i+1])}</b>${sinalRfv(g, p[0], p[g.i], p[g.i+1])}</dd>
+            </div>`;
+          }).join('')}
+        </dl>
+      </article>`;
+    }).join('')}
+  </div>`;
+}
+
 function blocoRfv(base, contexto){
   const B = base || PERFIS_RFV;
   const aberto = S.gAnaliseEm === S.screen ? S.gAnalise : null;
+  const cartao = S.gView.rfv === 'cartao';
   // Um botão só, para os seis cabeçalhos. Três linhas fixas — rótulo, unidade,
   // ação — então todos têm a mesma altura por construção, independente do
   // tamanho do texto. Antes a altura vinha do conteúdo e cada um tinha a sua.
@@ -3108,10 +3263,10 @@ function blocoRfv(base, contexto){
     // recebe uma célula vazia embaixo, só para segurar a borda e o sticky.
     return `<th colspan="${c.span}" class="${cls}">
       <button data-act="gAnalise" data-v="${c.id}" aria-expanded="${on}"
-        title="Ver análise de ${esc(c.id==='geral'?'todos os indicadores':c.rot.toLowerCase())}">
+        title="Ver as perguntas sobre ${esc(c.id==='geral'?'todos os indicadores':c.rot.toLowerCase())}">
         <span class="rv-g-rot">${esc(c.rot)}</span>
         <span class="rv-g-un">${esc(c.un)}</span>
-        <span class="rv-ia">${I.spark} análise</span>
+        <span class="rv-ia">${I.spark} perguntas</span>
       </button></th>`;
   }).join('');
 
@@ -3129,22 +3284,46 @@ function blocoRfv(base, contexto){
   const c = CAB_RFV.find(x=>x.id===aberto);
   const analise = c ? `<div class="rv-painel">
     <div class="rv-painel-top">${I.spark}
-      <h4>${c.id==='geral' ? 'Análise geral da base' : 'Análise de '+esc(c.rot.toLowerCase())}</h4>
+      <h4>${c.id==='geral' ? 'O que a base inteira está dizendo' : 'O que ' + esc(c.rot.toLowerCase()) + ' está dizendo'}</h4>
       <button class="rv-fechar" data-act="gAnalise" data-v="${c.id}">Fechar</button></div>
-    ${analiseRfv(c.id, B).map(([rot,txt])=>`<div class="rv-item">
-      <div class="rv-item-rot">${esc(rot)}</div>
-      <p>${txt}</p></div>`).join('')}
-    <p class="rv-disclaimer">${I.info} Texto gerado a partir dos números desta tabela.
+    ${analiseRfv(c.id, B).map(([perg,resp])=>`<div class="rv-item">
+      <p class="rv-q">${esc(perg)}</p>
+      <p class="rv-a">${resp}</p></div>`).join('')}
+    <p class="rv-disclaimer">${I.info} Respostas montadas a partir dos números desta tabela.
     Confira antes de levar a decisão adiante.</p>
+  </div>` : '';
+
+  /* Em cartão não existe linha de cabeçalho para clicar, então os seis
+     gatilhos das perguntas viram uma fileira de chips. Não é enfeite novo: é
+     o thead da tabela, reformatado para um layout que não tem thead.
+
+     "Fidelidade" também não sobrevive à troca — na tabela era o cabeçalho da
+     coluna de nomes, e em cartão essa coluna não existe. O chip usa o que a
+     opção sempre significou: todos os indicadores. */
+  const chips = cartao ? `<div class="rvc-chips" role="group" aria-label="Escolha o indicador">
+    ${CAB_RFV.map(x=>`<button class="rvc-chip${aberto===x.id?' on':''}"
+      data-act="gAnalise" data-v="${x.id}" aria-pressed="${aberto===x.id}">${
+      x.id==='geral' ? 'Todos os indicadores' : esc(x.rot)}</button>`).join('')}
   </div>` : '';
 
   return `<div class="gpanel gpanel-fim">
     <div class="gpanel-cab">
-      <h3>Perfil da base: volume, valor e comportamento
-        <i class="gp-periodo">base dos últimos 12 meses</i> ${tip('perfilBase')}</h3>
-      <p>Compara os últimos 12 meses com os 12 anteriores${contexto?', '+esc(contexto):''}. Clique em um grupo de indicadores para ver a análise.</p>
+      <div class="gpanel-top gpanel-top-cab">
+        <h3>Perfil da base: volume, valor e comportamento
+          <i class="gp-periodo">base dos últimos 12 meses</i> ${tip('perfilBase')}</h3>
+        <div class="gtoggle">
+          <button class="${cartao?'':'on'}" data-act="gView" data-v="rfv|tabela"
+            aria-label="Ver como tabela" aria-pressed="${!cartao}" title="Tabela: compara os perfis indicador por indicador">${I.sheet}</button>
+          <button class="${cartao?'on':''}" data-act="gView" data-v="rfv|cartao"
+            aria-label="Ver como cartões" aria-pressed="${cartao}" title="Cartões: lê um perfil de cada vez">${I.grade}</button>
+        </div>
+      </div>
+      <p>Compara os últimos 12 meses com os 12 anteriores${contexto?', '+esc(contexto):''}. ${
+        cartao ? 'Cada cartão é um perfil. Escolha um indicador para ver as perguntas que ele responde.'
+               : 'Clique em um grupo de indicadores para ver as perguntas que ele responde.'}</p>
     </div>
-    <div class="rv-wrap" data-scroll="tabela-perfil">
+    ${chips}
+    ${cartao ? cardsRfv(B, aberto) : `<div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
         <thead>
           <tr>${linhasCab}</tr>
@@ -3154,10 +3333,11 @@ function blocoRfv(base, contexto){
         </thead>
         <tbody>${corpo}</tbody>
       </table>
-    </div>
+    </div>`}
     ${analise}
     <p class="bloco-nota">A cor da variação segue o que é <b>bom</b>, não a direção da seta: em
-    Abandonador, menos cliente é melhor, e em Recência, menos dias é melhor.</p>
+    Abandonador, menos cliente é melhor, e em Recência, menos dias é melhor.${
+      cartao ? ' O cartão mostra o valor de hoje; o de antes aparece ao passar o mouse, e a tabela traz os dois lado a lado.' : ''}</p>
   </div>`;
 }
 
