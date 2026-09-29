@@ -4321,7 +4321,7 @@ function blocoAntesDurante(s, c){
   const padrao = !S.preIni;
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">Antes e durante a campanha ${tipTexto('Compara a campanha com um período de mesma duração antes dela. Tira do caminho o crescimento da rede, que em poucas semanas não muda. Não tira a sazonalidade — para isso, a comparação com o ano passado está nos números do topo.')}</h4>
+    <h4 class="bloco-tit">${j.dias} dias de campanha × ${j.dias} dias antes dela ${tipTexto('Compara a campanha com um período de mesma duração antes dela. Tira do caminho o crescimento da rede, que em poucas semanas não muda. Não tira a sazonalidade — para isso, a comparação com o ano passado está nos números do topo.')}</h4>
     <div class="cmp-janela">
       <label for="pre-ini">Comparar com os ${j.dias} dias a partir de</label>
       <input id="pre-ini" type="date" value="${iso(j.ini)}" max="${iso(addDias(brDate(c.ini), -j.dias))}"
@@ -4427,7 +4427,7 @@ function mixDna(s, mix, total){
 function cardFaturamento(s, c, periodo){
   if(!c.sellout || !c.compras) return '';
   const pct = c.faturamento / c.sellout * 100;
-  return heroi('Participação nas lojas', I.chart, nf1.format(pct)+'%',
+  return heroi('Participação no faturamento total', I.chart, nf1.format(pct)+'%',
     periodo || `${c.ini} - ${c.fim}`, {
       tip: tipTexto(`Quanto do que as lojas faturaram no período veio deste público. O
         denominador é o sellout da rede inteira, todos os produtos — não só os da campanha.`),
@@ -4623,9 +4623,8 @@ function funilCampanha(s, c){
   </div>`;
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">Do público até a compra</h4>
+    <h4 class="bloco-tit">Funil de impactados</h4>
     <div class="funil-camp">
-      <div class="fun-base">Sobre o público inteiro</div>
       ${degrau('Receberam a campanha', total, 100, '100% do público', 'd1')}
       ${degrau('Compraram', c.clientesComp, pct(c.clientesComp),
         `${Math.round(pct(c.clientesComp))}% do público`, 'd2', tipCompraram)}
@@ -4788,33 +4787,39 @@ function telaResultados(){
      Quem comprou continua no funil, que é onde a queda de um degrau para o
      outro é o assunto. */
   const perCamp = `${c.ini} - ${c.fim}`;
-  const porCem  = Math.round(conv);
 
   const herois = `<div class="herois">
-    ${heroi('Faturamento gerado', I.moeda, brl(c.faturamento), perCamp, {
+    ${heroi('Faturamento da campanha', I.moeda, brl(c.faturamento), perCamp, {
       tip: tipTexto(`Soma do que o público impactado comprou entre ${c.ini} e ${c.fim}, em
         ${nf.format(c.compras)} compras. A comparação é com o mesmo período do ano anterior,
         que neutraliza a época do ano.`),
       txt: `Mesmo período de ${brDate(c.ini).getFullYear()-1}: <b>${brl(anoAnt.faturamento)}</b>`,
       selo: selo(delta(c.faturamento, anoAnt.faturamento), '')})}
 
-    ${heroi('Clientes que foram impactados', I.users, nf.format(s.clientes), perCamp, {
-      tip: tipTexto(`Todo o público da segmentação recebeu a mensagem. Destes,
-        ${nf.format(c.clientesComp)} compraram no período — é essa fração que a linha de baixo
-        mostra. Comprar sem ter recebido não entra nesta conta.`),
-      txt: `<b>${porCem} a cada 100</b> compraram · <b>${nf1.format(conv)}%</b>`})}
+    /* O rodapé ficou só com o percentual, então o DENOMINADOR não está mais
+       escrito no cartão — 8,2% de quê não se lê ali. Quem segura isso é o
+       tooltip e o primeiro degrau do funil, que continua mostrando os 8.420
+       que receberam. Se o funil sair da tela um dia, este cartão fica sem
+       base e o percentual vira número solto. */
+    ${heroi('Clientes que foram impactados', I.users, nf.format(c.clientesComp), perCamp, {
+      tip: tipTexto(`${nf.format(c.clientesComp)} clientes compraram no período, de
+        ${nf.format(s.clientes)} que receberam a mensagem — os ${nf1.format(conv)}% da linha de
+        baixo. Comprar sem ter recebido não entra nesta conta.`),
+      txt: `<b>${nf1.format(conv)}%</b> do público impactado`})}
 
     ${heroi('Ticket médio', I.etiqueta, brl(ticket), perCamp, {
+      /* A RÉGUA MUDOU DE PERGUNTA. Antes era o normal deste público, que mede
+         se a CAMPANHA subiu o ticket. Agora é o ticket da rede, que mede se o
+         PÚBLICO vale mais que o cliente médio — outra pergunta, e uma que a
+         campanha não controla. Um público de medicação contínua fica verde
+         contra a rede mesmo numa campanha fraca. */
       tip: tipTexto(`Faturamento dividido pelo número de compras — não por cliente e não por
-        visita, que dariam números diferentes. ${s.ticketHist
-          ? `O normal deste público é ${brl(s.ticketHist)}.` : ''}`),
-      txt: s.ticketHist
-        ? `Normal deste público: <b>${brl(s.ticketHist)}</b>`
-        : `Em <b>${nf.format(c.compras)}</b> compras`,
+        visita, que dariam números diferentes. A comparação é com o ticket médio de toda a
+        rede no período (${brl(ticketGeral())}), não com o histórico deste público
+        ${s.ticketHist ? `(${brl(s.ticketHist)})` : ''}.`),
+      txt: `Ticket médio da loja: <b>${brl(ticketGeral())}</b>`,
       // o selo mede contra o MESMO número que o texto declara, por definição
-      selo: s.ticketHist ? selo(delta(ticket, s.ticketHist), '')
-                         : selo(delta(ticket, tkAnoAnt), 'do mesmo período de '
-                             + (brDate(c.ini).getFullYear()-1))})}
+      selo: selo(delta(ticket, ticketGeral()), '')})}
 
     ${cardFaturamento(s, c, perCamp)}
   </div>`;
