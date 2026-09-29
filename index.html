@@ -1009,12 +1009,12 @@ tbody tr.sel{background:#F3F8FF}
    anatomia: o olho compara na vertical, linha por linha. */
 .ad-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
   margin-bottom:var(--bloco)}
+/* Sem cor por grau. Verde, âmbar e vermelho diziam "alta é boa, baixa é
+   ruim" — e cliente de baixa aderência não é um cliente ruim, é a maior
+   oportunidade da tela. Os três cartões são iguais; quem os distingue é o
+   título e a ordem, que já bastam. */
 .ad-card{background:#fff;border:1px solid var(--border);border-radius:12px;
-  box-shadow:var(--shadow);padding:18px 20px 20px;
-  border-top:3px solid var(--border-strong)}
-.ad-card.ad-alta{border-top-color:#12B981}
-.ad-card.ad-media{border-top-color:#EDA412}
-.ad-card.ad-baixa{border-top-color:#E0134E}
+  box-shadow:var(--shadow);padding:18px 20px 20px}
 .ad-tit{margin:0 0 14px;font-size:15px;font-weight:700;color:var(--ink)}
 .ad-kpi{border:1px solid var(--border);border-radius:9px;padding:10px 12px}
 .ad-kpi.larga{margin-bottom:9px}
@@ -1045,9 +1045,7 @@ tbody tr.sel{background:#F3F8FF}
 .ad-pref-trilho{display:block;height:4px;border-radius:99px;background:#EFF4F9;
   margin-bottom:9px;overflow:hidden}
 .ad-pref-fill{display:block;height:100%;border-radius:99px}
-.ad-alta .ad-pref-fill{background:#12B981}
-.ad-media .ad-pref-fill{background:#EDA412}
-.ad-baixa .ad-pref-fill{background:#E0134E}
+.ad-pref-fill{background:var(--g-atual-h)}
 
 @media(max-width:1180px){
   .gcards-4{grid-template-columns:repeat(2,1fr)}
@@ -1864,7 +1862,8 @@ function estadoInicial(){
     sugDnas:[],               // DNAs selecionados; [] = todos
     sugAberto:null,           // produto com o "por quê" aberto
     sugBalcao:{},             // conjuntos ligados no balcão
-    gAnalise:null,            // grupo de indicador com a análise aberta  // gráfico ou tabela, por painel da Visão geral
+    gAnalise:null,            // grupo de indicador com a análise aberta
+    gAnaliseEm:null,          // em qual tela ela foi aberta: a tabela é a mesma, a base não  // gráfico ou tabela, por painel da Visão geral
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
     // usuário RECORTA, em vez de começar do zero e ter que construir a base.
@@ -2787,7 +2786,7 @@ const GRUPOS_RFV = [
 const CAB_RFV = [{id:'geral', rot:'Fidelidade', un:'todos os indicadores', span:1}]
   .concat(GRUPOS_RFV.map(g=>({id:g.id, rot:g.rot, un:g.un, span:3})));
 
-const totalCli = col => PERFIS_RFV.reduce((a,p)=>a+p[col], 0);
+const totalCli = (col, base) => (base||PERFIS_RFV).reduce((a,p)=>a+p[col], 0);
 /* Faturamento identificado = soma de LTV × clientes. É o que LTV significa,
    então não existe um segundo número solto para divergir deste. */
 const fatPerfil = p => p[2] * p[4];
@@ -2952,11 +2951,17 @@ function sinalRfv(g, perfil, ant, at){
    segunda leitura e some do caminho.
 
    Os números continuam calculados da tabela. Muda a forma, não o fato. */
-function analiseRfv(id){
-  const p = n => PERFIS_RFV.find(x=>x[0]===n);
+/* A análise lê os números da base que recebe. As frases continuam as
+   mesmas porque o dado por DNA é gerado preservando a DIREÇÃO de cada
+   variação: se na base inteira o Fiel cresceu, ele cresce em todo DNA.
+   Sem essa regra, "Fiel e Valioso até cresceram" viraria mentira em
+   algum DNA e ninguém perceberia. Há um teste que trava isso. */
+function analiseRfv(id, base){
+  const B = base || PERFIS_RFV;
+  const p = n => B.find(x=>x[0]===n);
   const v = (n,i) => varPct(p(n)[i], p(n)[i+1]);
   const pc = x => nf1.format(Math.abs(x))+'%';
-  const cliAnt = totalCli(1), cliAt = totalCli(2);
+  const cliAnt = totalCli(1, B), cliAt = totalCli(2, B);
   const abd = p('Abandonador');
 
   const T = {
@@ -3026,8 +3031,9 @@ function analiseRfv(id){
   return T[id] || [];
 }
 
-function blocoRfv(){
-  const aberto = S.gAnalise;
+function blocoRfv(base, contexto){
+  const B = base || PERFIS_RFV;
+  const aberto = S.gAnaliseEm === S.screen ? S.gAnalise : null;
   // Um botão só, para os seis cabeçalhos. Três linhas fixas — rótulo, unidade,
   // ação — então todos têm a mesma altura por construção, independente do
   // tamanho do texto. Antes a altura vinha do conteúdo e cada um tinha a sua.
@@ -3049,7 +3055,7 @@ function blocoRfv(){
   }).join('');
 
   const geralOn = aberto==='geral';
-  const corpo = PERFIS_RFV.map(p=>`<tr>
+  const corpo = B.map(p=>`<tr>
     <td class="rv-perfil${geralOn?' on':''}"><span class="rv-dot ${p[11]}"></span>${esc(p[0])}</td>
     ${GRUPOS_RFV.map(g=>{
       const on = aberto===g.id, i = g.i;
@@ -3064,7 +3070,7 @@ function blocoRfv(){
     <div class="rv-painel-top">${I.spark}
       <h4>${c.id==='geral' ? 'Análise geral da base' : 'Análise de '+esc(c.rot.toLowerCase())}</h4>
       <button class="rv-fechar" data-act="gAnalise" data-v="${c.id}">Fechar</button></div>
-    ${analiseRfv(c.id).map(([rot,txt])=>`<div class="rv-item">
+    ${analiseRfv(c.id, B).map(([rot,txt])=>`<div class="rv-item">
       <div class="rv-item-rot">${esc(rot)}</div>
       <p>${txt}</p></div>`).join('')}
     <p class="rv-disclaimer">${I.info} Texto gerado a partir dos números desta tabela.
@@ -3075,7 +3081,7 @@ function blocoRfv(){
     <div class="gpanel-cab">
       <h3>Perfil da base: volume, valor e comportamento
         <i class="gp-periodo">base dos últimos 12 meses</i> ${tip('perfilBase')}</h3>
-      <p>Compara os últimos 12 meses com os 12 anteriores. Clique em um grupo de indicadores para ver a análise.</p>
+      <p>Compara os últimos 12 meses com os 12 anteriores${contexto?', '+esc(contexto):''}. Clique em um grupo de indicadores para ver a análise.</p>
     </div>
     <div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
@@ -3742,6 +3748,49 @@ function telaSugestoes(){
     </div></div>`);
 }
 
+/* A tabela de perfil recortada por DNA.
+
+   É a mesma tabela da Visão geral, com os mesmos seis grupos e a mesma
+   análise — só que sobre os clientes daquele DNA. Ela é GERADA a partir
+   da global, e não escrita à mão, por duas razões:
+
+   1. os clientes atuais têm que somar exatamente o tamanho do DNA, senão
+      a tabela contradiz os cartões logo acima na mesma tela;
+   2. a DIREÇÃO de cada variação é preservada. Se na base inteira o Fiel
+      cresceu, ele cresce em todo DNA. É o que permite reusar as frases
+      da análise sem que alguma delas vire mentira num DNA específico.
+
+   O tamanho da variação muda de DNA para DNA — anterior e atual recebem
+   ruídos diferentes —, então a coluna Variação não sai idêntica em todos,
+   que é o que denunciaria dado copiado. */
+function perfisRfvDna(nome){
+  const alvo = clientesDna(nome);
+  const at = reparte(alvo, PERFIS_RFV.map(p => p[2]));
+
+  return PERFIS_RFV.map((p, k) => {
+    const linha = p.slice();
+    /* clientes: o atual vem do reparte, o anterior mantém a proporção do
+       original com um desvio próprio */
+    linha[2] = at[k];
+    linha[1] = Math.max(1, Math.round(at[k] * (p[1]/p[2]) * jitterDna(nome+'|ca'+k, .10)));
+    if(Math.sign(linha[2]-linha[1]) !== Math.sign(p[2]-p[1]))
+      linha[1] = Math.max(1, Math.round(at[k] * (p[1]/p[2])));
+
+    /* LTV, ticket, frequência e recência: dois ruídos por métrica, um
+       para o anterior e outro para o atual, com guarda de direção */
+    [3,5,7,9].forEach(i => {
+      const fA = jitterDna(nome+'|a'+i+k, .14), fB = jitterDna(nome+'|b'+i+k, .14);
+      let a = Math.max(1, Math.round(p[i]*fA)), b = Math.max(1, Math.round(p[i+1]*fB));
+      if(Math.sign(b-a) !== Math.sign(p[i+1]-p[i])){
+        const f = (fA+fB)/2;
+        a = Math.max(1, Math.round(p[i]*f)); b = Math.max(1, Math.round(p[i+1]*f));
+      }
+      linha[i] = a; linha[i+1] = b;
+    });
+    return linha;
+  });
+}
+
 /* ---------- Tela: DNA ---------- */
 
 function chipsDnaAba(){
@@ -3893,6 +3942,8 @@ function telaDna(){
     () => graficoFaixasDna(d), () => tabelaFaixasDna(d))}
 
   <div class="ad-cards">${d.graus.map(g => cardGrau(d, g)).join('')}</div>
+
+  ${blocoRfv(perfisRfvDna(S.dnaAba), 'entre os clientes com DNA ' + S.dnaAba)}
   </div>`);
 }
 
@@ -5651,6 +5702,10 @@ function handle(act, v, el, isInput){
       S.dnaAba = v; log('dna-aba', v); window.scrollTo(0,0); render(); return;
 
     case 'gAnalise':
+      // a análise pertence à tabela onde foi aberta: a Visão geral e o DNA
+      // usam o mesmo componente sobre bases diferentes, e sem isso um
+      // painel aberto num lado reaparecia no outro, sobre outro dado
+      S.gAnaliseEm = S.screen;
       S.gAnalise = S.gAnalise===v ? null : v;
       log('analise-ia', S.gAnalise ? 'abriu '+v : 'fechou'); render(); return;
 
