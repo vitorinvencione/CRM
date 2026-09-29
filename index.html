@@ -941,8 +941,8 @@ tbody tr.sel{background:#F3F8FF}
 .cmpv-trilho{display:flex;align-items:flex-end;width:100%;flex:1;min-height:0}
 .cmpv-fill{display:block;width:100%;border-radius:7px 7px 3px 3px;
   transition:height .3s ease}
-.cmpv-fill.antes{background:#C9D6E6}
-.cmpv-fill.agora{background:linear-gradient(180deg,#2D8FFC,var(--primary))}
+.cmpv-fill.antes{background:var(--g-ref)}
+.cmpv-fill.agora{background:var(--g-atual-v)}
 @media(prefers-reduced-motion:reduce){.cmpv-fill{transition:none}}
 .cmpv-rot{font-size:12px;color:var(--ink-2);text-align:center;line-height:1.3;
   padding-top:8px;border-top:1px solid var(--border);width:100%}
@@ -950,7 +950,7 @@ tbody tr.sel{background:#F3F8FF}
   font-size:12px;color:var(--ink-3)}
 .cmpv-legenda span{display:inline-flex;align-items:center;gap:7px}
 .cmpv-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-.cmpv-pt.antes{background:#C9D6E6}
+.cmpv-pt.antes{background:var(--g-ref)}
 .cmpv-pt.agora{background:var(--primary)}
 @media(max-width:700px){
   .cmpv{grid-template-columns:1fr;gap:20px}
@@ -4160,28 +4160,12 @@ function selo(d, sufixo){
 
 /* A frase que resume tudo. Se o associado ler só isto e fechar a tela, ele já
    sabe o que precisava saber. Achado vira insight quando cabe numa frase. */
-function veredito(s, c, ant){
+function veredito(s, c){
   const fase = faseCampanha(c);
   if(fase==='futura')
     return `Esta campanha começa em <b>${c.ini}</b>. Os resultados aparecem aqui a partir dessa data.`;
-  if(!c.compras)
-    return `Ainda não há compra registrada neste público desde o início da campanha. ${
-      fase==='andamento' ? 'A campanha segue no ar até '+c.fim+'.' : ''}`;
-
-  /* O veredito julga; os números-herói logo abaixo dizem o tamanho. Antes
-     ele repetia faturamento e clientes em 17px, e os mesmos dois valores
-     apareciam em seguida em 26px — a página abria dizendo a mesma coisa
-     duas vezes, com a repetição em corpo menor que o original.
-
-     É também o único lugar da tela que compara CAMPANHA COM CAMPANHA. Os
-     números do topo comparam com o ano passado e o bloco de baixo com o
-     período anterior; sem esta frase, o aprendizado entre campanhas do
-     mesmo público se perderia. */
-  if(!ant) return `É a <b>primeira campanha</b> deste público — a partir da próxima dá para comparar uma com a outra.`;
-  const d = delta(c.faturamento, ant.faturamento);
-  if(d.dir==='flat') return `Esta campanha vendeu <b>praticamente o mesmo</b> que a campanha anterior deste público.`;
-  return `Esta campanha vendeu <b>${nf1.format(Math.abs(d.pct))}% ${
-    d.dir==='up'?'a mais':'a menos'}</b> que a campanha anterior deste público.`;
+  return `Ainda não há compra registrada neste público desde o início da campanha. ${
+    fase==='andamento' ? 'A campanha segue no ar até '+c.fim+'.' : ''}`;
 }
 
 /* =========================================================================
@@ -4684,13 +4668,8 @@ function telaResultados(){
   }
 
   const fase = faseCampanha(c);
-  const ant  = anterioresDe(s, c)[0] || null;
   const conv = s.clientes ? c.clientesComp / s.clientes * 100 : 0;
-  const convAnt = ant && s.clientes ? ant.clientesComp / s.clientes * 100 : 0;
-  // ticket sempre recalculado da mesma forma nos dois lados da comparação:
-  // usar o campo guardado de um e a conta do outro daria seta errada
-  const tk = x => x && x.compras ? x.faturamento / x.compras : 0;
-  const ticket = tk(c), ticketAnt = tk(ant);
+  const ticket = c.compras ? c.faturamento / c.compras : 0;
 
   const SELOS = {
     futura:    ['Ainda não começou','sf'],
@@ -4724,7 +4703,13 @@ function telaResultados(){
   // Veredito com a mesma casca dos outros blocos da página: mesmo fundo, mesma
   // borda, mesmo raio. O destaque vem do tamanho do texto, não de um traço azul
   // que só ele tinha e que o fazia parecer um alerta.
-  const frase = `<div class="bloco res-veredito">${veredito(s, c, ant)}</div>`;
+  /* O veredito comparava esta campanha com a anterior do mesmo público em
+     percentual. Saiu do fluxo normal: o último bloco da página já mostra o
+     faturamento de TODAS as campanhas deste público lado a lado, e ter a
+     comparação duas vezes — uma em frase, uma em barra — fazia a página abrir
+     e fechar dizendo o mesmo. Fica só na tela de espera, onde não há número
+     nenhum para mostrar e a frase é a própria informação. */
+  const frase = `<div class="bloco res-veredito">${veredito(s, c)}</div>`;
 
   // Campanha sem resultado ainda: não existe herói para mostrar, e mostrar
   // R$ 0,00 seria mentir. A tela para aqui, com o que fazer em seguida.
@@ -4765,17 +4750,16 @@ function telaResultados(){
     ${cardFaturamento(s, c)}
   </div>`;
 
-  // Ordem: veredito → números → como esses números se formaram → contexto.
-  // A ressalva sobre incrementalidade foi para o fim: ela vale para a página
-  // inteira, e no meio ela cortava a leitura entre um bloco de métrica e outro.
   /* Ordem por hierarquia, não por ordem de construção:
-       1. veredito    — o julgamento numa frase
-       2. heróis      — quanto vendeu
+       1. heróis      — quanto vendeu
+       2. funil       — como esse número se formou
        3. antes/durante — contra o que estamos comparando
-       4. funil e DNA — como esses números se formaram
-       5. retorno     — fecha a leitura: depois de entender de onde veio o
-                        faturamento, quanto ele custou
-       6. ressalva    — vale para a página inteira, por isso vem por último */
+       4. canal e retorno — onde a venda aconteceu e quanto ela custou
+       5. histórico   — esta campanha entre as outras do mesmo público
+       6. ressalva    — vale para a página inteira, por isso vem por último
+
+     A página agora abre no número, não numa frase de julgamento. A leitura
+     campanha-contra-campanha acontece uma vez só, no bloco 5. */
   /* Duas linhas de dois gráficos, e cada par responde uma pergunta:
 
        quantos compraram e contra o que isso se compara
@@ -4788,7 +4772,7 @@ function telaResultados(){
      O histórico de faturamento fecha a página: é o único bloco que olha
      para fora desta campanha, e por isso vem depois de tudo que é sobre
      ela. */
-  return shell(`${cabecalho}${frase}${herois}
+  return shell(`${cabecalho}${herois}
     <div class="bloco-par">
       ${funilCampanha(s, c)}
       ${blocoAntesDurante(s, c)}
