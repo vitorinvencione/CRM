@@ -741,39 +741,21 @@ tbody tr.sel{background:#F3F8FF}
 
 /* O volume é o cabeçalho do cartão e o primeiro gatilho de pergunta: antes de
    qualquer comportamento, quanta gente tem aqui. */
-.rvc-vol{display:flex;align-items:baseline;gap:7px;width:100%;margin-top:9px;
-  padding:6px 8px 7px;margin-left:-8px;border-radius:8px;text-align:left;transition:.12s}
+.rvc-vol{display:flex;align-items:baseline;gap:7px;margin-top:9px;padding:6px 0 7px}
 .rvc-vol b{font-size:22px;font-weight:700;color:var(--ink);line-height:1.1;
   font-variant-numeric:tabular-nums}
 .rvc-vol-un{font-size:12px;color:var(--ink-3)}
 .rvc-vol .rv-var,.rvc-vol .rv-nulo{margin-left:auto}
-.rvc-vol:hover{background:#F5F9FE}
-.rvc-vol.on{background:#EAF3FE}
 
 .rvc-lista{margin:8px 0 0;border-top:1px solid var(--border);padding-top:2px}
 .rvc-lin{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-  padding:5px 8px;margin:0 -8px;border-radius:7px;transition:.12s}
+  padding:5px 0}
 .rvc-lin dt{margin:0;min-width:0}
-.rvc-lin dt button{font-size:12.5px;color:var(--ink-2);text-align:left;
-  border-bottom:1px dashed transparent;transition:.12s}
+.rvc-lin dt{font-size:12.5px;color:var(--ink-2)}
 .rvc-lin dd{margin:0;display:flex;align-items:baseline;gap:8px;white-space:nowrap}
 .rvc-lin dd b{font-size:13.5px;font-weight:600;color:var(--ink);
   font-variant-numeric:tabular-nums}
-.rvc-lin:hover{background:#F5F9FE}
-.rvc-lin:hover dt button{color:var(--primary);border-bottom-color:var(--primary)}
-/* A linha aberta acende nos SEIS cartões ao mesmo tempo — é o equivalente ao
-   realce da coluna na tabela: o indicador é o mesmo, o perfil é que muda. */
-.rvc-lin.on{background:#EAF3FE}
-.rvc-lin.on dt button{color:var(--primary);font-weight:600}
 
-/* A fileira de chips é o thead da tabela, reformatado. */
-.rvc-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
-.rvc-chip{font-size:12.5px;padding:6px 13px;border:1px solid var(--border);
-  border-radius:20px;background:#fff;color:var(--ink-2);transition:.12s}
-.rvc-chip:hover{border-color:var(--primary);color:var(--primary)}
-.rvc-chip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
-@media(prefers-reduced-motion:reduce){
-  .rvc-vol,.rvc-lin,.rvc-chip,.rvc-lin dt button{transition:none}}
 
 .gtoggle{display:flex;gap:4px;background:#F1F5F9;border-radius:9px;padding:3px}
 .gtoggle button{width:34px;height:30px;border-radius:7px;display:flex;align-items:center;
@@ -1160,51 +1142,26 @@ tbody tr.sel{background:#F3F8FF}
 /* A coluna do indicador fica presa: com 1.540px de tabela, rolar até o
    Abandonador sem ela é perder de vista qual linha se está lendo. */
 .rv-canto,.rv-ind{position:sticky;left:0;z-index:2;background:#fff}
-/* O canto é o cruzamento de todos os indicadores com todos os perfis, então
-   é ele que abre a leitura da base inteira. No formato anterior esse gatilho
-   morava no cabeçalho "Fidelidade"; sem dar casa nova a ele, a análise geral
-   ficaria inalcançável na tabela. */
 .rv-canto{text-align:left;background:var(--rv-cab);color:var(--ink-2);
-  font-size:12.5px;padding:0;vertical-align:top;
+  font-size:12.5px;font-weight:600;padding:13px 14px;vertical-align:top;
   border-right:1px solid var(--border)}
-.rv-canto button{display:grid;gap:3px;justify-items:start;width:100%;
-  padding:12px 14px 10px;text-align:left;transition:.12s}
-.rv-canto-rot{font-size:12.5px;font-weight:600;color:var(--ink-2)}
-.rv-canto button:hover{background:#EDF4FC}
-.rv-canto button:hover .rv-ia,.rv-canto.on .rv-ia{opacity:1}
-.rv-canto.on{background:#E4EFFC}
 .rv-canto-b{padding:0;border-bottom:1px solid var(--border)}
 .rvtab thead tr:first-child th{border-bottom:0}
 
-/* Cabeçalho de perfil: nome com o ponto da cor e o gatilho da análise. Duas
-   linhas fixas para os seis terminarem com a mesma altura. */
-.rv-pcab{background:var(--rv-cab);padding:0;border-bottom:0}
-.rv-pcab button{display:grid;grid-template-rows:auto auto;justify-items:center;gap:3px;
-  width:100%;padding:12px 10px 10px;transition:.12s}
-.rv-pnome{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
-  color:var(--ink)}
-.rv-pcab button:hover{background:#EDF4FC}
-.rv-pcab.on{background:#E4EFFC}
-.rv-ia{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
-  color:var(--primary);opacity:.5;transition:.12s}
-.rv-pcab button:hover .rv-ia,.rv-pcab.on .rv-ia{opacity:1}
+/* Cabeçalho de perfil: só o nome com o ponto da cor. */
+.rv-pcab{background:var(--rv-cab);padding:12px 10px 10px;border-bottom:0}
+.rv-pnome{display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:13px;font-weight:700;color:var(--ink)}
 .rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11px;
   background:var(--rv-cab)}
-.rvtab thead tr:nth-child(2) th.on{background:#E4EFFC}
 .rvtab .sep{border-left:1px solid var(--border)}
 
-/* Linha do indicador: rótulo, unidade e gatilho. A unidade reserva altura
-   fixa para as cinco linhas fecharem iguais. */
-.rv-ind{text-align:left;padding:0;border-right:1px solid var(--border);
+/* Linha do indicador: rótulo e unidade, com altura reservada para as cinco
+   linhas fecharem iguais mesmo com unidades de tamanhos diferentes. */
+.rv-ind{text-align:left;padding:11px 14px;border-right:1px solid var(--border);
   border-bottom:1px solid #F1F5F9}
-.rv-ind button{display:grid;grid-template-rows:auto 1.5em auto;gap:1px;width:100%;
-  padding:11px 14px;text-align:left;transition:.12s}
-.rv-ind-rot{font-size:13px;font-weight:700;color:var(--ink)}
-.rv-ind-un{font-size:11px;color:var(--ink-4);line-height:1.35}
-.rv-ind button:hover{background:#F5F9FE}
-.rv-ind button:hover .rv-ia,.rv-ind.on .rv-ia{opacity:1}
-.rv-ind.on{background:#F3F8FE}
-
+.rv-ind-rot{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.rv-ind-un{display:block;min-height:1.5em;font-size:11px;color:var(--ink-4);line-height:1.35}
 .rvtab td{padding:13px 10px;text-align:right;border-bottom:1px solid #F1F5F9;
   color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
 .rvtab tbody tr:last-child td,.rvtab tbody tr:last-child .rv-ind{border-bottom:0}
@@ -1215,54 +1172,16 @@ tbody tr.sel{background:#F3F8FF}
 .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .p-novos{background:#7C89A0}
 .rv-num.forte{color:var(--ink);font-weight:700}
-.rvtab td.on{background:#F3F8FE}
-.rvtab tbody tr.on td{background:#F3F8FE}
-.rvtab tbody tr:hover td.on,.rvtab tbody tr.on:hover td{background:#EAF3FD}
 .rv-sin{padding-left:4px!important}
 .rv-var{font-weight:700;font-size:12px}
 /* Os quatro gatilhos da tabela são botões e precisam de foco visível: quem
    navega por teclado atravessa dezoito colunas aqui. outline-offset negativo
    porque o botão preenche a célula e um anel externo seria cortado. */
-.rv-canto button:focus-visible,.rv-pcab button:focus-visible,
-.rv-ind button:focus-visible{outline:2px solid var(--primary);outline-offset:-2px;
-  border-radius:6px}
-.rvc-vol:focus-visible,.rvc-lin dt button:focus-visible,
-.rvc-chip:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-@media(prefers-reduced-motion:reduce){
-  .rv-pcab button,.rv-ind button,.rv-canto button,.rv-ia{transition:none}}
 .rv-var.bom{color:var(--green)}
 .rv-var.ruim{color:var(--danger)}
 .rv-nulo{color:var(--ink-4)}
 
 /* Painel da análise: mesma casca dos demais blocos, com o azul só no ícone. */
-.rv-painel{margin-top:var(--tit);background:#F8FBFF;border:1px solid #D8E7F8;border-radius:12px;
-  padding:18px 20px;animation:rvAbre .18s ease}
-@keyframes rvAbre{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.rv-painel{animation:none}}
-.rv-painel-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.rv-painel-top svg{color:var(--primary);flex-shrink:0}
-.rv-painel-top h4{flex:1;margin:0;font-size:14px;font-weight:700;color:var(--ink)}
-.rv-fechar{font-size:12.5px;font-weight:600;color:var(--ink-3);padding:5px 9px;border-radius:7px}
-.rv-fechar:hover{background:#E7F1FE;color:var(--primary)}
-/* Rótulo curto à esquerda, texto à direita: a estrutura fixa deixa a pessoa
-   pular direto para "O que fazer" na segunda vez que lê. */
-/* Pergunta e resposta empilhadas, não duas colunas. A pergunta é uma frase
-   inteira — numa coluna de 148px ela quebrava em quatro linhas enquanto a
-   resposta ocupava uma. O recuo da resposta é o que mantém o par junto sem
-   precisar de moldura. */
-.rv-item{padding:13px 0;border-bottom:1px solid #E4EEF9}
-.rv-item:last-of-type{border-bottom:0;padding-bottom:4px}
-.rv-item:first-of-type{padding-top:0}
-.rv-q{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.5;
-  display:flex;gap:8px}
-.rv-q::before{content:"—";color:var(--primary);flex-shrink:0;font-weight:700}
-.rv-a{margin-top:5px!important;padding-left:19px}
-.rv-painel p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
-@media(max-width:820px){.rv-a{padding-left:0}}
-.rv-painel b{color:var(--ink);font-weight:700}
-.rv-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:14px!important;
-  padding-top:12px;border-top:1px solid #DCEAF9;font-size:12px!important;color:var(--ink-4)!important}
-.rv-disclaimer svg{flex-shrink:0;margin-top:2px}
 
 .gtab{width:100%;border-collapse:collapse;font-size:13px}
 .gtab th{text-align:right;padding:9px 10px;font-size:12px;font-weight:600;color:var(--ink-3);
@@ -1977,8 +1896,6 @@ function estadoInicial(){
     sugDnas:[],               // DNAs selecionados; [] = todos
     sugAberto:null,           // produto com o "por quê" aberto
     sugBalcao:{},             // conjuntos ligados no balcão
-    gAnalise:null,            // grupo de indicador com a análise aberta
-    gAnaliseEm:null,          // em qual tela ela foi aberta: a tabela é a mesma, a base não  // gráfico ou tabela, por painel da Visão geral
     step:0,
     // Todas as lojas vêm marcadas: o fluxo começa com a base inteira e o
     // usuário RECORTA, em vez de começar do zero e ter que construir a base.
@@ -3103,6 +3020,18 @@ function sinalRfv(g, perfil, ant, at){
    variação: se na base inteira o Fiel cresceu, ele cresce em todo DNA.
    Sem essa regra, "Fiel e Valioso até cresceram" viraria mentira em
    algum DNA e ninguém perceberia. Há um teste que trava isso. */
+/* ====================================================================
+   TEXTO DE ANÁLISE — PARQUEADO, NÃO É CÓDIGO MORTO
+
+   O painel de perguntas saiu da tabela de Perfil da base por decisão do
+   Vitor: a análise vai viver numa área própria, ainda por definir. As duas
+   geradoras abaixo continuam aqui porque o CONTEÚDO é o trabalho caro — cada
+   número sai da tabela na hora, e a suíte confere que nenhuma afirmação
+   contradiz o dado nos nove conjuntos (Visão geral e os oito DNAs).
+
+   Nada na tela chama estas funções hoje. Os testes chamam, e é isso que
+   impede o texto de apodrecer enquanto a área nova não existe.
+   ==================================================================== */
 /* PERGUNTA E RESPOSTA, não laudo.
 
    Antes cada bloco abria com um rótulo de tópico — "O que aconteceu", "Por
@@ -3288,7 +3217,7 @@ function analisePerfil(nome, base){
   ];
 }
 
-function cardsRfv(B, aberto){
+function cardsRfv(B){
   const totalAt = totalCli(2, B) || 1;
   const gCli = GRUPOS_RFV[0];
   const resto = GRUPOS_RFV.slice(1);
@@ -3296,28 +3225,21 @@ function cardsRfv(B, aberto){
   return `<div class="rvc">
     ${B.map(p=>{
       const share = p[2] / totalAt * 100;
-      const onCli = aberto === gCli.id;
       return `<article class="rvc-card">
         <header class="rvc-topo">
           <span class="rvc-nome"><i class="rv-dot ${p[11]}"></i>${esc(p[0])}</span>
           <span class="rvc-share">${nf1.format(share)}% da base</span>
         </header>
-        <button class="rvc-vol${onCli?' on':''}" data-act="gAnalise" data-v="${gCli.id}"
-          aria-expanded="${onCli}"
-          title="${esc(gCli.rot)}: era ${gCli.fmt(p[1])}, agora ${gCli.fmt(p[2])}">
+        <div class="rvc-vol" title="${esc(gCli.rot)}: era ${gCli.fmt(p[1])}, agora ${gCli.fmt(p[2])}">
           <b>${gCli.fmt(p[2])}</b>
           <span class="rvc-vol-un">clientes</span>
           ${sinalRfv(gCli, p[0], p[1], p[2])}
-        </button>
+        </div>
         <dl class="rvc-lista">
-          ${resto.map(g=>{
-            const on = aberto===g.id;
-            return `<div class="rvc-lin${on?' on':''}">
-              <dt><button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
-                title="${esc(g.rot)}: era ${g.fmt(p[g.i])}, agora ${g.fmt(p[g.i+1])}">${esc(g.rot)}</button></dt>
+          ${resto.map(g=>`<div class="rvc-lin">
+              <dt title="${esc(g.rot)}: era ${g.fmt(p[g.i])}, agora ${g.fmt(p[g.i+1])}">${esc(g.rot)}</dt>
               <dd><b>${g.fmt(p[g.i+1])}</b>${sinalRfv(g, p[0], p[g.i], p[g.i+1])}</dd>
-            </div>`;
-          }).join('')}
+            </div>`).join('')}
         </dl>
       </article>`;
     }).join('')}
@@ -3326,7 +3248,6 @@ function cardsRfv(B, aberto){
 
 function blocoRfv(base, contexto){
   const B = base || PERFIS_RFV;
-  const aberto = S.gAnaliseEm === S.screen ? S.gAnalise : null;
   const cartao = S.gView.rfv === 'cartao';
   /* TABELA TRANSPOSTA: indicador na linha, perfil na coluna.
 
@@ -3348,73 +3269,26 @@ function blocoRfv(base, contexto){
      · a coluna do indicador é presa na rolagem. Com 1.540px de tabela, sem
        isso o associado rola até o Abandonador e não sabe mais qual linha
        está lendo. */
-  const cabPerfis = B.map(x=>{
-    const on = aberto === 'perfil:'+x[0];
-    return `<th colspan="3" class="rv-pcab${on?' on':''}">
-      <button data-act="gAnalise" data-v="perfil:${esc(x[0])}" aria-expanded="${on}"
-        title="Ver as perguntas sobre ${esc(x[0])}">
-        <span class="rv-pnome"><i class="rv-dot ${x[11]}"></i>${esc(x[0])}</span>
-        <span class="rv-ia">${I.spark} análise</span>
-      </button></th>`;
-  }).join('');
+  const cabPerfis = B.map(x=>`<th colspan="3" class="rv-pcab">
+      <span class="rv-pnome"><i class="rv-dot ${x[11]}"></i>${esc(x[0])}</span>
+    </th>`).join('');
 
-  const subCab = B.map(x=>{
-    const on = aberto === 'perfil:'+x[0];
-    return `<th class="sep${on?' on':''}">Antes</th><th${on?' class="on"':''}>Atual</th><th${on?' class="on"':''}>Variação</th>`;
-  }).join('');
+  const subCab = B.map(()=>
+    `<th class="sep">Antes</th><th>Atual</th><th>Variação</th>`).join('');
 
-  const corpo = GRUPOS_RFV.map(g=>{
-    const on = aberto === g.id;
-    return `<tr class="${on?'on':''}">
-      <th scope="row" class="rv-ind${on?' on':''}">
-        <button data-act="gAnalise" data-v="${g.id}" aria-expanded="${on}"
-          title="Ver as perguntas sobre ${esc(g.rot.toLowerCase())}">
-          <span class="rv-ind-rot">${esc(g.rot)}</span>
-          <span class="rv-ind-un">${esc(g.un)}</span>
-          <span class="rv-ia">${I.spark} análise</span>
-        </button>
+  const corpo = GRUPOS_RFV.map(g=>`<tr>
+      <th scope="row" class="rv-ind">
+        <span class="rv-ind-rot">${esc(g.rot)}</span>
+        <span class="rv-ind-un">${esc(g.un)}</span>
       </th>
-      ${B.map(x=>{
-        const onP = aberto === 'perfil:'+x[0], oo = (on||onP)?' on':'';
-        return `<td class="rv-num sep${oo}">${g.fmt(x[g.i])}</td>
-          <td class="rv-num forte${oo}">${g.fmt(x[g.i+1])}</td>
-          <td class="rv-sin${oo}">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`;
-      }).join('')}
-    </tr>`;
-  }).join('');
+      ${B.map(x=>
+        `<td class="rv-num sep">${g.fmt(x[g.i])}</td>
+          <td class="rv-num forte">${g.fmt(x[g.i+1])}</td>
+          <td class="rv-sin">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`
+      ).join('')}
+    </tr>`).join('');
 
-  /* Dois eixos de pergunta, um painel só. O que muda é o título e de onde
-     as perguntas vêm — nunca dois painéis abertos ao mesmo tempo. */
-  const perfilAberto = aberto && aberto.startsWith('perfil:') ? aberto.slice(7) : null;
-  const c = perfilAberto ? null : CAB_RFV.find(x=>x.id===aberto);
-  const qa = perfilAberto ? analisePerfil(perfilAberto, B) : (c ? analiseRfv(c.id, B) : []);
-  const tituloQa = perfilAberto
-    ? 'O que o perfil ' + esc(perfilAberto) + ' está dizendo'
-    : (c ? (c.id==='geral' ? 'O que a base inteira está dizendo'
-                           : 'O que ' + esc(c.rot.toLowerCase()) + ' está dizendo') : '');
-  const analise = qa.length ? `<div class="rv-painel">
-    <div class="rv-painel-top">${I.spark}
-      <h4>${tituloQa}</h4>
-      <button class="rv-fechar" data-act="gAnalise" data-v="${esc(aberto)}">Fechar</button></div>
-    ${qa.map(([perg,resp])=>`<div class="rv-item">
-      <p class="rv-q">${esc(perg)}</p>
-      <p class="rv-a">${resp}</p></div>`).join('')}
-    <p class="rv-disclaimer">${I.info} Respostas montadas a partir dos números desta tabela.
-    Confira antes de levar a decisão adiante.</p>
-  </div>` : '';
 
-  /* Em cartão não existe linha de cabeçalho para clicar, então os seis
-     gatilhos das perguntas viram uma fileira de chips. Não é enfeite novo: é
-     o thead da tabela, reformatado para um layout que não tem thead.
-
-     "Fidelidade" também não sobrevive à troca — na tabela era o cabeçalho da
-     coluna de nomes, e em cartão essa coluna não existe. O chip usa o que a
-     opção sempre significou: todos os indicadores. */
-  const chips = cartao ? `<div class="rvc-chips" role="group" aria-label="Escolha o indicador">
-    ${CAB_RFV.map(x=>`<button class="rvc-chip${aberto===x.id?' on':''}"
-      data-act="gAnalise" data-v="${x.id}" aria-pressed="${aberto===x.id}">${
-      x.id==='geral' ? 'Todos os indicadores' : esc(x.rot)}</button>`).join('')}
-  </div>` : '';
 
   return `<div class="gpanel gpanel-fim">
     <div class="gpanel-cab">
@@ -3428,31 +3302,22 @@ function blocoRfv(base, contexto){
             aria-label="Ver como cartões" aria-pressed="${cartao}" title="Cartões: lê um perfil de cada vez">${I.grade}</button>
         </div>
       </div>
-      <p>Compara os últimos 12 meses com os 12 anteriores${contexto?', '+esc(contexto):''}. ${
-        cartao ? 'Cada cartão é um perfil. Escolha um indicador para ver as perguntas que ele responde.'
-               : 'Clique em um grupo de indicadores para ver as perguntas que ele responde.'}</p>
+      <p>Compara os últimos 12 meses com os 12 anteriores${contexto?', '+esc(contexto):''}.${
+        cartao ? ' Cada cartão é um perfil.' : ''}</p>
     </div>
-    ${chips}
-    ${cartao ? cardsRfv(B, aberto) : `<div class="rv-wrap" data-scroll="tabela-perfil">
+    ${cartao ? cardsRfv(B) : `<div class="rv-wrap" data-scroll="tabela-perfil">
       <table class="rvtab">
         <colgroup>
           <col class="rv-c-ind">
           ${B.map(()=>'<col class="rv-c-ant"><col class="rv-c-at"><col class="rv-c-var">').join('')}
         </colgroup>
         <thead>
-          <tr><th class="rv-canto${aberto==='geral'?' on':''}" scope="col">
-            <button data-act="gAnalise" data-v="geral" aria-expanded="${aberto==='geral'}"
-              title="Ver as perguntas sobre todos os indicadores">
-              <span class="rv-canto-rot">Indicador</span>
-              <span class="rv-ia">${I.spark} análise</span>
-            </button>
-          </th>${cabPerfis}</tr>
+          <tr><th class="rv-canto" scope="col">Indicador</th>${cabPerfis}</tr>
           <tr><th class="rv-canto rv-canto-b"></th>${subCab}</tr>
         </thead>
         <tbody>${corpo}</tbody>
       </table>
     </div>`}
-    ${analise}
     <p class="bloco-nota">A cor da variação segue o que é <b>bom</b>, não a direção da seta: em
     Abandonador, menos cliente é melhor, e em Recência, menos dias é melhor.${
       cartao ? ' O cartão mostra o valor de hoje; o de antes aparece ao passar o mouse, e a tabela traz os dois lado a lado.' : ''}</p>
@@ -6103,14 +5968,6 @@ function handle(act, v, el, isInput){
 
     case 'dnaAba':
       S.dnaAba = v; log('dna-aba', v); window.scrollTo(0,0); render(); return;
-
-    case 'gAnalise':
-      // a análise pertence à tabela onde foi aberta: a Visão geral e o DNA
-      // usam o mesmo componente sobre bases diferentes, e sem isso um
-      // painel aberto num lado reaparecia no outro, sobre outro dado
-      S.gAnaliseEm = S.screen;
-      S.gAnalise = S.gAnalise===v ? null : v;
-      log('analise-ia', S.gAnalise ? 'abriu '+v : 'fechou'); render(); return;
 
     case 'gView': {
       const [id,modo] = v.split('|');
