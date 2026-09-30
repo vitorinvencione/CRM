@@ -965,6 +965,56 @@ tbody tr.sel{background:#F3F8FF}
    desenho, não o cabeçalho, e centrado é lido como legenda do que vem
    abaixo. width:fit-content porque o flex esticaria a cartela cinza pela
    largura toda. */
+/* ---------- Retorno sobre o investimento ----------
+   Três indicadores mestres, com o retorno dominando: é a pergunta que o
+   bloco responde. O CSS anterior desta área tinha sumido numa fatia vizinha
+   e o bloco vinha renderizando sem estilo nenhum. */
+.inv-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  margin-bottom:var(--res-item)}
+.inv-topo .bloco-tit{margin:0}
+.inv-btn{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
+  font-size:12.5px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:8px;
+  border:1px solid var(--border);transition:.12s}
+.inv-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+.inv-btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.inv-btn svg{width:13px;height:13px}
+.inv-abrir{margin-top:14px;display:inline-flex;align-items:center;gap:7px}
+.inv-abrir svg{width:14px;height:14px}
+
+.inv-mestres{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.im{display:flex;flex-direction:column;gap:2px;min-width:0;padding-left:14px;
+  border-left:1px solid var(--border)}
+.im:first-child{padding-left:0;border-left:0}
+.im span{font-size:11.5px;color:var(--ink-3)}
+/* nowrap porque o valor quebrando em duas linhas desalinha os três mestres
+   entre si; o corpo foi calibrado pelo pior caso real, R$ 30.575. */
+.im b{font-size:20px;font-weight:700;color:var(--ink);line-height:1.15;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.im i{font-size:11.5px;font-style:normal;color:var(--ink-4);line-height:1.35}
+/* O retorno é a resposta do bloco: sobe de corpo e ganha a cor do produto. */
+.im.forte b{font-size:30px;color:var(--primary);letter-spacing:-.01em}
+@media(max-width:720px){.inv-mestres{grid-template-columns:1fr 1fr}
+  .im:nth-child(3){padding-left:0;border-left:0;grid-column:1/-1;padding-top:10px;
+    border-top:1px solid var(--border)}}
+
+/* Editor: some depois de salvar, então não pode empurrar o layout enquanto
+   está aberto — fica acima dos mestres, no lugar do respiro do título. */
+.inv-edit{background:#F7FAFD;border:1px solid #DCE8F5;border-radius:10px;
+  padding:13px 14px;margin-bottom:var(--res-item)}
+.inv-edit label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);
+  margin-bottom:7px}
+.inv-linha{display:flex;gap:8px;flex-wrap:wrap}
+.inv-linha input{flex:1;min-width:130px;height:38px;padding:0 12px;
+  border:1px solid var(--border-strong);border-radius:8px;font-size:14px;
+  font-variant-numeric:tabular-nums;background:#fff}
+.inv-linha input:focus{border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-soft);outline:none}
+.inv-cancela{font-size:13px;font-weight:600;color:var(--ink-3);padding:0 12px;border-radius:8px}
+.inv-cancela:hover{background:#EDF1F6;color:var(--ink-2)}
+.inv-cancela:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.inv-edit .ajuda{margin:9px 0 0;font-size:11.5px;color:var(--ink-4);line-height:1.45}
+@media(prefers-reduced-motion:reduce){.inv-btn{transition:none}}
+
 .cmp-ops{display:flex;gap:3px;background:#F1F5F9;border-radius:9px;padding:3px;
   width:fit-content;margin:0 auto var(--res-bloco)}
 .cmp-op{font-size:11.5px;font-weight:600;color:var(--ink-3);padding:6px 11px;
@@ -1815,6 +1865,8 @@ function estadoInicial(){
     motorExplica:null,      // bloco com a explicação aberta
     dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
     preModo:'anterior',     // régua do comparativo: 'anterior' ou 'ano'
+    invEdit:null,           // id da campanha com o investimento em edição
+    invValor:'',            // texto digitado no campo de investimento
     // 'rfv' não é por tela: a tabela de perfil aparece na Visão geral e no DNA,
     // e quem prefere ler em cartão prefere nas duas.
     gView:{faixas:'grafico', dnas:'grafico', dnaPerfil:'grafico', dnaFaixas:'grafico', rfv:'tabela'},
@@ -4863,28 +4915,71 @@ function funilCampanha(s, c){
    não é um bloco. */
 
 
-/* Investimento e retorno: nível 2, e com estado próprio quando não informado.
-   Mostrar "R$ 0,00" seria dizer que a campanha foi de graça, o que é diferente
-   de ninguém ter preenchido o campo. */
+/* INVESTIMENTO EDITÁVEL NA PRÓPRIA TELA.
+
+   O valor deixou de ser algo que só existe na criação da campanha. Na
+   prática o associado começa sem verba definida, a campanha roda, e a verba
+   entra depois — ou cresce no meio do caminho. Fechar esse número na criação
+   obrigava a refazer a campanha para corrigir um dado administrativo.
+
+   O campo pede o TOTAL, não um incremento: "acrescentar R$ 500" exigiria
+   guardar um histórico de aportes que a base ainda não tem, e um campo que
+   soma escondido é a receita para o número dobrar sem ninguém entender.
+
+   Três indicadores mestres, com o retorno dominando: é a pergunta que o
+   bloco responde. Investido e custo por cliente são o que sustenta a conta. */
 function blocoInvestimento(c){
+  const editando = S.invEdit === c.id;
   const r = retornoCamp(c);
-  if(r === null) return `<div class="bloco bloco-vazio">
-    <h4 class="bloco-tit">Retorno sobre o investimento</h4>
-    <p class="bloco-nota">Nenhum investimento foi <b>informado</b> para esta campanha — o que é
-    diferente de ter custado zero. Sem esse valor não há retorno para calcular. Ele é preenchido
-    na criação da campanha.</p>
+
+  const editor = `<div class="inv-edit">
+    <label for="inv-val">Total investido na campanha</label>
+    <div class="inv-linha">
+      <input id="inv-val" type="text" inputmode="decimal" value="${esc(S.invValor)}"
+        placeholder="R$ 0,00" data-act="invValor" data-k="inv-val" autocomplete="off">
+      <button class="btn btn-primary btn-sm" data-act="invSalvar">Salvar</button>
+      <button class="inv-cancela" data-act="invCancelar">Cancelar</button>
+    </div>
+    <p class="ajuda">Informe quanto já foi gasto no total. Para acrescentar verba no meio da
+    campanha, digite o novo total. Em branco marca a campanha como sem investimento informado.</p>
   </div>`;
+
+  if(r === null) return `<div class="bloco${editando?'':' bloco-vazio'}">
+    <h4 class="bloco-tit">Retorno sobre o investimento</h4>
+    ${editando ? editor : `<p class="bloco-nota">Nenhum investimento foi <b>informado</b> para esta
+      campanha — o que é diferente de ter custado zero. Sem esse valor não há retorno para
+      calcular.</p>
+      <button class="btn btn-primary btn-sm inv-abrir" data-act="invEditar" data-v="${c.id}">
+        ${I.pen} Informar investimento</button>`}
+  </div>`;
+
   const cpc = c.clientesComp ? c.investimento / c.clientesComp : 0;
   return `<div class="bloco">
-    <h4 class="bloco-tit">Retorno sobre o investimento</h4>
-    <div class="retorno">
-      <div class="ret-num"><b>R$ ${nf1.format(r)}</b><span>de venda para cada R$ 1 investido</span></div>
-      <div class="ret-lado">
-        <div><span>Investido</span><b>${brl(c.investimento)}</b></div>
-        <div><span>Custo por cliente que comprou</span><b>${cpc?brl(cpc):'—'}</b></div>
+    <div class="inv-topo">
+      <h4 class="bloco-tit">Retorno sobre o investimento</h4>
+      ${editando ? '' : `<button class="inv-btn" data-act="invEditar" data-v="${c.id}"
+        title="Alterar o valor investido">${I.pen} Editar</button>`}
+    </div>
+    ${editando ? editor : ''}
+    <div class="inv-mestres">
+      <div class="im forte">
+        <span>Retorno</span>
+        <b>R$ ${nf1.format(r)}</b>
+        <i>de venda para cada R$ 1 investido</i>
+      </div>
+      <div class="im">
+        <span>Investido</span>
+        <b>${brlInt(c.investimento)}</b>
+        <i>no total da campanha</i>
+      </div>
+      <div class="im">
+        <span>Custo por cliente</span>
+        <b>${cpc?brl(cpc):'—'}</b>
+        <i>entre os ${nf.format(c.clientesComp)} que compraram</i>
       </div>
     </div>
-    <p class="bloco-nota">O valor investido é informado por quem cria a campanha e não é conferido pelo sistema.</p>
+    <p class="bloco-nota">O valor investido é informado por quem acompanha a campanha e não é
+    conferido pelo sistema.</p>
   </div>`;
 }
 
@@ -5951,6 +6046,37 @@ function handle(act, v, el, isInput){
       toast('Copie o filtro do card na criação da segmentação: “'+v+'”.');
       log('sugestoes-campanha', v); window.scrollTo(0,0); render(); return;
 
+    case 'invEditar': {
+      const sg = S.segmentacoes.find(x=>x.id===S.resSeg);
+      const cp = sg && (sg.campanhas||[]).find(x=>x.id===v);
+      S.invEdit = v;
+      // abre com o valor atual já escrito: corrigir é mais comum que zerar
+      S.invValor = cp && cp.investimento ? brl(cp.investimento) : '';
+      log('investimento-editar', v); render(); return; }
+
+    case 'invValor':
+      S.invValor = el ? el.value : v;
+      return;   // sem render: o campo não pode perder o cursor a cada tecla
+
+    case 'invSalvar': {
+      const sg = S.segmentacoes.find(x=>x.id===S.resSeg);
+      const cp = sg && (sg.campanhas||[]).find(x=>x.id===S.invEdit);
+      if(cp){
+        const antes = cp.investimento || 0;
+        // parseBrl devolve 0 para vazio e para lixo: nos dois casos a campanha
+        // volta a ser "sem investimento informado", que é um estado legítimo
+        cp.investimento = parseBrl(S.invValor);
+        log('investimento-salvo', cp.id+' '+antes+' → '+cp.investimento);
+        toast(cp.investimento
+          ? 'Investimento atualizado para '+brl(cp.investimento)+'.'
+          : 'Campanha marcada como sem investimento informado.');
+      }
+      S.invEdit = null; S.invValor = ''; render(); return; }
+
+    case 'invCancelar':
+      S.invEdit = null; S.invValor = '';
+      log('investimento-cancelar'); render(); return;
+
     case 'preModo':
       S.preModo = v;
       log('comparativo-regua', v);
@@ -6147,8 +6273,9 @@ function handle(act, v, el, isInput){
       log('campanhas', S.campAberta?'abriu '+v:'fechou'); render(); return;
 
     case 'verResultados': {
-      // a régua do comparativo volta ao padrão a cada campanha aberta
-      S.preModo = 'anterior';
+      // a régua do comparativo volta ao padrão a cada campanha aberta,
+      // e um editor aberto na campanha anterior não pode seguir junto
+      S.preModo = 'anterior'; S.invEdit = null; S.invValor = '';
       const [sid,cid] = v.split('|');
       S.resSeg = sid; S.resCamp = cid; S.screen = 'resultados'; S.menuSeg = null;
       const sg = S.segmentacoes.find(x=>x.id===sid);
