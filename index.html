@@ -961,12 +961,12 @@ tbody tr.sel{background:#F3F8FF}
    Uma grade de cinco colunas: rótulo, valor de antes, a seta, valor da
    campanha e a variação. Os dois valores têm o mesmo peso tipográfico —
    quem decide qual é o importante é a seta, não o negrito. */
-/* Título e alternador na mesma linha: a régua escolhida muda o título, então
-   o controle precisa estar ao lado dele para a relação ficar óbvia. */
-.cmp-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
-  flex-wrap:wrap;margin-bottom:var(--res-item)}
-.cmp-topo .bloco-tit{margin:0}
-.cmp-ops{display:flex;gap:3px;background:#F1F5F9;border-radius:9px;padding:3px;flex-shrink:0}
+/* O alternador fica abaixo do título e centrado no gráfico: ele governa o
+   desenho, não o cabeçalho, e centrado é lido como legenda do que vem
+   abaixo. width:fit-content porque o flex esticaria a cartela cinza pela
+   largura toda. */
+.cmp-ops{display:flex;gap:3px;background:#F1F5F9;border-radius:9px;padding:3px;
+  width:fit-content;margin:0 auto var(--res-bloco)}
 .cmp-op{font-size:11.5px;font-weight:600;color:var(--ink-3);padding:6px 11px;
   border-radius:7px;white-space:nowrap;transition:.12s}
 .cmp-op:hover{color:var(--ink-2)}
@@ -4482,8 +4482,7 @@ function blocoAntesDurante(s, c){
     title="${esc(titulo)}">${rot}</button>`;
 
   return `<div class="bloco">
-    <div class="cmp-topo">
-      <h4 class="bloco-tit">${ano
+    <h4 class="bloco-tit">${ano
         ? `${dias} dias de campanha × mesmo período de ${anoNum}`
         : `${dias} dias de campanha × ${dias} dias antes dela`} ${tipTexto(ano
         ? `Compara a campanha com o mesmo intervalo do calendário doze meses antes. Tira do
@@ -4492,10 +4491,9 @@ function blocoAntesDurante(s, c){
         : `Compara a campanha com um período de mesma duração imediatamente antes dela. Tira do
            caminho o crescimento da rede, que em poucas semanas não muda. Não tira a
            sazonalidade.`)}</h4>
-      <div class="cmp-ops" role="group" aria-label="Escolha o período de comparação">
-        ${botao('anterior', `${dias} dias antes`, `Os ${dias} dias imediatamente anteriores à campanha`)}
-        ${botao('ano', `Mesmo período de ${anoNum}`, `O mesmo intervalo do calendário em ${anoNum}`)}
-      </div>
+    <div class="cmp-ops" role="group" aria-label="Escolha o período de comparação">
+      ${botao('anterior', `${dias} dias antes`, `Os ${dias} dias imediatamente anteriores à campanha`)}
+      ${botao('ano', `Mesmo período de ${anoNum}`, `O mesmo intervalo do calendário em ${anoNum}`)}
     </div>
     <div class="cmpv">
       ${grupoComp('Faturamento', pre.faturamento, c.faturamento, vCurto)}
