@@ -961,21 +961,18 @@ tbody tr.sel{background:#F3F8FF}
    Uma grade de cinco colunas: rótulo, valor de antes, a seta, valor da
    campanha e a variação. Os dois valores têm o mesmo peso tipográfico —
    quem decide qual é o importante é a seta, não o negrito. */
-.cmp-janela{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;
-  font-size:13px;color:var(--ink-2)}
-.cmp-janela input[type=date]{height:34px;padding:0 10px;border:1px solid var(--border-strong);
-  border-radius:8px;background:#fff;color:var(--ink);font-size:13px}
-.cmp-janela input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);outline:none}
-.cmp-ate{color:var(--ink-3)}
-.cmp-tag{font-size:11.5px;font-weight:600;color:var(--ink-3);background:#F3F6FA;
-  border-radius:99px;padding:4px 10px}
-.cmp-voltar{font-size:12.5px;font-weight:600;color:var(--primary);padding:4px 8px;border-radius:7px}
-.cmp-voltar:hover{background:var(--primary-soft)}
-.cmp-voltar:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-.cmp-choque{display:flex;gap:8px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;
-  border-radius:9px;background:#FEF6F2;border:1px solid #F6D9CC;font-size:12.5px;
-  line-height:1.5;color:#8A3B18}
-.cmp-choque svg{flex-shrink:0;margin-top:2px;color:var(--danger)}
+/* Título e alternador na mesma linha: a régua escolhida muda o título, então
+   o controle precisa estar ao lado dele para a relação ficar óbvia. */
+.cmp-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  flex-wrap:wrap;margin-bottom:var(--res-item)}
+.cmp-topo .bloco-tit{margin:0}
+.cmp-ops{display:flex;gap:3px;background:#F1F5F9;border-radius:9px;padding:3px;flex-shrink:0}
+.cmp-op{font-size:11.5px;font-weight:600;color:var(--ink-3);padding:6px 11px;
+  border-radius:7px;white-space:nowrap;transition:.12s}
+.cmp-op:hover{color:var(--ink-2)}
+.cmp-op.on{background:#fff;color:var(--primary);box-shadow:0 1px 2px rgba(16,36,64,.08)}
+.cmp-op:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.cmp-op{transition:none}}
 /* Três grupos de duas colunas. A altura do gráfico é fixa para o bloco não
    pular quando os números mudam; as colunas crescem de baixo para cima. */
 .cmpv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}
@@ -1817,7 +1814,7 @@ function estadoInicial(){
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
     motorExplica:null,      // bloco com a explicação aberta
     dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
-    preIni:null,            // início da janela de comparação; null = colada na campanha
+    preModo:'anterior',     // régua do comparativo: 'anterior' ou 'ano'
     // 'rfv' não é por tela: a tabela de perfil aparece na Visão geral e no DNA,
     // e quem prefere ler em cartão prefere nas duas.
     gView:{faixas:'grafico', dnas:'grafico', dnaPerfil:'grafico', dnaFaixas:'grafico', rfv:'tabela'},
@@ -4418,12 +4415,11 @@ function janelaPre(c, iniEscolhido){
 const dadosPre = (s, c, j) =>
   periodoNormal(s, c, c.id + '|pre|' + j.ini.toISOString().slice(0,10), 1);
 
-/* A armadilha do comparador: se a janela escolhida pega outra campanha do
-   mesmo público, a comparação vira campanha contra campanha e o ganho
-   desaparece sem que ninguém entenda por quê. */
-const campanhasNaJanela = (s, c, j) => (s.campanhas||[])
-  .filter(x => x.id !== c.id && x.compras > 0 &&
-    brDate(x.ini) <= j.fim && brDate(x.fim) >= j.ini);
+/* campanhasNaJanela saiu junto com o date picker: ela existia para avisar
+   que a janela escolhida pegava outra campanha do mesmo público, e esse
+   risco só existia porque a data era livre. Com as duas réguas fixas, a
+   janela anterior é sempre a colada no início — se houver campanha ali, o
+   problema é de calendário de campanha, não de escolha do leitor. */
 
 /* Colunas verticais, os dois estados lado a lado.
 
@@ -4458,41 +4454,65 @@ function grupoComp(rot, antes, agora, fmt){
   </div>`;
 }
 
+/* DUAS RÉGUAS, UM BOTÃO. O date picker saiu: escolher qualquer data de
+   início dava liberdade que ninguém usava e abria a porta para a janela cair
+   em cima de outra campanha do mesmo público — o alerta que existia aqui era
+   um remendo para esse risco.
+
+   Ficam as duas comparações que significam alguma coisa, e cada uma tira do
+   caminho uma explicação alternativa diferente:
+
+   · PERÍODO ANTERIOR tira o crescimento da rede, que em poucas semanas não
+     muda. Não tira a sazonalidade.
+   · ANO ANTERIOR tira a sazonalidade — agosto contra agosto. Não tira o
+     crescimento de doze meses.
+
+   Nenhuma das duas mede o que a campanha CAUSOU; para isso faltaria grupo de
+   controle. Elas só eliminam suspeitas, e por isso vale poder trocar. */
 function blocoAntesDurante(s, c){
   if(!c.compras) return '';
-  const j   = janelaPre(c, S.preIni);
-  const pre = dadosPre(s, c, j);
-  const iso = d => d.toISOString().slice(0,10);
-  const br  = d => d.toLocaleDateString('pt-BR');
-  const choque = campanhasNaJanela(s, c, j);
-  const padrao = !S.preIni;
+  const ano   = S.preModo === 'ano';
+  const dias  = diasCampanha(c);
+  const anoNum = brDate(c.ini).getFullYear() - 1;
+  const pre   = ano ? mesmoPeriodoAnoAnterior(s, c) : dadosPre(s, c, janelaPre(c, null));
+  const rotAntes = ano ? anoNum : 'Antes';
+
+  const botao = (id, rot, titulo) => `<button class="cmp-op${S.preModo===id||(!S.preModo&&id==='anterior')?' on':''}"
+    data-act="preModo" data-v="${id}" aria-pressed="${S.preModo===id||(!S.preModo&&id==='anterior')}"
+    title="${esc(titulo)}">${rot}</button>`;
 
   return `<div class="bloco">
-    <h4 class="bloco-tit">${j.dias} dias de campanha × ${j.dias} dias antes dela ${tipTexto('Compara a campanha com um período de mesma duração antes dela. Tira do caminho o crescimento da rede, que em poucas semanas não muda. Não tira a sazonalidade — para isso, a comparação com o ano passado está nos números do topo.')}</h4>
-    <div class="cmp-janela">
-      <label for="pre-ini">Comparar com os ${j.dias} dias a partir de</label>
-      <input id="pre-ini" type="date" value="${iso(j.ini)}" max="${iso(addDias(brDate(c.ini), -j.dias))}"
-        data-act="preIni" data-k="pre-ini">
-      <span class="cmp-ate">até ${br(j.fim)}</span>
-      ${padrao ? '<span class="cmp-tag">período colado à campanha</span>'
-               : '<button class="cmp-voltar" data-act="preIni" data-v="">Voltar ao padrão</button>'}
+    <div class="cmp-topo">
+      <h4 class="bloco-tit">${ano
+        ? `${dias} dias de campanha × mesmo período de ${anoNum}`
+        : `${dias} dias de campanha × ${dias} dias antes dela`} ${tipTexto(ano
+        ? `Compara a campanha com o mesmo intervalo do calendário doze meses antes. Tira do
+           caminho a sazonalidade — agosto vende diferente de dezembro. Não tira o crescimento
+           da rede em doze meses.`
+        : `Compara a campanha com um período de mesma duração imediatamente antes dela. Tira do
+           caminho o crescimento da rede, que em poucas semanas não muda. Não tira a
+           sazonalidade.`)}</h4>
+      <div class="cmp-ops" role="group" aria-label="Escolha o período de comparação">
+        ${botao('anterior', `${dias} dias antes`, `Os ${dias} dias imediatamente anteriores à campanha`)}
+        ${botao('ano', `Mesmo período de ${anoNum}`, `O mesmo intervalo do calendário em ${anoNum}`)}
+      </div>
     </div>
-    ${choque.length ? `<p class="cmp-choque">${I.alert} Esta janela pega a campanha
-      de ${esc(fmtBr(choque[0].ini.split('/').reverse().join('-')) || choque[0].ini)} deste mesmo público.
-      A comparação vira campanha contra campanha e o ganho desaparece. Escolha outra data.</p>` : ''}
     <div class="cmpv">
       ${grupoComp('Faturamento', pre.faturamento, c.faturamento, vCurto)}
       ${grupoComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
       ${grupoComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
     </div>
     <div class="cmpv-legenda">
-      <span><i class="cmpv-pt antes"></i>Antes</span>
+      <span><i class="cmpv-pt antes"></i>${rotAntes}</span>
       <span><i class="cmpv-pt agora"></i>Na campanha</span>
     </div>
-    <p class="bloco-nota">A duração dos dois períodos é sempre a mesma — ${j.dias} dias contra
-    ${j.dias} dias. Comparar janelas de tamanhos diferentes não diz nada, então só a data de
-    início é escolhida. <b>As colunas só se comparam dentro de cada grupo</b>: reais, clientes e
-    compras não cabem na mesma escala.</p>
+    <p class="bloco-nota">${ano
+      ? `São os mesmos dias do calendário, ${dias} contra ${dias}, um ano antes — quando não havia
+         campanha e a rede era menor. <b>Isto tira a sazonalidade do caminho, não o crescimento.</b>`
+      : `São ${dias} dias contra ${dias} dias, colados no início da campanha. <b>Isto tira o
+         crescimento do caminho, não a sazonalidade</b>: se a campanha caiu numa alta natural do
+         ano, o ganho aparece inflado.`} As colunas só se comparam dentro de cada grupo: reais,
+    clientes e compras não cabem na mesma escala.</p>
   </div>`;
 }
 
@@ -5933,12 +5953,10 @@ function handle(act, v, el, isInput){
       toast('Copie o filtro do card na criação da segmentação: “'+v+'”.');
       log('sugestoes-campanha', v); window.scrollTo(0,0); render(); return;
 
-    case 'preIni': {
-      // '' volta ao padrão: a janela cola de novo no início da campanha
-      const v2 = (el && el.value) || v;
-      S.preIni = v2 ? v2.split('-').reverse().join('/') : null;
-      log('comparativo-periodo', S.preIni || 'padrão');
-      render(); return; }
+    case 'preModo':
+      S.preModo = v;
+      log('comparativo-regua', v);
+      render(); return;
 
     case 'dnaAba':
       S.dnaAba = v; log('dna-aba', v); window.scrollTo(0,0); render(); return;
@@ -6131,9 +6149,8 @@ function handle(act, v, el, isInput){
       log('campanhas', S.campAberta?'abriu '+v:'fechou'); render(); return;
 
     case 'verResultados': {
-      // cada campanha tem a sua duração, então a janela de comparação
-      // recomeça no padrão a cada uma que se abre
-      S.preIni = null;
+      // a régua do comparativo volta ao padrão a cada campanha aberta
+      S.preModo = 'anterior';
       const [sid,cid] = v.split('|');
       S.resSeg = sid; S.resCamp = cid; S.screen = 'resultados'; S.menuSeg = null;
       const sg = S.segmentacoes.find(x=>x.id===sid);
