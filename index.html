@@ -1373,179 +1373,48 @@ tbody tr.sel{background:#F3F8FF}
    colunas do comparativo, para os dois gráficos lado a lado não parecerem
    de produtos diferentes. */
 /* As faixas encostam para formar uma silhueta contínua. O texto mora dentro
-   porque a largura deixou de ser medida — foi a troca que a decisão permitiu. */
+   porque a largura deixou de ser medida — foi a troca que a decisão permitiu.
+
+   A FORMA VIVE NUM PSEUDO-ELEMENTO, não no próprio bloco. clip-path recorta
+   todos os descendentes, inclusive os posicionados de forma absoluta: com o
+   recorte na faixa, a bolha do tooltip ficava presa dentro do trapézio e
+   aparecia como uma tarja cortada. Com o trapézio no ::before, o conteúdo e
+   a bolha ficam livres. */
 .funil-camp{display:flex;flex-direction:column;margin:4px 0 2px}
 .fun-faixa{position:relative;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:1px;padding:16px 12px;text-align:center;min-width:0}
+.fun-faixa::before{content:'';position:absolute;inset:0;clip-path:var(--clip);
+  transition:filter .12s ease}
+/* Só o CONTEÚDO sobe acima da forma. Antes isto era ".fun-faixa>*", que
+   pegava a bolha junto e trocava o position:absolute dela por relative — o
+   tooltip virava texto solto no meio do gráfico. */
+.fun-num,.fun-rot,.fun-sub{position:relative;z-index:1}
 .fun-num{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.01em;
   font-variant-numeric:tabular-nums}
-/* max-width força a quebra antes de o clip-path cortar: dentro de um
-   trapézio, o que sai da forma some — não vaza, some. */
+/* max-width força a quebra antes de a forma cortar: o rótulo mais longo é
+   "Tiveram ticket médio acima da média" e ele precisa caber na parte estreita. */
 .fun-rot{font-size:12.5px;line-height:1.3;max-width:74%}
 .fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{max-width:84%}
 .fun-sub{font-size:11.5px;line-height:1.3;opacity:.72}
-.fun-faixa.d1{background:var(--g-ref)}
+.fun-faixa.d1::before{background:var(--g-ref)}
 .fun-faixa.d1 .fun-num{color:var(--ink)}
 .fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{color:var(--ink-2)}
-.fun-faixa.d2{background:var(--g-atual-h)}
+.fun-faixa.d2::before{background:var(--g-atual-h)}
 .fun-faixa.d2 .fun-num,.fun-faixa.d2 .fun-rot{color:#fff}
-.fun-faixa.d3{background:var(--g-sub);padding:13px 12px}
+.fun-faixa.d3{padding:13px 12px}
+.fun-faixa.d3::before{background:var(--g-sub)}
 .fun-faixa.d3 .fun-num{font-size:22px;color:var(--ink)}
 .fun-faixa.d3 .fun-rot{color:var(--ink-2)}
-/* A taxa de passagem entre duas faixas: é ela que carrega a quantidade, já
-   que a largura não carrega mais. */
-.fun-passo{margin:0!important;padding:9px 12px;text-align:center;
-  font-size:12px;color:var(--ink-3)}
-.fun-passo b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
-/* Fecho: as taxas em corpo grande, que a faixa estreita não consegue dizer. */
-.fun-fecho{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
-  margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.fun-fecho div{display:flex;flex-direction:column;gap:1px;min-width:0}
-.fun-fecho span{font-size:11.5px;color:var(--ink-3)}
-.fun-fecho b{font-size:20px;font-weight:700;color:var(--ink);line-height:1.15;
-  font-variant-numeric:tabular-nums}
-.fun-fecho i{font-size:11.5px;font-style:normal;color:var(--ink-4)}
-@media(max-width:720px){.fun-fecho{grid-template-columns:1fr 1fr}}
-/* A última etapa muda de base — mede sobre quem comprou, não sobre o público.
-   A marca é um traço pontilhado antes dela: a silhueta continua, mas o aviso
-   de que a régua trocou fica no caminho do olho. */
-
-
-.retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
-.ret-num b{display:block;font-size:31px;font-weight:700;color:var(--ink);line-height:1.15}
-.ret-num span{display:block;font-size:13px;color:var(--ink-3);margin-top:3px}
-.ret-lado{display:flex;gap:26px;flex-wrap:wrap;padding-left:30px;border-left:1px solid var(--border)}
-.ret-lado span{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
-.ret-lado b{display:block;font-size:17px;font-weight:700;color:var(--ink-2)}
-
-@media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
-@media(max-width:1080px){
-  .herois{grid-template-columns:repeat(2,1fr)}
-  .fun-num{font-size:22px}
-}
-
-.maiswrap{position:relative;z-index:20;flex-shrink:0}
-.mais{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.12s;color:var(--ink-3)}
-.mais:hover{background:#EDF1F6;color:var(--ink)}
-.mais.on{background:#E2E8F0;color:var(--ink)}
-.segmenu{position:absolute;top:calc(100% + 6px);right:0;z-index:30;min-width:196px;background:#fff;
-  border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 12px 32px rgba(15,35,60,.16);padding:6px;overflow:hidden}
-.segmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border-radius:7px;
-  font-size:13px;color:var(--ink-2);text-align:left;transition:.1s}
-.segmenu button svg{flex:0 0 15px;color:var(--ink-4)}
-.segmenu button:hover{background:#F1F5F9;color:var(--ink)}
-.segmenu button:hover svg{color:var(--ink-2)}
-.segmenu button.perigo{color:var(--danger)}
-.segmenu button.perigo svg{color:var(--danger)}
-.segmenu button.perigo:hover{background:var(--danger-soft);color:var(--danger)}
-
-/* pills de canal */
-.canal{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap}
-.canal svg{flex-shrink:0;opacity:.85}
-.ca-email{background:#E6F1FB;color:#0C447C}
-.ca-zap{background:#E1F5EE;color:#085041}
-.ca-tel{background:#EEEDFE;color:#3C3489}
-.ca-sms{background:#FAEEDA;color:#854F0B}
-
-/* modal de campanha */
-.mc-secao{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink)}
-.mc-datas{display:flex;gap:16px;flex-wrap:wrap}
-.mc-datas .field{flex:1;min-width:180px;margin-bottom:0}
-.mc-canais{display:flex;gap:9px;flex-wrap:wrap}
-.mc-canal{border:1px solid var(--border-strong);background:#fff;border-radius:9px;padding:9px 11px;transition:.12s}
-.mc-canal:hover{border-color:var(--primary)}
-.mc-canal.on{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}
-.mc-canal:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-
-@media(max-width:980px){
-  .sc-topo{flex-direction:column;align-items:stretch;gap:18px}
-  .sc-kpis{flex-wrap:wrap}
-  .kbox{flex:1;min-width:140px}
-  .maiswrap{position:absolute;top:18px;right:18px}
-  .segcard{position:relative}
-}
-@media(max-width:900px){
-  .cpc{grid-template-columns:1fr 1fr;gap:12px 16px}
-  .cpc-datas{grid-column:1 / -1}
-  .btn-res{grid-column:2;justify-self:end}
-}
-@media(max-width:520px){
-  .cpc{grid-template-columns:1fr auto}
-}
-
-/* ---------- Modal ---------- */
-.overlay{position:fixed;inset:0;background:rgba(15,40,70,.42);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
-.modal{background:#fff;border-radius:12px;width:100%;max-width:568px;padding:26px 28px;box-shadow:0 18px 50px rgba(15,40,70,.22)}
-.modal h2{margin:0 0 20px;font-size:20px;font-weight:700}
-.modal .field{margin-bottom:16px}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center}
-
-/* ---------- Modal: salvar segmentação ---------- */
-.modal-salvar{max-width:600px;padding:0;display:flex;flex-direction:column;max-height:calc(100vh - 40px)}
-.ms-head{padding:24px 28px 18px;border-bottom:1px solid var(--border)}
-.ms-head h2{margin:0 0 6px;font-size:20px;font-weight:700}
-.ms-head p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.5}
-.ms-corpo{padding:20px 28px 4px;overflow-y:auto;flex:1}
-
-/* resumo: confirmação rápida, não uma etapa nova — por isso caixa chapada e fonte pequena */
-.rm{border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;background:#fff}
-.rm-head{display:flex;align-items:center;gap:8px;padding:11px 16px;background:#F5F8FC;
-  border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--ink-2);
-  text-transform:uppercase;letter-spacing:.05em}
-.rm-head svg{color:var(--ink-4)}
-.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.rm-item{display:flex;flex-direction:column;gap:2px;padding:11px 16px;min-width:0;
-  border-bottom:1px solid var(--border)}
-.rm-grid .rm-item:nth-child(odd){border-right:1px solid var(--border)}
-.rm-grid .rm-item:nth-last-child(-n+2){border-bottom:0}
-.rm-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--ink-4)}
-.rm-v{font-size:13.5px;color:var(--ink);line-height:1.4;overflow-wrap:anywhere}
-@media(max-width:520px){
-  .rm-grid{grid-template-columns:1fr}
-  .rm-grid .rm-item:nth-child(odd){border-right:0}
-  .rm-grid .rm-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
-  .rm-grid .rm-item:last-child{border-bottom:0}
-}
-
-.ms-form .field{margin-bottom:20px}
-.ms-form .field.com-erro{margin-bottom:18px}
-.ms-form label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
-.ajuda{margin:6px 0 0;font-size:12px;color:var(--ink-4);line-height:1.5}
-.ajuda-ate{margin-top:-12px;margin-bottom:20px}
-/* erro colado no campo, não só no topo do modal */
-.erro-campo{display:flex;align-items:flex-start;gap:6px;margin:7px 0 0;font-size:12.5px;
-  color:var(--danger);line-height:1.45;font-weight:500}
-.erro-campo svg{flex:0 0 14px;margin-top:1px}
-.ok-data{display:flex;align-items:center;gap:7px;margin:8px 0 0;font-size:12.5px;color:#0E7A48}
-.ok-data b{font-weight:600}
-.ms-erro{margin:0 0 20px}
-.ms-acoes{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  padding:16px 28px;border-top:1px solid var(--border);background:#FBFCFE;border-radius:0 0 12px 12px}
-.ms-primarias{display:flex;gap:10px;flex-wrap:wrap}
-.ms-acoes .btn:disabled{opacity:.5;cursor:not-allowed}
-.spin{animation:girar .9s linear infinite}
-@keyframes girar{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
-@media(max-width:620px){
-  .ms-acoes{flex-direction:column-reverse;align-items:stretch}
-  .ms-primarias{flex-direction:column}
-  .ms-acoes .btn{width:100%;justify-content:center}
-}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:9px;font-size:13.5px;z-index:80;box-shadow:0 8px 24px rgba(15,40,70,.28)}
-
-/* ---------- Date range picker ---------- */
-.okmsg{display:inline-flex;gap:8px;align-items:center;margin-top:14px;background:var(--green-soft);color:#0E7A48;border-radius:7px;padding:9px 13px;font-size:12.5px}
-
-/* ---------- Tooltip ---------- */
-.ttip{position:relative;display:inline-flex;color:var(--ink-4);cursor:help}
-.ttip:hover{color:var(--primary)}
+/* ---------- Tooltip ----------
+   Bloco base, usado pela tela inteira. Já foi apagado por engano numa fatia
+   de CSS vizinha; sem ele toda bolha da aplicação vira texto solto no meio
+   do conteúdo, e nenhum teste de HTML pega isso porque o markup continua
+   correto. */
 .bubble{
   position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
   background:var(--ink);color:#fff;padding:9px 12px;border-radius:7px;font-size:12px;line-height:1.45;
   width:246px;opacity:0;pointer-events:none;transition:.12s;z-index:40;font-weight:400;text-align:left;
 }
-.ttip:hover .bubble,
-.fun-faixa.com-tip:hover .bubble{opacity:1}
 
 /* Tooltip em lista: título centralizado, pares nas bordas opostas, rodapé
    com o denominador. A seta embaixo amarra a bolha ao que a disparou —
@@ -1554,6 +1423,10 @@ tbody tr.sel{background:#F3F8FF}
   box-shadow:0 10px 28px rgba(9,24,44,.26)}
 .bubble-lista::after{content:'';position:absolute;top:100%;left:50%;
   transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--ink)}
+.bl-topo{display:block;text-align:center;font-size:12.5px;
+  color:rgba(255,255,255,.88);padding-bottom:9px;margin-bottom:9px;
+  border-bottom:1px solid rgba(255,255,255,.16)}
+.bl-topo b{font-weight:700;color:#fff}
 .bl-tit{display:block;text-align:center;font-size:13px;font-weight:700;
   margin-bottom:10px;letter-spacing:.01em}
 .bl-lin{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
@@ -1563,15 +1436,48 @@ tbody tr.sel{background:#F3F8FF}
 .bl-lin>i{font-style:normal;font-weight:600;flex-shrink:0;font-variant-numeric:tabular-nums}
 .bl-pe{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14);
   font-size:11px;color:rgba(255,255,255,.6)}
+.ttip:hover .bubble,
+.fun-faixa.com-tip:hover .bubble{opacity:1}
 
-/* A etapa inteira vira o alvo do tooltip — rótulo, número e apoio. Antes era
-   a barra; com a faixa afunilada para 8% da largura, mirar nela seria mirar
-   num fio de 40px. */
 .fun-faixa.com-tip{cursor:help}
-.fun-faixa.com-tip .bubble{bottom:calc(100% - 10px)}
-.fun-faixa.com-tip:hover{filter:brightness(1.06)}
-.fun-faixa.com-tip{transition:filter .12s ease}
-@media(prefers-reduced-motion:reduce){.fun-faixa.com-tip{transition:none}}
+.fun-faixa.com-tip .bubble{bottom:calc(100% - 12px);z-index:50}
+.fun-faixa.com-tip:hover::before,.fun-faixa.com-tip:focus-visible::before{filter:brightness(1.07)}
+.fun-faixa.com-tip:focus-visible{outline:none}
+.fun-faixa.com-tip:focus-visible::before{outline:2px solid var(--primary);outline-offset:-3px}
+.fun-faixa.com-tip:focus-visible .bubble{opacity:1}
+/* A bolha da primeira faixa aponta para baixo: ela é o topo do bloco e não
+   há espaço acima dela dentro do cartão. */
+.fun-faixa.d1 .bubble{top:calc(100% - 10px);bottom:auto}
+
+/* Fecho: as três taxas em corpo grande. É aqui que a quantidade vive, já que
+   a forma deixou de medir. */
+.fun-fecho{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.fun-fecho div{display:flex;flex-direction:column;gap:1px;min-width:0;
+  padding:7px 10px;border-radius:8px;transition:background .12s ease}
+.fun-fecho div:first-child{margin-left:-10px}
+.fun-fecho span{font-size:11.5px;color:var(--ink-3)}
+.fun-fecho b{font-size:20px;font-weight:700;color:var(--ink);line-height:1.2;
+  font-variant-numeric:tabular-nums;transition:color .12s ease}
+.fun-fecho i{font-size:11.5px;font-style:normal;color:var(--ink-4)}
+@media(max-width:720px){.fun-fecho{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){
+  .fun-fecho div,.fun-fecho b{transition:none}}
+
+/* HOVER NA FAIXA ACENDE O NÚMERO QUE ELA EXPLICA, no rodapé.
+   A conversão é a passagem da primeira para a segunda faixa, então as duas
+   acendem o mesmo número; a terceira acende os dois que falam dela. */
+.funil-camp:has(.fun-faixa.d1:is(:hover,:focus-visible)) + .fun-fecho .ff-conv,
+.funil-camp:has(.fun-faixa.d2:is(:hover,:focus-visible)) + .fun-fecho .ff-conv,
+.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-acima,
+.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-normal{
+  background:#EAF3FE}
+.funil-camp:has(.fun-faixa.d1:is(:hover,:focus-visible)) + .fun-fecho .ff-conv b,
+.funil-camp:has(.fun-faixa.d2:is(:hover,:focus-visible)) + .fun-fecho .ff-conv b,
+.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-acima b,
+.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-normal b{
+  color:var(--primary)}
+@media(prefers-reduced-motion:reduce){.fun-faixa::before{transition:none}}
 
 /* ---------- Painel do facilitador ---------- */
 #fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
@@ -2173,8 +2079,9 @@ function fatias(mix, total, teto){
 
 /* A mesma bolha, presa numa barra do funil em vez de num ícone: a barra é
    um alvo grande e é onde o olho já está. */
-function tipBarra(titulo, linhas, rodape){
+function tipBarra(titulo, linhas, rodape, topo){
   return `<span class="bubble bubble-lista">
+    ${topo ? `<span class="bl-topo">${topo}</span>` : ''}
     <b class="bl-tit">${esc(titulo)}</b>
     ${linhas.map(([r,v]) => `<span class="bl-lin"><span>${esc(r)}</span><i>${esc(v)}</i></span>`).join('')}
     ${rodape ? `<span class="bl-pe">${esc(rodape)}</span>` : ''}
@@ -2182,6 +2089,9 @@ function tipBarra(titulo, linhas, rodape){
 }
 
 const tipTexto = t => `<span class="ttip">${I.info}<span class="bubble">${esc(String(t).replace(/\s+/g,' ').trim())}</span></span>`;
+/* Bolha sem o ícone de info: para quando o GATILHO é o próprio elemento —
+   uma faixa do funil, por exemplo — e um ícone dentro dele seria ruído. */
+const bolhaTexto = t => `<span class="bubble">${esc(String(t).replace(/\s+/g,' ').trim())}</span>`;
 
 /* =========================================================================
    4. MOTOR DE CÁLCULO
@@ -4838,10 +4748,15 @@ function funilCampanha(s, c){
      vira "Outras categorias", e o arredondamento usa maior resto, que
      devolve a sobra de décimo para a maior fatia em vez de deixar
      99,9%. */
+  /* As taxas que saíram dos vãos voltam aqui: ficam a um passar de mouse da
+     faixa a que pertencem, sem ocupar espaço permanente nem repetir o que o
+     fecho já diz em corpo grande. */
   const tipCompraram = (c.mix || []).length
     ? tipBarra('Categorias', fatias(c.mix, c.faturamento, 5),
-               'do faturamento desta campanha')
-    : '';
+               'do faturamento desta campanha',
+               `<b>${nf1.format(pct(c.clientesComp))}%</b> dos ${nf.format(total)} que receberam`)
+    : bolhaTexto(`${nf.format(c.clientesComp)} compraram — ${nf1.format(pct(c.clientesComp))}% dos
+        ${nf.format(total)} que receberam a campanha.`);
   const base = s.pctAcimaHist || 0;
   const dif  = pctAcima - base;
 
@@ -4858,10 +4773,14 @@ function funilCampanha(s, c){
      para dizer "isto vem abaixo daquilo".
 
      A contrapartida é explícita: como a forma não mede nada, quem mede é o
-     texto. O número mora dentro da faixa, a taxa de passagem aparece entre
-     uma e outra, e o fecho repete as três taxas em corpo grande. Nenhum
-     número depende da largura para ser lido — que era exatamente o problema
-     da versão proporcional. */
+     texto. O número mora dentro da faixa e as três taxas ficam no fecho, em
+     corpo grande. Nenhum número depende da largura para ser lido — que era
+     exatamente o problema da versão proporcional.
+
+     As faixas encostam sem nada entre elas. As taxas de passagem que ficavam
+     nos vãos ("8,2% compraram", "49% de quem comprou") diziam exatamente o
+     que o fecho já diz, e o vão quebrava a silhueta no meio — que é o único
+     trabalho que a forma ainda tem. */
   const pctAt = pct(c.clientesComp);
   /* As larguras têm piso pelo TEXTO, não pelo dado: o rótulo mais longo é
      "Tiveram ticket médio acima da média" e ele precisa caber na parte mais
@@ -4870,30 +4789,31 @@ function funilCampanha(s, c){
   const faixa = (i, cls, rot, n, sub, bolha) => {
     const wt = W[i], wb = W[i+1] !== undefined ? W[i+1] : W[i] - 8;
     const c1 = (100-wt)/2, c2 = (100+wt)/2, c3 = (100+wb)/2, c4 = (100-wb)/2;
-    return `<div class="fun-faixa ${cls}${bolha?' com-tip':''}"
-      style="clip-path:polygon(${c1}% 0,${c2}% 0,${c3}% 100%,${c4}% 100%)">
+    return `<div class="fun-faixa ${cls}${bolha?' com-tip':''}"${
+      bolha ? ` tabindex="0" role="button" aria-label="${esc(rot)}: ${nf.format(n)}"` : ''}
+      style="--clip:polygon(${c1}% 0,${c2}% 0,${c3}% 100%,${c4}% 100%)">
       <b class="fun-num">${nf.format(n)}</b>
       <span class="fun-rot">${rot}</span>
       ${sub ? `<span class="fun-sub">${sub}</span>` : ''}
       ${bolha||''}
     </div>`;
   };
-  const passo = txt => `<p class="fun-passo">${txt}</p>`;
-
   return `<div class="bloco">
     <h4 class="bloco-tit">Funil de impactados</h4>
     <div class="funil-camp">
-      ${faixa(0, 'd1', 'Público-alvo', total, 'receberam a campanha')}
-      ${passo(`<b>${nf1.format(pctAt)}%</b> compraram`)}
+      ${faixa(0, 'd1', 'Público-alvo', total, 'receberam a campanha',
+        bolhaTexto(`Todo o público da segmentação recebeu a campanha. É a base de onde saem as
+          taxas do rodapé.`))}
       ${faixa(1, 'd2', 'Compraram', c.clientesComp, '', tipCompraram)}
-      ${passo(`<b>${pctAcima}%</b> de quem comprou · num período normal são ${base}%`)}
-      ${faixa(2, 'd3', 'Tiveram ticket médio acima da média', acima, '')}
+      ${faixa(2, 'd3', 'Tiveram ticket médio acima da média', acima, '',
+        bolhaTexto(`${nf.format(acima)} gastaram mais de ${brl(s.ticketHist||0)} por compra —
+          ${pctAcima}% de quem comprou. Num período normal deste mesmo público são ${base}%.`))}
     </div>
 
     <div class="fun-fecho">
-      <div><span>Conversão</span><b>${nf1.format(pctAt)}%</b><i>do público-alvo</i></div>
-      <div><span>Ticket acima da média</span><b>${pctAcima}%</b><i>de quem comprou</i></div>
-      <div><span>Num período normal</span><b>${base}%</b><i>deste mesmo público</i></div>
+      <div class="ff-conv"><span>Conversão</span><b>${nf1.format(pctAt)}%</b><i>do público-alvo</i></div>
+      <div class="ff-acima"><span>Ticket acima da média</span><b>${pctAcima}%</b><i>de quem comprou</i></div>
+      <div class="ff-normal"><span>Num período normal</span><b>${base}%</b><i>deste mesmo público</i></div>
     </div>
 
     <p class="bloco-nota">A última etapa muda de base: ela mede sobre quem comprou, não sobre o
