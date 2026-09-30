@@ -1127,56 +1127,77 @@ tbody tr.sel{background:#F3F8FF}
 .rv-wrap::-webkit-scrollbar-track{background:transparent}
 
 /* separate em vez de collapse: com collapse a borda da coluna presa some. */
-/* table-layout FIXO. É o que garante que "Atual" do Fiel caia sob "Atual" do
-   Novos: a largura vem do colgroup, não do conteúdo. Sem isso R$ 3.906,00
-   alargaria a coluna do Fiel e desalinharia a grade inteira. */
-.rvtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
-  font-size:12.5px;min-width:1540px}
-.rv-c-ind{width:196px}
-.rv-c-ant{width:68px}
-.rv-c-at{width:84px}
-.rv-c-var{width:72px}
-.rvtab th{font-weight:600;color:var(--ink-3);font-size:11.5px;padding:0;
-  border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+/* table-layout FIXO: a largura vem do colgroup, não do conteúdo. É o que
+   garante que "Atual" do Fiel caia sob "Atual" do Novos.
 
-/* A coluna do indicador fica presa: com 1.540px de tabela, rolar até o
-   Abandonador sem ela é perder de vista qual linha se está lendo. */
-.rv-canto,.rv-ind{position:sticky;left:0;z-index:2;background:#fff}
-.rv-canto{text-align:left;background:var(--rv-cab);color:var(--ink-2);
-  font-size:12.5px;font-weight:600;padding:13px 14px;vertical-align:top;
-  border-right:1px solid var(--border)}
+   AS LARGURAS SÃO MEDIDAS DO CONTEÚDO, não chutadas. O maior valor de cada
+   coluna é "R$ 3.560" (8 caracteres, ~46px a 11,5px) — antes a coluna tinha
+   68px com 20px de respiro, sobravam 48px e o número saía cortado. Agora
+   cada coluna tem folga sobre o pior caso real, medido nos nove conjuntos. */
+.rvtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
+  font-size:12.5px;min-width:1252px}
+.rv-c-ind{width:160px}
+.rv-c-ant{width:58px}
+.rv-c-at{width:68px}
+.rv-c-var{width:56px}
+
+/* ESPECIFICIDADE: ".rvtab th" (0-0-1-1) vencia ".rv-canto" e ".rv-ind"
+   (0-0-1-0), e a coluna do indicador ficava alinhada à direita, colada nos
+   números. Os seletores abaixo carregam o elemento junto para empatar o peso
+   e vencer pela ordem. */
+.rvtab th{font-weight:600;color:var(--ink-3);font-size:11px;padding:0;
+  border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+.rvtab th.rv-canto,.rvtab th.rv-ind{text-align:left;white-space:normal}
+
+/* A coluna do indicador fica presa: rolando até o Abandonador sem ela, o
+   associado perde de vista qual linha está lendo. */
+.rvtab th.rv-canto,.rvtab th.rv-ind{position:sticky;left:0;z-index:2;background:#fff}
+.rvtab th.rv-canto{background:var(--rv-cab);color:var(--ink-2);font-size:12px;
+  padding:14px 14px 10px;vertical-align:bottom}
 .rv-canto-b{padding:0;border-bottom:1px solid var(--border)}
 .rvtab thead tr:first-child th{border-bottom:0}
+/* A borda da coluna presa é sombra, não border: border em célula sticky
+   pisca na rolagem em alguns navegadores. */
+.rvtab th.rv-canto,.rvtab th.rv-ind{box-shadow:1px 0 0 var(--border)}
 
-/* Cabeçalho de perfil: só o nome com o ponto da cor. */
-.rv-pcab{background:var(--rv-cab);padding:12px 10px 10px;border-bottom:0}
+/* Cabeçalho de perfil: o nome respira acima da trinca que ele cobre. */
+.rv-pcab{background:var(--rv-cab);padding:14px 8px 9px;border-bottom:0}
 .rv-pnome{display:flex;align-items:center;justify-content:center;gap:7px;
-  font-size:13px;font-weight:700;color:var(--ink)}
-.rvtab thead tr:nth-child(2) th{padding:7px 10px 9px;font-size:11px;
-  background:var(--rv-cab)}
-.rvtab .sep{border-left:1px solid var(--border)}
+  font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap}
+.rvtab thead tr:nth-child(2) th{padding:0 8px 8px;font-size:10.5px;
+  font-weight:500;color:var(--ink-4);background:var(--rv-cab)}
 
-/* Linha do indicador: rótulo e unidade, com altura reservada para as cinco
-   linhas fecharem iguais mesmo com unidades de tamanhos diferentes. */
-.rv-ind{text-align:left;padding:11px 14px;border-right:1px solid var(--border);
-  border-bottom:1px solid #F1F5F9}
-.rv-ind-rot{display:block;font-size:13px;font-weight:700;color:var(--ink)}
-.rv-ind-un{display:block;min-height:1.5em;font-size:11px;color:var(--ink-4);line-height:1.35}
-.rvtab td{padding:13px 10px;text-align:right;border-bottom:1px solid #F1F5F9;
-  color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
-.rvtab tbody tr:last-child td,.rvtab tbody tr:last-child .rv-ind{border-bottom:0}
+/* A régua entre perfis é o que separa uma trinca da outra. Mais forte que a
+   linha entre linhas, porque é a divisão que importa para comparar. */
+.rvtab .sep{border-left:1px solid #D7E2EE}
+
+/* Linha do indicador: rótulo e unidade, altura reservada para as cinco
+   fecharem iguais mesmo com unidades de comprimentos diferentes. */
+.rvtab th.rv-ind{padding:12px 14px;border-bottom:1px solid #EDF2F7}
+.rv-ind-rot{display:block;font-size:13px;font-weight:700;color:var(--ink);
+  line-height:1.3}
+.rv-ind-un{display:block;min-height:2.6em;margin-top:2px;font-size:10.5px;
+  color:var(--ink-4);line-height:1.3}
+
+/* HIERARQUIA DENTRO DA TRINCA. Comparar de um perfil para outro é percorrer
+   a linha lendo só "Atual". Então Atual é o único em corpo cheio, Antes
+   recua para cinza claro e a variação fica menor que os dois. Sem isso os
+   três pesam igual e a linha vira dezoito números sem ordem de leitura. */
+.rvtab td{padding:12px 8px;text-align:right;border-bottom:1px solid #EDF2F7;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.rv-num{color:var(--ink-4);font-size:11px}
+.rv-num.forte{color:var(--ink);font-weight:700;font-size:13px}
+.rvtab tbody tr:last-child td,.rvtab tbody tr:last-child th.rv-ind{border-bottom:0}
 /* Realce da linha inteira no hover: com dezoito colunas, é o que impede o
    olho de pular de linha no meio da comparação. */
-.rvtab tbody tr:hover td{background:#FAFCFE}
-.rvtab tbody tr:hover .rv-ind{background:#F5F9FE}
-.rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.rvtab tbody tr:hover td{background:#F7FAFD}
+.rvtab tbody tr:hover th.rv-ind{background:#F7FAFD}
+.rv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .p-novos{background:#7C89A0}
-.rv-num.forte{color:var(--ink);font-weight:700}
-.rv-sin{padding-left:4px!important}
-.rv-var{font-weight:700;font-size:12px}
-/* Os quatro gatilhos da tabela são botões e precisam de foco visível: quem
-   navega por teclado atravessa dezoito colunas aqui. outline-offset negativo
-   porque o botão preenche a célula e um anel externo seria cortado. */
+/* respiro entre o valor e a seta: sem ele "R$ 1.508" e "↓ 57,6%" encostam e
+   viram uma string só */
+.rv-sin{padding-left:6px!important}
+.rv-var{font-weight:700;font-size:11.5px}
 .rv-var.bom{color:var(--green)}
 .rv-var.ruim{color:var(--danger)}
 .rv-nulo{color:var(--ink-4)}
@@ -1351,25 +1372,31 @@ tbody tr.sel{background:#F3F8FF}
 /* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
    colunas do comparativo, para os dois gráficos lado a lado não parecerem
    de produtos diferentes. */
-/* Rótulo à esquerda, faixa à direita. As faixas encostam (gap 0 nas linhas)
-   para formar uma silhueta contínua; o rótulo fica fora porque uma faixa de
-   8% da largura não comporta texto — e é para não precisar mentir na largura
-   que ele saiu de dentro. */
-.funil-camp{display:flex;flex-direction:column;margin:2px 0 4px}
-.fun-lin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
-  align-items:center;gap:16px;position:relative}
-.fun-txt{display:flex;flex-direction:column;gap:2px;padding:9px 0}
-.fun-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.fun-rot{font-size:12.5px;color:var(--ink-2);line-height:1.3}
-.fun-num{font-size:17px;font-weight:700;color:var(--ink);line-height:1.15;
+/* As faixas encostam para formar uma silhueta contínua. O texto mora dentro
+   porque a largura deixou de ser medida — foi a troca que a decisão permitiu. */
+.funil-camp{display:flex;flex-direction:column;margin:4px 0 2px}
+.fun-faixa{position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:1px;padding:16px 12px;text-align:center;min-width:0}
+.fun-num{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.01em;
   font-variant-numeric:tabular-nums}
-.fun-ap{font-size:11.5px;color:var(--ink-3);line-height:1.35}
-.fun-faixa{height:100%;min-height:58px;align-self:stretch}
-.fun-lin.d1 .fun-faixa{background:var(--g-ref)}
-.fun-lin.d2 .fun-faixa{background:var(--g-atual-h)}
-.fun-lin.d3 .fun-faixa{background:var(--g-sub)}
-.fun-lin.d3 .fun-rot{color:var(--ink-3)}
-.fun-lin.d3 .fun-num{font-size:15px;font-weight:600}
+/* max-width força a quebra antes de o clip-path cortar: dentro de um
+   trapézio, o que sai da forma some — não vaza, some. */
+.fun-rot{font-size:12.5px;line-height:1.3;max-width:74%}
+.fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{max-width:84%}
+.fun-sub{font-size:11.5px;line-height:1.3;opacity:.72}
+.fun-faixa.d1{background:var(--g-ref)}
+.fun-faixa.d1 .fun-num{color:var(--ink)}
+.fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{color:var(--ink-2)}
+.fun-faixa.d2{background:var(--g-atual-h)}
+.fun-faixa.d2 .fun-num,.fun-faixa.d2 .fun-rot{color:#fff}
+.fun-faixa.d3{background:var(--g-sub);padding:13px 12px}
+.fun-faixa.d3 .fun-num{font-size:22px;color:var(--ink)}
+.fun-faixa.d3 .fun-rot{color:var(--ink-2)}
+/* A taxa de passagem entre duas faixas: é ela que carrega a quantidade, já
+   que a largura não carrega mais. */
+.fun-passo{margin:0!important;padding:9px 12px;text-align:center;
+  font-size:12px;color:var(--ink-3)}
+.fun-passo b{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
 /* Fecho: as taxas em corpo grande, que a faixa estreita não consegue dizer. */
 .fun-fecho{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
   margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
@@ -1382,11 +1409,6 @@ tbody tr.sel{background:#F3F8FF}
 /* A última etapa muda de base — mede sobre quem comprou, não sobre o público.
    A marca é um traço pontilhado antes dela: a silhueta continua, mas o aviso
    de que a régua trocou fica no caminho do olho. */
-.fun-lin.ramo .fun-txt{position:relative;margin-top:6px;padding-top:8px}
-.fun-lin.ramo .fun-txt::before{content:'';position:absolute;left:0;right:0;top:0;
-  border-top:1px dashed var(--border)}
-/* o traço para na coluna de texto de propósito: se atravessasse o desenho,
-   cortaria a silhueta em duas e o funil deixaria de ser um funil */
 
 
 .retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
@@ -1399,10 +1421,7 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:1080px){
   .herois{grid-template-columns:repeat(2,1fr)}
-  /* Em tela estreita o rótulo precisa de mais espaço que o desenho: uma
-     faixa de 8% já é fina, e apertá-la mais não tira legibilidade de nada
-     que o texto não diga melhor. */
-  .fun-lin{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+  .fun-num{font-size:22px}
 }
 
 .maiswrap{position:relative;z-index:20;flex-shrink:0}
@@ -1526,7 +1545,7 @@ tbody tr.sel{background:#F3F8FF}
   width:246px;opacity:0;pointer-events:none;transition:.12s;z-index:40;font-weight:400;text-align:left;
 }
 .ttip:hover .bubble,
-.fun-lin.com-tip:hover .bubble{opacity:1}
+.fun-faixa.com-tip:hover .bubble{opacity:1}
 
 /* Tooltip em lista: título centralizado, pares nas bordas opostas, rodapé
    com o denominador. A seta embaixo amarra a bolha ao que a disparou —
@@ -1548,11 +1567,11 @@ tbody tr.sel{background:#F3F8FF}
 /* A etapa inteira vira o alvo do tooltip — rótulo, número e apoio. Antes era
    a barra; com a faixa afunilada para 8% da largura, mirar nela seria mirar
    num fio de 40px. */
-.fun-lin.com-tip{cursor:help}
-.fun-lin.com-tip .bubble{bottom:calc(100% - 4px);left:26%}
-.fun-lin.com-tip:hover .fun-num{color:var(--primary)}
-.fun-lin.com-tip .fun-num{transition:color .12s ease}
-@media(prefers-reduced-motion:reduce){.fun-lin.com-tip .fun-num{transition:none}}
+.fun-faixa.com-tip{cursor:help}
+.fun-faixa.com-tip .bubble{bottom:calc(100% - 10px)}
+.fun-faixa.com-tip:hover{filter:brightness(1.06)}
+.fun-faixa.com-tip{transition:filter .12s ease}
+@media(prefers-reduced-motion:reduce){.fun-faixa.com-tip{transition:none}}
 
 /* ---------- Painel do facilitador ---------- */
 #fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
@@ -2813,13 +2832,18 @@ const PERFIS_RFV = [
 
 /* Os cinco grupos de indicador. `bom` diz para que lado a variação é boa;
    `inverte` lista os perfis em que a regra se inverte. */
+/* Dinheiro sem centavos NESTA tabela. Todos os valores de PERFIS_RFV são
+   reais inteiros, então ",00" é ruído puro — e custa três caracteres em doze
+   colunas, que era metade do motivo de "R$ 3.560,00" aparecer cortado. */
+const brlInt = v => 'R$ ' + nf.format(Math.round(v));
+
 const GRUPOS_RFV = [
   {id:'clientes', rot:'Clientes', un:'quantidade no período', i:1,
    bom:'sobe', inverte:['Abandonador'], fmt:v=>nf.format(v)},
   {id:'ltv', rot:'LTV', un:'R$ por cliente', i:3,
-   bom:'sobe', inverte:[], fmt:v=>brl(v)},
+   bom:'sobe', inverte:[], fmt:v=>brl(v), fmtC:brlInt},
   {id:'ticket', rot:'Ticket médio', un:'R$ por venda', i:5,
-   bom:'sobe', inverte:[], fmt:v=>brl(v)},
+   bom:'sobe', inverte:[], fmt:v=>brl(v), fmtC:brlInt},
   {id:'freq', rot:'Frequência', un:'compras no período', i:7,
    bom:'sobe', inverte:[], fmt:v=>nf.format(v)},
   {id:'rec', rot:'Recência', un:'dias desde a última compra', i:9,
@@ -2830,6 +2854,9 @@ const GRUPOS_RFV = [
    lista e pelo mesmo botão. Antes "Clientes" era o único sem linha de unidade
    (ficava com duas linhas contra três dos outros) e "Fidelidade" era texto
    morto enquanto os cinco ao lado eram botões. */
+// quem não declara fmtC usa o fmt normal: contagem e dias já são curtos
+GRUPOS_RFV.forEach(g => { if(!g.fmtC) g.fmtC = g.fmt; });
+
 const CAB_RFV = [{id:'geral', rot:'Fidelidade', un:'todos os indicadores', span:1}]
   .concat(GRUPOS_RFV.map(g=>({id:g.id, rot:g.rot, un:g.un, span:3})));
 
@@ -3236,15 +3263,15 @@ function cardsRfv(B){
           <span class="rvc-nome"><i class="rv-dot ${p[11]}"></i>${esc(p[0])}</span>
           <span class="rvc-share">${nf1.format(share)}% da base</span>
         </header>
-        <div class="rvc-vol" title="${esc(gCli.rot)}: era ${gCli.fmt(p[1])}, agora ${gCli.fmt(p[2])}">
-          <b>${gCli.fmt(p[2])}</b>
+        <div class="rvc-vol" title="${esc(gCli.rot)}: era ${gCli.fmtC(p[1])}, agora ${gCli.fmtC(p[2])}">
+          <b>${gCli.fmtC(p[2])}</b>
           <span class="rvc-vol-un">clientes</span>
           ${sinalRfv(gCli, p[0], p[1], p[2])}
         </div>
         <dl class="rvc-lista">
           ${resto.map(g=>`<div class="rvc-lin">
-              <dt title="${esc(g.rot)}: era ${g.fmt(p[g.i])}, agora ${g.fmt(p[g.i+1])}">${esc(g.rot)}</dt>
-              <dd><b>${g.fmt(p[g.i+1])}</b>${sinalRfv(g, p[0], p[g.i], p[g.i+1])}</dd>
+              <dt title="${esc(g.rot)}: era ${g.fmtC(p[g.i])}, agora ${g.fmtC(p[g.i+1])}">${esc(g.rot)}</dt>
+              <dd><b>${g.fmtC(p[g.i+1])}</b>${sinalRfv(g, p[0], p[g.i], p[g.i+1])}</dd>
             </div>`).join('')}
         </dl>
       </article>`;
@@ -3288,8 +3315,8 @@ function blocoRfv(base, contexto){
         <span class="rv-ind-un">${esc(g.un)}</span>
       </th>
       ${B.map(x=>
-        `<td class="rv-num sep">${g.fmt(x[g.i])}</td>
-          <td class="rv-num forte">${g.fmt(x[g.i+1])}</td>
+        `<td class="rv-num sep">${g.fmtC(x[g.i])}</td>
+          <td class="rv-num forte">${g.fmtC(x[g.i+1])}</td>
           <td class="rv-sin">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`
       ).join('')}
     </tr>`).join('');
@@ -4823,50 +4850,45 @@ function funilCampanha(s, c){
      usava o público como base e o texto usava quem comprou. Barra que contradiz
      o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
      mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
-  /* FUNIL DE VERDADE: a largura de cada faixa é a proporção real.
+  /* O AFUNILAMENTO É SINALIZAÇÃO, NÃO MEDIDA.
 
-     A referência desenhava 8.420 → 631 → 253 como 100% → 85% → 65%. Os
-     valores são 100% → 7,5% → 3,0%. Um funil cuja largura não codifica o
-     valor ensina o contrário do que o dado diz: o associado olha e conclui
-     que quase todo mundo comprou.
+     Decisão do Vitor, e ela resolve um impasse real. Com 8% de conversão, a
+     largura proporcional fazia a segunda faixa virar um fio de 40px — honesto
+     e ilegível. Agora as três larguras são fixas (100 / 74 / 52) e servem só
+     para dizer "isto vem abaixo daquilo".
 
-     Aqui a faixa afunila de verdade, e isso tem uma consequência aceita de
-     propósito: a segunda e a terceira ficam estreitas. É o que o número é.
-     Por isso o rótulo e o valor moram FORA da faixa, numa linha própria —
-     texto dentro de uma faixa de 8% seria ilegível, e é para não precisar
-     mentir na largura que ele saiu de lá.
-
-     O fecho com os três números repete as taxas em corpo grande, que é o que
-     a faixa estreita não consegue dizer sozinha. */
+     A contrapartida é explícita: como a forma não mede nada, quem mede é o
+     texto. O número mora dentro da faixa, a taxa de passagem aparece entre
+     uma e outra, e o fecho repete as três taxas em corpo grande. Nenhum
+     número depende da largura para ser lido — que era exatamente o problema
+     da versão proporcional. */
   const pctAt = pct(c.clientesComp);
-  const larg  = v => Math.max(2, v).toFixed(1);
-  const w1 = 100, w2 = +larg(pctAt), w3 = +larg(pct(acima));
-
-  /* Rótulo à esquerda, faixa à direita, na mesma linha do grid. As três
-     faixas encostam sem folga, então formam UMA silhueta contínua — com o
-     texto entre elas, o funil virava três formas soltas. */
-  const linha = (rot, n, apoio, cls, wTopo, wBase, bolha, ramo) => {
-    const c1 = (100 - wTopo) / 2, c2 = (100 + wTopo) / 2;
-    const c3 = (100 + wBase) / 2, c4 = (100 - wBase) / 2;
-    return `<div class="fun-lin ${cls}${bolha?' com-tip':''}${ramo?' ramo':''}">
-      <div class="fun-txt">
-        <div class="fun-cab"><span class="fun-rot">${rot}</span><b class="fun-num">${nf.format(n)}</b></div>
-        <span class="fun-ap">${apoio}</span>
-      </div>
-      <div class="fun-faixa" aria-hidden="true"
-        style="clip-path:polygon(${c1.toFixed(2)}% 0,${c2.toFixed(2)}% 0,${c3.toFixed(2)}% 100%,${c4.toFixed(2)}% 100%)"></div>
+  /* As larguras têm piso pelo TEXTO, não pelo dado: o rótulo mais longo é
+     "Tiveram ticket médio acima da média" e ele precisa caber na parte mais
+     estreita da última faixa, senão o clip-path corta a frase. */
+  const W = [100, 80, 62];
+  const faixa = (i, cls, rot, n, sub, bolha) => {
+    const wt = W[i], wb = W[i+1] !== undefined ? W[i+1] : W[i] - 8;
+    const c1 = (100-wt)/2, c2 = (100+wt)/2, c3 = (100+wb)/2, c4 = (100-wb)/2;
+    return `<div class="fun-faixa ${cls}${bolha?' com-tip':''}"
+      style="clip-path:polygon(${c1}% 0,${c2}% 0,${c3}% 100%,${c4}% 100%)">
+      <b class="fun-num">${nf.format(n)}</b>
+      <span class="fun-rot">${rot}</span>
+      ${sub ? `<span class="fun-sub">${sub}</span>` : ''}
       ${bolha||''}
     </div>`;
   };
+  const passo = txt => `<p class="fun-passo">${txt}</p>`;
 
   return `<div class="bloco">
     <h4 class="bloco-tit">Funil de impactados</h4>
     <div class="funil-camp">
-      ${linha('Público-alvo', total, 'receberam a campanha', 'd1', w1, w2, '')}
-      ${linha('Compraram', c.clientesComp, `de ${nf.format(total)} que receberam`,
-        'd2', w2, w3, tipCompraram)}
-      ${linha('Tiveram ticket médio acima da média', acima,
-        `de ${nf.format(c.clientesComp)} que compraram`, 'd3', w3, w3, '', true)}    </div>
+      ${faixa(0, 'd1', 'Público-alvo', total, 'receberam a campanha')}
+      ${passo(`<b>${nf1.format(pctAt)}%</b> compraram`)}
+      ${faixa(1, 'd2', 'Compraram', c.clientesComp, '', tipCompraram)}
+      ${passo(`<b>${pctAcima}%</b> de quem comprou · num período normal são ${base}%`)}
+      ${faixa(2, 'd3', 'Tiveram ticket médio acima da média', acima, '')}
+    </div>
 
     <div class="fun-fecho">
       <div><span>Conversão</span><b>${nf1.format(pctAt)}%</b><i>do público-alvo</i></div>
