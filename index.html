@@ -1409,6 +1409,40 @@ tbody tr.sel{background:#F3F8FF}
 .fc-lin.atual .fc-tot{font-size:19px}
 .fc-lin.atual .fc-trilho{height:18px}
 .fc-lin.atual .fc-ap{color:var(--ink-2)}
+/* Cabeçalho do bloco: título à esquerda, ordenação à direita. A ordenação
+   muda a leitura (linha do tempo x ranking), então fica junto do título. */
+.fc-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  flex-wrap:wrap;margin-bottom:11px}
+.fc-topo .bloco-tit{margin:0}
+.fc-ord-grupo{display:flex;gap:3px;background:#F1F5F9;border-radius:9px;padding:3px;flex-shrink:0}
+.fc-ord{font-size:11.5px;font-weight:600;color:var(--ink-3);padding:6px 11px;
+  border-radius:7px;white-space:nowrap;transition:.12s}
+.fc-ord:hover{color:var(--ink-2)}
+.fc-ord.on{background:#fff;color:var(--primary);box-shadow:0 1px 2px rgba(16,36,64,.08)}
+.fc-ord:focus-visible,.fc-chip:focus-visible,.fc-limpa:focus-visible{
+  outline:2px solid var(--primary);outline-offset:2px}
+
+/* Filtro de canais: é o que transforma a lista em comparativo. */
+.fc-filtro{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;
+  padding-bottom:13px;border-bottom:1px solid var(--border)}
+.fc-filtro-rot{font-size:11.5px;font-weight:600;color:var(--ink-3);flex-shrink:0}
+.fc-chips{display:flex;gap:6px;flex-wrap:wrap}
+.fc-chip{font-size:11.5px;font-weight:600;color:var(--ink-3);padding:5px 11px;
+  border:1px solid var(--border);border-radius:20px;background:#fff;transition:.12s}
+.fc-chip:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
+.fc-chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.fc-chip:disabled{cursor:not-allowed}
+.fc-limpa{font-size:11.5px;font-weight:600;color:var(--primary);padding:5px 9px;
+  border-radius:7px;margin-left:auto}
+.fc-limpa:hover{background:var(--primary-soft)}
+
+/* A linha de apoio passou a carregar os canais da campanha. */
+.fc-ap{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.fc-canais{display:inline-flex;gap:5px;flex-wrap:wrap}
+.fc-canais .canal{font-size:10.5px;padding:2px 7px}
+.fc-vazio{margin:18px 0!important;text-align:center}
+@media(prefers-reduced-motion:reduce){.fc-ord,.fc-chip{transition:none}}
+
 .fc-leg{display:flex;gap:20px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
 .fc-leg span{display:inline-flex;align-items:center;gap:7px}
 .fc-pt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
@@ -1525,6 +1559,123 @@ tbody tr.sel{background:#F3F8FF}
 .funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-normal b{
   color:var(--primary)}
 @media(prefers-reduced-motion:reduce){.fun-faixa::before{transition:none}}
+
+/* ---------- RECUPERADO DO GIT (commit ee39c3b) ----------
+   Quarenta e três seletores desapareceram numa fatia de CSS que cortou
+   blocos vizinhos — quatro seções inteiras: Modal, Modal de salvar, Date
+   range picker e Tooltip, mais as pills de canal, o toast e o menu "...".
+
+   O sintoma que o Vitor viu: "criar campanha não abre". O modal estava no
+   DOM e passava nos testes, porque o markup continuava correto; sem
+   position:fixed e sem z-index ele caía no fim da página, invisível.
+
+   NENHUM TESTE DE MARKUP PEGA ISSO. É por isso que existe agora uma guarda
+   que confere a presença das regras estruturais, e não só do HTML. */
+.maiswrap{position:relative;z-index:20;flex-shrink:0}
+.mais{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:.12s;color:var(--ink-3)}
+.mais:hover{background:#EDF1F6;color:var(--ink)}
+.mais.on{background:#E2E8F0;color:var(--ink)}
+.segmenu{position:absolute;top:calc(100% + 6px);right:0;z-index:30;min-width:196px;background:#fff;
+  border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 12px 32px rgba(15,35,60,.16);padding:6px;overflow:hidden}
+.segmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border-radius:7px;
+  font-size:13px;color:var(--ink-2);text-align:left;transition:.1s}
+.segmenu button svg{flex:0 0 15px;color:var(--ink-4)}
+.segmenu button:hover{background:#F1F5F9;color:var(--ink)}
+.segmenu button:hover svg{color:var(--ink-2)}
+.segmenu button.perigo{color:var(--danger)}
+.segmenu button.perigo svg{color:var(--danger)}
+.segmenu button.perigo:hover{background:var(--danger-soft);color:var(--danger)}
+/* pills de canal */
+.canal{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.canal svg{flex-shrink:0;opacity:.85}
+.ca-email{background:#E6F1FB;color:#0C447C}
+.ca-zap{background:#E1F5EE;color:#085041}
+.ca-tel{background:#EEEDFE;color:#3C3489}
+.ca-sms{background:#FAEEDA;color:#854F0B}
+/* modal de campanha */
+.mc-secao{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink)}
+.mc-datas{display:flex;gap:16px;flex-wrap:wrap}
+.mc-datas .field{flex:1;min-width:180px;margin-bottom:0}
+.mc-canais{display:flex;gap:9px;flex-wrap:wrap}
+.mc-canal{border:1px solid var(--border-strong);background:#fff;border-radius:9px;padding:9px 11px;transition:.12s}
+.mc-canal:hover{border-color:var(--primary)}
+.mc-canal.on{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}
+.mc-canal:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+/* Multisseleção precisa parecer multisseleção: a marca de escolhido é um
+   visto, não só a borda azul — com sete pills e várias ativas ao mesmo tempo,
+   só a borda vira ruído. */
+.mc-canal.on::after{content:'✓';margin-left:7px;font-size:11px;font-weight:700;
+  color:var(--primary)}
+.mc-hint{margin-left:8px;font-size:11.5px;font-weight:500;color:var(--ink-4)}
+/* Cores dos canais novos, na mesma família das que já existiam. */
+.ca-meta{background:#F5ECFB;color:#8B3FBF}
+.ca-google{background:#E9F1FD;color:#1A62C7}
+.ca-tiktok{background:#EDEFF3;color:#2B3440}
+/* Botão desabilitado: o motivo está no title e o estado é visível. */
+.btn:disabled,.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn:disabled:hover,.btn[disabled]:hover{background:var(--primary)}
+@media(max-width:980px){
+  .sc-topo{flex-direction:column;align-items:stretch;gap:18px}
+  .sc-kpis{flex-wrap:wrap}
+  .kbox{flex:1;min-width:140px}
+  .maiswrap{position:absolute;top:18px;right:18px}
+  .segcard{position:relative}
+}
+/* ---------- Modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(15,40,70,.42);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:568px;padding:26px 28px;box-shadow:0 18px 50px rgba(15,40,70,.22)}
+.modal h2{margin:0 0 20px;font-size:20px;font-weight:700}
+.modal .field{margin-bottom:16px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+/* ---------- Modal: salvar segmentação ---------- */
+.modal-salvar{max-width:600px;padding:0;display:flex;flex-direction:column;max-height:calc(100vh - 40px)}
+.ms-head{padding:24px 28px 18px;border-bottom:1px solid var(--border)}
+.ms-head h2{margin:0 0 6px;font-size:20px;font-weight:700}
+.ms-head p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.5}
+.ms-corpo{padding:20px 28px 4px;overflow-y:auto;flex:1}
+/* resumo: confirmação rápida, não uma etapa nova — por isso caixa chapada e fonte pequena */
+.rm{border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;background:#fff}
+.rm-head{display:flex;align-items:center;gap:8px;padding:11px 16px;background:#F5F8FC;
+  border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--ink-2);
+  text-transform:uppercase;letter-spacing:.05em}
+.rm-head svg{color:var(--ink-4)}
+.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.rm-item{display:flex;flex-direction:column;gap:2px;padding:11px 16px;min-width:0;
+  border-bottom:1px solid var(--border)}
+.rm-grid .rm-item:nth-child(odd){border-right:1px solid var(--border)}
+.rm-grid .rm-item:nth-last-child(-n+2){border-bottom:0}
+.rm-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--ink-4)}
+.rm-v{font-size:13.5px;color:var(--ink);line-height:1.4;overflow-wrap:anywhere}
+@media(max-width:520px){
+  .rm-grid{grid-template-columns:1fr}
+  .rm-grid .rm-item:nth-child(odd){border-right:0}
+  .rm-grid .rm-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
+  .rm-grid .rm-item:last-child{border-bottom:0}
+}
+.ms-form .field{margin-bottom:20px}
+.ms-form .field.com-erro{margin-bottom:18px}
+.ms-form label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.ajuda{margin:6px 0 0;font-size:12px;color:var(--ink-4);line-height:1.5}
+.ajuda-ate{margin-top:-12px;margin-bottom:20px}
+/* erro colado no campo, não só no topo do modal */
+.erro-campo{display:flex;align-items:flex-start;gap:6px;margin:7px 0 0;font-size:12.5px;
+  color:var(--danger);line-height:1.45;font-weight:500}
+.erro-campo svg{flex:0 0 14px;margin-top:1px}
+.ok-data{display:flex;align-items:center;gap:7px;margin:8px 0 0;font-size:12.5px;color:#0E7A48}
+.ok-data b{font-weight:600}
+.ms-erro{margin:0 0 20px}
+.ms-acoes{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:16px 28px;border-top:1px solid var(--border);background:#FBFCFE;border-radius:0 0 12px 12px}
+.ms-primarias{display:flex;gap:10px;flex-wrap:wrap}
+.ms-acoes .btn:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:620px){
+  .ms-acoes{flex-direction:column-reverse;align-items:stretch}
+  .ms-primarias{flex-direction:column}
+  .ms-acoes .btn{width:100%;justify-content:center}
+}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:9px;font-size:13.5px;z-index:80;box-shadow:0 8px 24px rgba(15,40,70,.28)}
+/* ---------- Date range picker ---------- */
+.okmsg{display:inline-flex;gap:8px;align-items:center;margin-top:14px;background:var(--green-soft);color:#0E7A48;border-radius:7px;padding:9px 13px;font-size:12.5px}
 
 /* ---------- Painel do facilitador ---------- */
 #fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
@@ -1865,6 +2016,8 @@ function estadoInicial(){
     motorExplica:null,      // bloco com a explicação aberta
     dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
     preModo:'anterior',     // régua do comparativo: 'anterior' ou 'ano'
+    fcOrdem:'data',         // ordem do resultado por canal: 'data' ou 'desempenho'
+    fcCanais:[],            // canais visíveis; vazio = todos
     invEdit:null,           // id da campanha com o investimento em edição
     invValor:'',            // texto digitado no campo de investimento
     // 'rfv' não é por tela: a tabela de perfil aparece na Visão geral e no DNA,
@@ -1906,7 +2059,7 @@ function estadoInicial(){
     menuSeg:null,             // id da segmentação com o menu "..." aberto
     campAberta:null,          // id da segmentação com as campanhas expandidas
     modalCamp:null,           // id da segmentação no modal de nova campanha
-    campIni:'', campFim:'', campCanal:'', campInvest:'', campErro:'',
+    campIni:'', campFim:'', campCanais:[], campInvest:'', campErro:'',
     resSeg:null, resCamp:null,  // campanha aberta na tela de resultados
     toast:''
   };
@@ -1925,9 +2078,9 @@ function segmentacoesDemo(){
      clientes:8420, mixHist:[['Anti-hipertensivos',49.0],['Banho',12.6],['Minerais',12.0],['Analgésicos',9.6],['Multivitamínicos',9.4],['Bucal',7.4]], ticketHist:96.00, pctAcimaHist:38, prods:14, disponivelAte:'30/11/2026',
      rfv:'Fiel, Valioso', dna:'Hipertensão', demo:'Feminino · 36 - 45 anos',
      campanhas:[
-       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canal:'whatsapp', faturamento:96400, compras:814, clientesComp:688, clientesAcima:337, clientesRecompra:112, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], sellout:3255000, investimento:5410},
-       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canal:'sms',      faturamento:71200, compras:741, clientesComp:631, clientesAcima:253, clientesRecompra:98, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], sellout:3197250, investimento:2210},
-       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canal:'email',    faturamento:58900, compras:664, clientesComp:561, clientesAcima:191, clientesRecompra:91, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], sellout:3189900, investimento:0}
+       {id:'c1', ini:'10/08/2026', fim:'09/09/2026', criadaEm:'05/08/2026', canais:['whatsapp','sms'], faturamento:96400, compras:814, clientesComp:688, clientesAcima:337, clientesRecompra:112, mix:[['Anti-hipertensivos',55912],['Bucal',12403],['Analgésicos',10352],['Multivitamínicos',7715],['Minerais',5296],['Banho',4722]], sellout:3255000, investimento:5410},
+       {id:'c2', ini:'02/06/2026', fim:'30/06/2026', criadaEm:'28/05/2026', canais:['sms'],      faturamento:71200, compras:741, clientesComp:631, clientesAcima:253, clientesRecompra:98, mix:[['Anti-hipertensivos',36312],['Bucal',8371],['Minerais',7969],['Banho',7546],['Analgésicos',6983],['Multivitamínicos',4019]], sellout:3197250, investimento:2210},
+       {id:'c3', ini:'04/03/2026', fim:'03/04/2026', criadaEm:'01/03/2026', canais:['email'],    faturamento:58900, compras:664, clientesComp:561, clientesAcima:191, clientesRecompra:91, mix:[['Anti-hipertensivos',25916],['Banho',8389],['Analgésicos',7352],['Minerais',6366],['Multivitamínicos',6327],['Bucal',4550]], sellout:3189900, investimento:0}
      ]},
 
     {id:'s2', titulo:'Mães de bebês — recompra de fraldas',
@@ -1935,8 +2088,8 @@ function segmentacoesDemo(){
      clientes:3175, mixHist:[['Higiene infantil',23.5],['Leites infantis',20.7],['Bucal',11.9],['Fraldas',10.8],['Multivitamínicos',10.0],['Analgésicos',8.4],['Banho',8.3],['Minerais',6.4]], ticketHist:118.00, pctAcimaHist:36, prods:22, disponivelAte:'31/12/2026',
      rfv:'Fiel', dna:'Mãe', demo:'Feminino · 26 - 35 anos',
      campanhas:[
-       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canal:'whatsapp', faturamento:42300, compras:320, clientesComp:261, clientesAcima:127, clientesRecompra:52, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], sellout:3255000, investimento:2788},
-       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canal:'email',    faturamento:38100, compras:344, clientesComp:284, clientesAcima:102, clientesRecompra:53, mix:[['Fraldas',11601],['Higiene infantil',5275],['Leites infantis',4841],['Minerais',4536],['Banho',3298],['Analgésicos',3293],['Multivitamínicos',2888],['Bucal',2368]], sellout:3320100, investimento:0}
+       {id:'c4', ini:'15/08/2026', fim:'14/09/2026', criadaEm:'11/08/2026', canais:['whatsapp','meta'], faturamento:42300, compras:320, clientesComp:261, clientesAcima:127, clientesRecompra:52, mix:[['Leites infantis',12342],['Higiene infantil',7643],['Fraldas',6664],['Bucal',4238],['Multivitamínicos',4199],['Minerais',3338],['Analgésicos',2038],['Banho',1838]], sellout:3255000, investimento:2788},
+       {id:'c5', ini:'01/05/2026', fim:'31/05/2026', criadaEm:'27/04/2026', canais:['email'],    faturamento:47800, compras:344, clientesComp:284, clientesAcima:102, clientesRecompra:53, mix:[['Fraldas',14555],['Higiene infantil',6618],['Leites infantis',6073],['Minerais',5691],['Banho',4138],['Analgésicos',4131],['Multivitamínicos',3623],['Bucal',2971]], sellout:3320100, investimento:0}
      ]},
 
     {id:'s3', titulo:'Diabéticos com alta aderência em cuidado diário',
@@ -1944,7 +2097,7 @@ function segmentacoesDemo(){
      clientes:2640, mixHist:[['Antidiabéticos',43.8],['Suplementos',17.2],['Analgésicos',10.8],['Bucal',9.0],['Multivitamínicos',8.1],['Banho',6.4],['Minerais',4.7]], ticketHist:131.00, pctAcimaHist:39, prods:9, disponivelAte:'30/11/2026',
      rfv:'Fiel', dna:'Diabetes', demo:'Todos · +65 anos',
      campanhas:[
-       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canal:'ligacao', faturamento:51700, compras:362, clientesComp:287, clientesAcima:143, clientesRecompra:66, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], sellout:3255000, investimento:4368}
+       {id:'c6', ini:'10/04/2026', fim:'10/05/2026', criadaEm:'06/04/2026', canais:['ligacao'], faturamento:51700, compras:362, clientesComp:287, clientesAcima:143, clientesRecompra:66, mix:[['Suplementos',18915],['Antidiabéticos',15207],['Bucal',4553],['Minerais',4220],['Analgésicos',3419],['Multivitamínicos',3219],['Banho',2167]], sellout:3255000, investimento:4368}
      ]},
 
     {id:'s4', titulo:'Dermocosméticos — ticket alto, baixa frequência',
@@ -1964,8 +2117,8 @@ function segmentacoesDemo(){
      clientes:12480, mixHist:[['Corporal',21.9],['Banho',15.0],['Minerais',11.7],['Proteção solar',11.1],['Cabelo',9.6],['Facial',9.4],['Bucal',7.5],['Analgésicos',7.3],['Multivitamínicos',6.5]], ticketHist:71.00, pctAcimaHist:37, prods:18, disponivelAte:'28/02/2026',
      rfv:'Ocasional, Potencial', dna:'Beleza', demo:'Todos · 26 - 35 anos',
      campanhas:[
-       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canal:'email', faturamento:184300, compras:2484, clientesComp:2351, clientesAcima:939, clientesRecompra:118, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], sellout:3696000, investimento:1574},
-       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canal:'sms',   faturamento:126800, compras:1907, clientesComp:1791, clientesAcima:549, clientesRecompra:103, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], sellout:4068750, investimento:2698}
+       {id:'c7', ini:'05/01/2026', fim:'05/02/2026', criadaEm:'02/01/2026', canais:['email','meta','google'], faturamento:184300, compras:2484, clientesComp:2351, clientesAcima:939, clientesRecompra:118, mix:[['Corporal',52162],['Proteção solar',28580],['Cabelo',26665],['Facial',23446],['Analgésicos',15336],['Banho',14316],['Multivitamínicos',9086],['Minerais',7805],['Bucal',6904]], sellout:3696000, investimento:1574},
+       {id:'c8', ini:'01/12/2025', fim:'31/12/2025', criadaEm:'26/11/2025', canais:['sms','meta'],   faturamento:126800, compras:1907, clientesComp:1791, clientesAcima:549, clientesRecompra:103, mix:[['Facial',25312],['Corporal',20776],['Proteção solar',20380],['Cabelo',14684],['Minerais',13060],['Analgésicos',10882],['Multivitamínicos',8154],['Bucal',7415],['Banho',6137]], sellout:4068750, investimento:2698}
      ]},
 
     {id:'s7', titulo:'Gripe e resfriado — inverno 2026',
@@ -1973,8 +2126,8 @@ function segmentacoesDemo(){
      clientes:21050, ticketHist:58.00, pctAcimaHist:40, prods:27, disponivelAte:'30/06/2026',
      rfv:'Todos os perfis', dna:'Nenhum', demo:'Todos · Todas as idades',
      campanhas:[
-       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canal:'whatsapp', faturamento:241900, compras:4581, clientesComp:4462, clientesAcima:1278, clientesRecompra:105, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], sellout:3417750, investimento:11725},
-       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canal:'ligacao',  faturamento:158200, compras:2581, clientesComp:2498, clientesAcima:999, clientesRecompra:74, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], sellout:3150000, investimento:26460}
+       {id:'c9',  ini:'20/06/2026', fim:'20/07/2026', criadaEm:'16/06/2026', canais:['whatsapp','meta','tiktok'], faturamento:241900, compras:4581, clientesComp:4462, clientesAcima:1278, clientesRecompra:105, mix:[['Analgésicos',112789],['Multivitamínicos',59201],['Minerais',26182],['Bucal',25519],['Banho',18209]], sellout:3417750, investimento:11725},
+       {id:'c10', ini:'01/04/2026', fim:'30/04/2026', criadaEm:'27/03/2026', canais:['ligacao','sms'],  faturamento:158200, compras:2581, clientesComp:2498, clientesAcima:999, clientesRecompra:74, mix:[['Analgésicos',67424],['Multivitamínicos',41576],['Minerais',19088],['Bucal',15191],['Banho',14921]], sellout:3150000, investimento:26460}
      ]}
   ];
 }
@@ -2032,6 +2185,9 @@ const I = {
   card:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
   moeda:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2a3 3 0 00-2.5-1.2c-1.4 0-2.5.8-2.5 2s1.1 2 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2a3 3 0 01-2.5-1.2M12 6.2v11.6"/></svg>',
   etiqueta:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7.2-7.2A2 2 0 013 12V5a2 2 0 012-2h7a2 2 0 011.4.6l7.2 7.2a2 2 0 010 2.6z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  meta:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>',
+  google:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M21 12h-9v3h5.2a5.2 5.2 0 11-1.5-5.4"/></svg>',
+  tiktok:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="8.5" cy="16.5" r="3.5"/><path d="M12 16.5V4c.7 2.4 2.5 3.9 5 4.1"/></svg>',
   mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>',
   zap:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-12.3 7.4L3 20.5l1.7-5.5A8.4 8.4 0 1121 11.5z"/></svg>',
   fone:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>',
@@ -4165,14 +4321,30 @@ function telaDna(){
 
 /* ---------- Tela: lista de segmentações ---------- */
 /* ---------- Vigência e campanhas ---------- */
+/* Sete canais, na ordem da referência. A ordem importa: é a que aparece no
+   modal, nos filtros e nas legendas, e mudar de lugar entre telas custa mais
+   do que parece para quem usa todo dia. */
 const CANAIS = {
-  email:   ['E-mail',   'ca-email', 'mail'],
-  whatsapp:['WhatsApp', 'ca-zap',   'zap'],
-  ligacao: ['Ligação',  'ca-tel',   'fone'],
-  sms:     ['SMS',      'ca-sms',   'sms']
+  email:   ['E-mail',             'ca-email',  'mail'],
+  whatsapp:['WhatsApp',           'ca-zap',    'zap'],
+  meta:    ['Instagram / Facebook','ca-meta',  'meta'],
+  google:  ['Google',             'ca-google', 'google'],
+  tiktok:  ['TikTok',             'ca-tiktok', 'tiktok'],
+  ligacao: ['Ligação',            'ca-tel',    'fone'],
+  sms:     ['SMS',                'ca-sms',    'sms']
 };
+const CANAL_IDS = Object.keys(CANAIS);
 const pillCanal = k => { const [rot,cls,ic] = CANAIS[k] || ['Outro','ca-email','mail'];
   return `<span class="canal ${cls}">${I[ic]} ${rot}</span>`; };
+
+/* UMA CAMPANHA PODE TER VÁRIOS CANAIS. O dado antigo guardava um só, em
+   `canal`; o novo guarda uma lista em `canais`. Esta função é a única porta
+   de leitura, então nada no resto do código precisa saber de qual formato o
+   registro veio. */
+const canaisDe = c => (c && c.canais && c.canais.length) ? c.canais
+                    : (c && c.canal ? [c.canal] : []);
+const pillsCanais = c => canaisDe(c).map(pillCanal).join('');
+const rotCanais = c => canaisDe(c).map(k => (CANAIS[k]||['Outro'])[0]).join(' + ');
 const brDate = d => parseYmd(d.split('/').reverse().join('-'));
 
 /* "R$ 2.500,00" → 2500. O ponto é separador de milhar e a vírgula é decimal;
@@ -4299,7 +4471,7 @@ function cardCampanha(s, c){
         ${ativa?`<span class="cpc-tag">Em andamento</span>`:''}</div>
       <div class="cpc-criada">${I.cal} Criada em: ${c.criadaEm}</div>
     </div>
-    <div class="cpc-col cpc-canal">${pillCanal(c.canal)}</div>
+    <div class="cpc-col cpc-canal">${pillsCanais(c)}</div>
     <div class="cpc-col"><span class="vdado" title="Faturamento da campanha">${I.moeda} ${brl(c.faturamento)}</span></div>
     <div class="cpc-col"><span class="vdado" title="Ticket médio da campanha: faturamento dividido pelo número de compras">${I.etiqueta} ${brl(ticketCamp(c))}</span></div>
     <button class="btn-res" data-act="verResultados" data-v="${s.id}|${c.id}"
@@ -4675,14 +4847,23 @@ function cardFaturamento(s, c, periodo){
    compra mais no balcão; campanha por WhatsApp empurra mais para o
    delivery do que uma ligação. As duas coisas entram na conta, e é por
    isso que Hipertensão fica mais presencial que Mãe. */
-const CANAL_VENDA = {whatsapp:1.25, email:1.10, sms:1.00, ligacao:0.80};
+/* Quanto cada canal puxa a venda para o online. Mídia paga (Meta, Google,
+   TikTok) leva mais gente ao delivery que uma ligação, que é o canal mais
+   ligado ao balcão. */
+const CANAL_VENDA = {whatsapp:1.25, email:1.10, meta:1.35, google:1.30,
+                     tiktok:1.40, sms:1.00, ligacao:0.80};
 
 function fatiaOnline(s, c){
   const p = DNA_PERFIL[String(s.dna||'').split(',')[0].trim()] ||
             DNA_PERFIL[String(s.dna||'').trim()+'s'] || {pico:3};
   /* quanto mais velho o pico etário do público, menos delivery */
   const base = p.pico <= 2 ? .30 : p.pico === 3 ? .24 : p.pico === 4 ? .19 : .13;
-  const pct = base * (CANAL_VENDA[c.canal] || 1) * jitterCamp(c.id + '|on');
+  /* Com mais de um canal, o peso é a média dos pesos: a campanha sai por
+     todos ao mesmo tempo e não há como atribuir a venda a um só. */
+  const ks = canaisDe(c);
+  const pesoCanal = ks.length
+    ? ks.reduce((a,k)=>a+(CANAL_VENDA[k]||1),0)/ks.length : 1;
+  const pct = base * pesoCanal * jitterCamp(c.id + '|on');
   return Math.min(.45, Math.max(.08, pct));
 }
 
@@ -4739,32 +4920,71 @@ function blocoCanais(s, c){
    A barra é empilhada — o total da campanha, com a parte que veio de
    produtos do DNA destacada dentro. Duas informações, nenhum
    comparativo. */
+/* RESULTADO POR ATIVAÇÕES POR CANAL.
+
+   O bloco deixou de ser só o histórico do público e passou a servir para
+   comparar canal com canal. Três controles, e cada um existe por um motivo:
+
+   · ORDENAR POR DATA ou DESEMPENHO. Por data é a leitura de linha do tempo,
+     que mostra se a coisa melhora. Por desempenho é a de ranking, que mostra
+     o que repetir. São perguntas diferentes e nenhuma ordem serve às duas.
+   · FILTRAR CANAIS. Com sete canais e campanhas multicanal, ver tudo junto
+     não compara nada — o filtro é o que transforma a lista em comparativo.
+   · CAMPANHA MULTICANAL entra em TODO canal que ela usou. Isso significa que
+     as barras se sobrepõem e NÃO SOMAM: dizer "o WhatsApp faturou X" quando
+     a campanha saiu por WhatsApp e Meta ao mesmo tempo seria atribuir a
+     venda inteira a um canal. A nota do rodapé diz isso. */
 function blocoDnaVendas(s, c){
   const {nomes, subs} = subsDoDna(s);
   if(!nomes.length) return '';
-  const camps = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix)
-    .sort((a,b)=>brDate(b.ini)-brDate(a.ini));
-  if(!camps.length) return '';
+  const todas = (s.campanhas||[]).filter(x=>x.compras>0 && x.mix);
+  if(!todas.length) return '';
 
   const rotDna = nomes.join(' e ');
-  const linhas = camps.map(x => {
+  // só os canais que este público de fato usou: filtro com opção morta é ruído
+  const usados = CANAL_IDS.filter(k => todas.some(x => canaisDe(x).includes(k)));
+  const sel = S.fcCanais.length ? S.fcCanais.filter(k=>usados.includes(k)) : usados;
+  const camps = todas.filter(x => canaisDe(x).some(k => sel.includes(k)));
+
+  const porData = (a,b) => brDate(b.ini) - brDate(a.ini);
+  const porDesemp = (a,b) => b.faturamento - a.faturamento;
+  const linhas = camps.slice().sort(S.fcOrdem==='desempenho' ? porDesemp : porData).map(x => {
     const m = mixDna(s, x.mix, x.faturamento);
     const dna = Math.round(x.faturamento * m.pctAlvo / 100);
-    // as duas partes somam o faturamento por subtração, nunca por arredondamento
     return {...x, dna, fora: x.faturamento - dna};
   });
-  const maior = Math.max(...linhas.map(x => x.faturamento)) || 1;
+  const maior = Math.max(...linhas.map(x => x.faturamento), 1);
   const periodo = x => `${x.ini.slice(0,5)} a ${x.fim}`;
 
-  return `<div class="bloco">
-    <h4 class="bloco-tit">Faturamento das campanhas deste público
-      ${tipTexto(`Cada barra é o que a campanha faturou no período, repartida em duas cores: o
-      azul é o que veio de produtos de ${esc(rotDna)} — as categorias
-      ${esc([...subs].join(', '))} — e o verde-azulado é tudo que o cliente levou fora desse
-      DNA. As duas somam o faturamento inteiro da campanha. As barras estão na mesma escala,
-      então o comprimento mostra o porte de cada uma.`)}</h4>
+  const chip = k => {
+    const on = sel.includes(k), so = sel.length===1 && on;
+    return `<button class="fc-chip${on?' on':''}" data-act="fcCanal" data-v="${k}"
+      aria-pressed="${on}" ${so?'disabled title="Pelo menos um canal precisa ficar visível"':''}
+      >${esc(CANAIS[k][0])}</button>`;
+  };
+  const ordem = (id, rot) => `<button class="fc-ord${S.fcOrdem===id?' on':''}"
+    data-act="fcOrdem" data-v="${id}" aria-pressed="${S.fcOrdem===id}">${rot}</button>`;
 
-    <div class="fcamp">
+  return `<div class="bloco">
+    <div class="fc-topo">
+      <h4 class="bloco-tit">Resultado por ativações por canal
+        ${tipTexto(`Cada barra é o que a campanha faturou no período, repartida em duas cores: o
+        azul é o que veio de produtos de ${esc(rotDna)} — as categorias
+        ${esc([...subs].join(', '))} — e o verde-azulado é tudo que o cliente levou fora desse
+        DNA. Uma campanha com mais de um canal aparece em todos eles, então as barras filtradas
+        não somam o total da tela.`)}</h4>
+      <div class="fc-ord-grupo" role="group" aria-label="Ordenar as campanhas">
+        ${ordem('data','Por data')}${ordem('desempenho','Por desempenho')}
+      </div>
+    </div>
+
+    <div class="fc-filtro">
+      <span class="fc-filtro-rot">Canais</span>
+      <div class="fc-chips">${usados.map(chip).join('')}</div>
+      ${S.fcCanais.length ? `<button class="fc-limpa" data-act="fcCanal" data-v="">Ver todos</button>` : ''}
+    </div>
+
+    ${linhas.length ? `<div class="fcamp">
       ${linhas.map(x => {
         const atual = x.id===c.id;
         const pctDna = x.faturamento ? x.dna/x.faturamento*100 : 0;
@@ -4777,15 +4997,22 @@ function blocoDnaVendas(s, c){
             title="${esc(periodo(x))}: ${brl(x.faturamento)} — ${brl(x.dna)} de ${esc(rotDna)} e ${brl(x.fora)} fora">
             <span class="fc-dna" style="width:${pctDna.toFixed(1)}%"></span>
           </div>
-          <span class="fc-ap">${brl(x.dna)} de ${esc(rotDna)} · ${brl(x.fora)} fora · ${CANAIS[x.canal][0]}</span>
+          <div class="fc-ap">
+            <span class="fc-canais">${pillsCanais(x)}</span>
+            <span>${brl(x.dna)} de ${esc(rotDna)}</span>
+          </div>
         </div>`;
       }).join('')}
-    </div>
+    </div>` : `<p class="bloco-nota fc-vazio">Nenhuma campanha deste público usou os canais
+      escolhidos. Marque outro canal ou volte a ver todos.</p>`}
 
     <div class="fc-leg">
       <span><i class="fc-pt dna"></i>Produtos de ${esc(rotDna)}</span>
       <span><i class="fc-pt resto"></i>Fora de ${esc(rotDna)}</span>
     </div>
+    ${sel.length < usados.length ? `<p class="bloco-nota">Mostrando ${linhas.length} de
+      ${todas.length} campanhas. <b>Uma campanha multicanal aparece em todos os canais que
+      usou</b>, então as barras filtradas não somam o total do público.</p>` : ''}
   </div>`;
 }
 
@@ -5030,7 +5257,7 @@ function telaResultados(){
   const cabecalho = `<div class="res-topo">
     <button class="btn-voltar" data-act="voltarLista">${I.back} Voltar para as segmentações</button>
     <div class="res-ident">
-      <div class="res-linha">${pillCanal(c.canal)}
+      <div class="res-linha">${pillsCanais(c)}
         <span class="res-per">${I.cal} ${c.ini} a ${c.fim}</span>
         <span class="res-selo ${seloCls}">${seloRot}</span></div>
       <h1 class="res-tit">${esc(s.titulo)}</h1>
@@ -5703,7 +5930,7 @@ function faltamNaCampanha(){
   if(!S.campFim) f.fim = 'Escolha quando a campanha termina.';
   else if(S.campIni && parseYmd(S.campFim) < parseYmd(S.campIni)) f.fim = 'O término não pode ser antes do início.';
   else if(limite && parseYmd(S.campFim) > limite) f.fim = `A campanha precisa terminar até ${s.disponivelAte}, quando a segmentação vence.`;
-  if(!S.campCanal) f.canal = 'Escolha por onde falar com esses clientes.';
+  if(!S.campCanais.length) f.canal = 'Escolha pelo menos um canal para falar com esses clientes.';
   return f;
 }
 
@@ -5744,11 +5971,12 @@ function modalNovaCampanha(){
           <p class="ajuda">A campanha precisa acontecer entre hoje e <b>${s.disponivelAte}</b>, quando a segmentação deixa de ficar disponível.</p>
           ${dias?`<p class="ok-data">${I.checkc} A campanha vai rodar por <b>${dias} ${dias===1?'dia':'dias'}</b>.</p>`:''}
 
-          <p class="mc-secao" style="margin-top:22px">Canal de comunicação</p>
-          <div class="mc-canais" role="radiogroup" aria-label="Canal de comunicação">
-            ${Object.keys(CANAIS).map(k=>`
-              <button class="mc-canal ${S.campCanal===k?'on':''}" role="radio" aria-checked="${S.campCanal===k}"
-                data-act="campCanal" data-v="${k}">${pillCanal(k)}</button>`).join('')}
+          <p class="mc-secao" style="margin-top:22px">Selecione o canal de comunicação
+            <span class="mc-hint">um ou mais</span></p>
+          <div class="mc-canais" role="group" aria-label="Canais de comunicação">
+            ${CANAL_IDS.map(k=>{ const on = S.campCanais.includes(k);
+              return `<button class="mc-canal${on?' on':''}" role="checkbox" aria-checked="${on}"
+                data-act="campCanal" data-v="${k}">${pillCanal(k)}</button>`; }).join('')}
           </div>
           ${err('canal')?`<p class="erro-campo" role="alert">${I.alert}<span>${err('canal')}</span></p>`:''}
 
@@ -5763,7 +5991,16 @@ function modalNovaCampanha(){
 
       <footer class="ms-acoes">
         <button class="btn btn-ghost" data-act="fecharModalCamp">Cancelar</button>
-        <button class="btn btn-primary" data-act="criarCampanha">Salvar campanha</button>
+        ${(() => {
+          /* O botão só habilita com período e canal preenchidos. Investimento
+             fica de fora de propósito: ele é opcional na criação e editável
+             depois, na própria tela de resultado. */
+          const falta = Object.keys(faltamNaCampanha()).length > 0;
+          return `<button class="btn btn-primary" data-act="criarCampanha"
+            ${falta ? 'disabled aria-disabled="true"' : ''}
+            title="${falta ? 'Preencha o período e escolha ao menos um canal' : 'Criar a campanha'}"
+            >Salvar campanha</button>`;
+        })()}
       </footer>
     </div></div>`;
 }
@@ -6077,6 +6314,16 @@ function handle(act, v, el, isInput){
       S.invEdit = null; S.invValor = '';
       log('investimento-cancelar'); render(); return;
 
+    case 'fcOrdem':
+      S.fcOrdem = v; log('resultado-canal-ordem', v); render(); return;
+
+    case 'fcCanal':
+      // '' limpa o filtro; senão alterna, mas nunca deixa a lista vazia —
+      // o botão do último canal visível vem desabilitado
+      S.fcCanais = v ? arrToggle(S.fcCanais, v) : [];
+      log('resultado-canal-filtro', S.fcCanais.join(',') || 'todos');
+      render(); return;
+
     case 'preModo':
       S.preModo = v;
       log('comparativo-regua', v);
@@ -6276,6 +6523,7 @@ function handle(act, v, el, isInput){
       // a régua do comparativo volta ao padrão a cada campanha aberta,
       // e um editor aberto na campanha anterior não pode seguir junto
       S.preModo = 'anterior'; S.invEdit = null; S.invValor = '';
+      S.fcOrdem = 'data'; S.fcCanais = [];
       const [sid,cid] = v.split('|');
       S.resSeg = sid; S.resCamp = cid; S.screen = 'resultados'; S.menuSeg = null;
       const sg = S.segmentacoes.find(x=>x.id===sid);
@@ -6290,7 +6538,7 @@ function handle(act, v, el, isInput){
       log('voltou-da-tela-de-resultados'); render(); return;
 
     case 'abrirModalCamp':
-      S.modalCamp = v; S.campIni=''; S.campFim=''; S.campCanal=''; S.campInvest=''; S.campErro='';
+      S.modalCamp = v; S.campIni=''; S.campFim=''; S.campCanais=[]; S.campInvest=''; S.campErro='';
       log('abriu-modal-campanha', v); render(); return;
 
     case 'fecharModalCamp': case 'fecharModalCampBg':
@@ -6304,7 +6552,8 @@ function handle(act, v, el, isInput){
     case 'campFim': S.campFim = v; render(); return;
     case 'campInvest': S.campInvest = v; return;
     case 'campCanal':
-      S.campCanal = S.campCanal===v ? '' : v;
+      // multisseleção: clicar de novo tira o canal da lista
+      S.campCanais = arrToggle(S.campCanais, v);
       if(S.campErro==='campos' && !Object.keys(faltamNaCampanha()).length) S.campErro='';
       render(); return;
 
@@ -6319,11 +6568,11 @@ function handle(act, v, el, isInput){
       const nova = {
         id:'c'+Date.now(),
         ini: fmtBr(S.campIni), fim: fmtBr(S.campFim), criadaEm: fmtD(HOJE.getTime()),
-        canal: S.campCanal, faturamento: 0, compras: 0, clientesComp: 0,
+        canais: S.campCanais.slice(), faturamento: 0, compras: 0, clientesComp: 0,
         investimento: parseBrl(S.campInvest)
       };
       s.campanhas = [nova, ...(s.campanhas||[])];
-      log('criou-campanha', s.titulo+' · '+CANAIS[S.campCanal][0]+' · '+nova.ini+' a '+nova.fim);
+      log('criou-campanha', s.titulo+' · '+rotCanais(nova)+' · '+nova.ini+' a '+nova.fim);
       S.modalCamp=null; S.campAberta=s.id;
       render();
       toast('Campanha criada para '+nf.format(s.clientes)+' clientes.');
