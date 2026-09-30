@@ -1351,39 +1351,42 @@ tbody tr.sel{background:#F3F8FF}
 /* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
    colunas do comparativo, para os dois gráficos lado a lado não parecerem
    de produtos diferentes. */
-.funil-camp{--fun-ind:18px;display:flex;flex-direction:column;gap:16px;margin:2px 0 16px}
-.fun-lin{display:flex;flex-direction:column;gap:6px}
+/* Rótulo à esquerda, faixa à direita. As faixas encostam (gap 0 nas linhas)
+   para formar uma silhueta contínua; o rótulo fica fora porque uma faixa de
+   8% da largura não comporta texto — e é para não precisar mentir na largura
+   que ele saiu de dentro. */
+.funil-camp{display:flex;flex-direction:column;margin:2px 0 4px}
+.fun-lin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  align-items:center;gap:16px;position:relative}
+.fun-txt{display:flex;flex-direction:column;gap:2px;padding:9px 0}
 .fun-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .fun-rot{font-size:12.5px;color:var(--ink-2);line-height:1.3}
-.fun-num{font-size:16px;font-weight:700;color:var(--ink);line-height:1.15;
-  font-variant-numeric:tabular-nums;flex-shrink:0}
-.fun-trilho{height:12px;border-radius:99px;background:#EFF4F9;overflow:hidden}
-.fun-fill{height:100%;border-radius:99px;background:var(--primary);min-width:6px;
-  transition:width .25s ease}
+.fun-num{font-size:17px;font-weight:700;color:var(--ink);line-height:1.15;
+  font-variant-numeric:tabular-nums}
 .fun-ap{font-size:11.5px;color:var(--ink-3);line-height:1.35}
-@media(prefers-reduced-motion:reduce){.fun-fill{transition:none}}
-/* Cor por papel, igual ao comparativo: o público é referência, quem
-   comprou é o que está sendo medido, o recorte é subconjunto do medido. */
-.fun-lin.d1 .fun-fill{background:var(--g-ref)}
-.fun-lin.d2 .fun-fill{background:var(--g-atual-h)}
-.fun-lin.d3 .fun-fill{background:var(--g-sub)}
+.fun-faixa{height:100%;min-height:58px;align-self:stretch}
+.fun-lin.d1 .fun-faixa{background:var(--g-ref)}
+.fun-lin.d2 .fun-faixa{background:var(--g-atual-h)}
+.fun-lin.d3 .fun-faixa{background:var(--g-sub)}
 .fun-lin.d3 .fun-rot{color:var(--ink-3)}
-.fun-lin.d3 .fun-num{font-size:14px;font-weight:600}
-.fun-base{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--ink-4);margin-bottom:-3px}
-
-/* Ramo: recuo com um fio de árvore em vez de uma borda grossa colada no
-   texto. O fio para antes do fim da última linha — é conector, não
-   divisória. Com o degrau empilhado, o tique horizontal encosta na linha
-   do cabeçalho, que é onde o rótulo mora agora. */
-.fun-ramo{position:relative;padding-left:var(--fun-ind);margin-top:4px;
-  display:flex;flex-direction:column;gap:16px}
-.fun-ramo::before{content:'';position:absolute;left:5px;top:2px;bottom:34px;
-  width:1px;background:var(--border-strong)}
-.fun-ramo .fun-cab{position:relative}
-.fun-ramo .fun-cab::before{content:'';position:absolute;left:calc(-1 * var(--fun-ind) + 5px);
-  top:9px;width:11px;height:1px;background:var(--border-strong)}
-.fun-ramo .fun-base{margin-left:calc(-1 * var(--fun-ind) + 16px)}
+.fun-lin.d3 .fun-num{font-size:15px;font-weight:600}
+/* Fecho: as taxas em corpo grande, que a faixa estreita não consegue dizer. */
+.fun-fecho{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.fun-fecho div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.fun-fecho span{font-size:11.5px;color:var(--ink-3)}
+.fun-fecho b{font-size:20px;font-weight:700;color:var(--ink);line-height:1.15;
+  font-variant-numeric:tabular-nums}
+.fun-fecho i{font-size:11.5px;font-style:normal;color:var(--ink-4)}
+@media(max-width:720px){.fun-fecho{grid-template-columns:1fr 1fr}}
+/* A última etapa muda de base — mede sobre quem comprou, não sobre o público.
+   A marca é um traço pontilhado antes dela: a silhueta continua, mas o aviso
+   de que a régua trocou fica no caminho do olho. */
+.fun-lin.ramo .fun-txt{position:relative;margin-top:6px;padding-top:8px}
+.fun-lin.ramo .fun-txt::before{content:'';position:absolute;left:0;right:0;top:0;
+  border-top:1px dashed var(--border)}
+/* o traço para na coluna de texto de propósito: se atravessasse o desenho,
+   cortaria a silhueta em duas e o funil deixaria de ser um funil */
 
 
 .retorno{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
@@ -1396,7 +1399,10 @@ tbody tr.sel{background:#F3F8FF}
 @media(max-width:1180px){ .herois{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:1080px){
   .herois{grid-template-columns:repeat(2,1fr)}
-  .funil-camp{--fun-ind:14px;gap:14px}
+  /* Em tela estreita o rótulo precisa de mais espaço que o desenho: uma
+     faixa de 8% já é fina, e apertá-la mais não tira legibilidade de nada
+     que o texto não diga melhor. */
+  .fun-lin{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
 }
 
 .maiswrap{position:relative;z-index:20;flex-shrink:0}
@@ -1520,7 +1526,7 @@ tbody tr.sel{background:#F3F8FF}
   width:246px;opacity:0;pointer-events:none;transition:.12s;z-index:40;font-weight:400;text-align:left;
 }
 .ttip:hover .bubble,
-.fun-trilho.com-tip:hover .bubble{opacity:1}
+.fun-lin.com-tip:hover .bubble{opacity:1}
 
 /* Tooltip em lista: título centralizado, pares nas bordas opostas, rodapé
    com o denominador. A seta embaixo amarra a bolha ao que a disparou —
@@ -1539,14 +1545,14 @@ tbody tr.sel{background:#F3F8FF}
 .bl-pe{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14);
   font-size:11px;color:rgba(255,255,255,.6)}
 
-/* A barra vira o alvo do tooltip: é grande e é onde o olho já está. O
-   overflow tinha que abrir para a bolha caber — o recorte não fazia falta,
-   porque o preenchimento já tem o próprio raio. */
-.fun-trilho.com-tip{overflow:visible;cursor:help;position:relative}
-.fun-trilho.com-tip .bubble{bottom:calc(100% + 10px)}
-.fun-trilho.com-tip:hover .fun-fill{filter:brightness(1.06)}
-.fun-trilho.com-tip .fun-fill{transition:width .25s ease,filter .12s ease}
-@media(prefers-reduced-motion:reduce){.fun-trilho.com-tip .fun-fill{transition:none}}
+/* A etapa inteira vira o alvo do tooltip — rótulo, número e apoio. Antes era
+   a barra; com a faixa afunilada para 8% da largura, mirar nela seria mirar
+   num fio de 40px. */
+.fun-lin.com-tip{cursor:help}
+.fun-lin.com-tip .bubble{bottom:calc(100% - 4px);left:26%}
+.fun-lin.com-tip:hover .fun-num{color:var(--primary)}
+.fun-lin.com-tip .fun-num{transition:color .12s ease}
+@media(prefers-reduced-motion:reduce){.fun-lin.com-tip .fun-num{transition:none}}
 
 /* ---------- Painel do facilitador ---------- */
 #fab{position:fixed;right:18px;bottom:18px;z-index:70;background:var(--ink);color:#fff;border-radius:999px;height:44px;padding:0 18px;font-size:13px;font-weight:600;box-shadow:0 8px 22px rgba(15,40,70,.28);display:flex;align-items:center;gap:8px}
@@ -4817,33 +4823,59 @@ function funilCampanha(s, c){
      usava o público como base e o texto usava quem comprou. Barra que contradiz
      o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
      mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
-  /* Rótulo e número na mesma linha, barra logo abaixo ocupando a largura
-     toda, apoio embaixo. Antes eram três colunas lado a lado e a do rótulo
-     sozinha comia 236px — com o funil dividindo a tela com o comparativo
-     não sobrava barra para desenhar. Empilhado, a barra fica maior num
-     espaço menor, e o degrau passa a ter a mesma anatomia do grupo de
-     colunas do outro gráfico: identificação em cima, desenho no meio,
-     leitura embaixo. */
-  const degrau = (rot, n, largura, apoio, cls, bolha) => `<div class="fun-lin ${cls}">
-    <div class="fun-cab"><span class="fun-rot">${rot}</span><b class="fun-num">${nf.format(n)}</b></div>
-    <div class="fun-trilho${bolha?' com-tip':''}"><div class="fun-fill" style="width:${largura.toFixed(1)}%"></div>${bolha||''}</div>
-    <span class="fun-ap">${apoio}</span>
-  </div>`;
+  /* FUNIL DE VERDADE: a largura de cada faixa é a proporção real.
+
+     A referência desenhava 8.420 → 631 → 253 como 100% → 85% → 65%. Os
+     valores são 100% → 7,5% → 3,0%. Um funil cuja largura não codifica o
+     valor ensina o contrário do que o dado diz: o associado olha e conclui
+     que quase todo mundo comprou.
+
+     Aqui a faixa afunila de verdade, e isso tem uma consequência aceita de
+     propósito: a segunda e a terceira ficam estreitas. É o que o número é.
+     Por isso o rótulo e o valor moram FORA da faixa, numa linha própria —
+     texto dentro de uma faixa de 8% seria ilegível, e é para não precisar
+     mentir na largura que ele saiu de lá.
+
+     O fecho com os três números repete as taxas em corpo grande, que é o que
+     a faixa estreita não consegue dizer sozinha. */
+  const pctAt = pct(c.clientesComp);
+  const larg  = v => Math.max(2, v).toFixed(1);
+  const w1 = 100, w2 = +larg(pctAt), w3 = +larg(pct(acima));
+
+  /* Rótulo à esquerda, faixa à direita, na mesma linha do grid. As três
+     faixas encostam sem folga, então formam UMA silhueta contínua — com o
+     texto entre elas, o funil virava três formas soltas. */
+  const linha = (rot, n, apoio, cls, wTopo, wBase, bolha, ramo) => {
+    const c1 = (100 - wTopo) / 2, c2 = (100 + wTopo) / 2;
+    const c3 = (100 + wBase) / 2, c4 = (100 - wBase) / 2;
+    return `<div class="fun-lin ${cls}${bolha?' com-tip':''}${ramo?' ramo':''}">
+      <div class="fun-txt">
+        <div class="fun-cab"><span class="fun-rot">${rot}</span><b class="fun-num">${nf.format(n)}</b></div>
+        <span class="fun-ap">${apoio}</span>
+      </div>
+      <div class="fun-faixa" aria-hidden="true"
+        style="clip-path:polygon(${c1.toFixed(2)}% 0,${c2.toFixed(2)}% 0,${c3.toFixed(2)}% 100%,${c4.toFixed(2)}% 100%)"></div>
+      ${bolha||''}
+    </div>`;
+  };
 
   return `<div class="bloco">
     <h4 class="bloco-tit">Funil de impactados</h4>
     <div class="funil-camp">
-      ${degrau('Receberam a campanha', total, 100, '100% do público', 'd1')}
-      ${degrau('Compraram', c.clientesComp, pct(c.clientesComp),
-        `${Math.round(pct(c.clientesComp))}% do público`, 'd2', tipCompraram)}
-      <div class="fun-ramo">
-        <div class="fun-base">Sobre os ${nf.format(c.clientesComp)} que compraram</div>
-        ${degrau('Gastaram acima do normal', acima, dosQ(acima),
-          `${pctAcima}% de quem comprou · num período normal são ${base}%`, 'd3')}
-      </div>
+      ${linha('Público-alvo', total, 'receberam a campanha', 'd1', w1, w2, '')}
+      ${linha('Compraram', c.clientesComp, `de ${nf.format(total)} que receberam`,
+        'd2', w2, w3, tipCompraram)}
+      ${linha('Tiveram ticket médio acima da média', acima,
+        `de ${nf.format(c.clientesComp)} que compraram`, 'd3', w3, w3, '', true)}    </div>
+
+    <div class="fun-fecho">
+      <div><span>Conversão</span><b>${nf1.format(pctAt)}%</b><i>do público-alvo</i></div>
+      <div><span>Ticket acima da média</span><b>${pctAcima}%</b><i>de quem comprou</i></div>
+      <div><span>Num período normal</span><b>${base}%</b><i>deste mesmo público</i></div>
     </div>
-    <p class="bloco-nota">A última barra muda de base: ela mede sobre quem comprou, não sobre o
-    público inteiro. “Acima do normal” é gastar mais de ${brl(s.ticketHist||0)} por compra, que é o
+
+    <p class="bloco-nota">A última etapa muda de base: ela mede sobre quem comprou, não sobre o
+    público inteiro. “Acima da média” é gastar mais de ${brl(s.ticketHist||0)} por compra, que é o
     que este público costuma gastar fora de campanha. <b>Ela importa tanto quanto o ticket médio lá
     em cima</b>: a média sobe se poucos clientes gastarem muito, e só a contagem mostra se o aumento
     se espalhou.</p>
