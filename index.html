@@ -657,23 +657,53 @@ tbody tr.sel{background:#F3F8FF}
 /* Mesmo tratamento das faixas de DNA: a que está viva fica branca e legível,
    as encerradas recuam para o fundo. Sem cor de contorno — o contraste basta. */
 /* Colunas fixas para os cards ficarem alinhados entre si */
-.cpc{display:grid;grid-template-columns:minmax(200px,1fr) 150px 158px 150px 34px;gap:16px;align-items:center;
-  background:#FAFCFE;border:1px solid #E3EAF3;border-radius:10px;padding:15px 18px;margin-bottom:10px;transition:.14s}
+/* Quatro colunas, não cinco: o canal saiu da grade porque sua largura é
+   variável (um a sete) e grade rígida não comporta isso. As duas de número
+   usam largura automática com mínimo, então alinham entre linhas sem
+   reservar espaço vazio quando o valor é curto. */
+.cpc{display:grid;grid-template-columns:minmax(220px,1fr) minmax(120px,auto) minmax(104px,auto) 34px;
+  gap:20px;align-items:center;
+  background:#FAFCFE;border:1px solid #E3EAF3;border-radius:10px;padding:14px 18px;margin-bottom:10px;transition:.14s}
 .cpc:last-child{margin-bottom:0}
 .cpc.ativa{background:#fff;border-color:var(--border)}
-.cpc-datas{min-width:0}
-.cpc-per{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px;font-weight:600;color:var(--ink-4)}
+
+/* Bloco de identidade: o período manda, canais e data de criação ficam na
+   linha de baixo, como metadado. */
+.cpc-ident{min-width:0;display:flex;flex-direction:column;gap:7px}
+.cpc-per{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14.5px;
+  font-weight:600;color:var(--ink-4);font-variant-numeric:tabular-nums}
 .cpc.ativa .cpc-per{color:var(--ink)}
-.cpc-tag{font-size:11px;font-weight:600;background:var(--primary-soft);color:#0B6FD0;border-radius:999px;padding:3px 10px}
-.cpc-criada{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:12.5px;color:var(--ink-4)}
-.cpc.ativa .cpc-criada{color:var(--ink-3)}
-.cpc-col{min-width:0}
-.cpc-canal{display:flex}
-.vdado{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
-  color:var(--ink-3);white-space:nowrap;transition:.14s}
-.cpc.ativa .vdado{font-weight:700;color:var(--ink)}
-.vdado svg{color:#B9C8DA;flex-shrink:0}
-.cpc.ativa .vdado svg{color:var(--ink-4)}
+.cpc-tag{font-size:11px;font-weight:600;background:var(--primary-soft);color:#0B6FD0;
+  border-radius:999px;padding:3px 10px;white-space:nowrap}
+.cpc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.cpc-canais{display:inline-flex;gap:5px;flex-wrap:wrap}
+/* Pill compacta nesta lista: aqui ela é contexto, não o assunto — no modal,
+   onde é a escolha, continua no tamanho cheio. */
+.cpc-canais .canal{font-size:10.5px;padding:3px 8px;gap:5px}
+.cpc-canais .canal svg{width:11px;height:11px}
+.cpc-criada{font-size:11.5px;color:var(--ink-4);white-space:nowrap}
+.cpc-criada::before{content:'·';margin-right:6px;color:var(--ink-4)}
+.cpc-canais:empty + .cpc-criada::before{content:'';margin:0}
+
+/* HIERARQUIA DOS DOIS NÚMEROS: faturamento é o resultado, ticket é o
+   detalhe. Antes pesavam igual e disputavam o olho. O rótulo em cima
+   dispensa o ícone — eram dois sinais para a mesma coisa. */
+.cpc-num{display:flex;flex-direction:column;gap:1px;align-items:flex-end;min-width:0}
+.cpc-rot{font-size:10.5px;color:var(--ink-4);white-space:nowrap}
+.cpc-num b{font-size:14px;font-weight:600;color:var(--ink-3);line-height:1.2;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.cpc-fat b{font-size:17px;font-weight:700}
+.cpc.ativa .cpc-num b{color:var(--ink-2)}
+.cpc.ativa .cpc-fat b{color:var(--ink)}
+/* Estreito: identidade ocupa a linha inteira e os dois números descem para
+   a segunda, alinhados à esquerda. Mantê-los à direita aqui abriria um vão
+   morto no meio do cartão, que foi o que aconteceu na primeira tentativa. */
+@media(max-width:860px){
+  .cpc{grid-template-columns:auto auto 34px;gap:11px 22px;align-items:start}
+  .cpc-ident{grid-column:1/-1}
+  .cpc-num{align-items:flex-start}
+  .btn-res{grid-row:2;grid-column:3;align-self:center}
+}
 /* ação de segundo plano: só o ícone, o card inteiro já diz do que se trata */
 .btn-res{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;
   color:var(--ink-4);background:transparent;transition:.12s;justify-self:end}
@@ -4463,17 +4493,39 @@ function botaoMais(s){
 
 /* Grid de colunas fixas: canal, faturamento e ticket caem sempre na mesma
    posição, então os valores de um card alinham com os do card de baixo. */
+/* CARD DE CAMPANHA, refeito para caber de um a sete canais.
+
+   O canal tinha coluna própria de 150px numa grade rígida. Com um canal
+   funcionava; com três, as pills transbordavam e passavam POR CIMA do
+   faturamento — "Instagram / Fac…R$ 184.300,00…oogle". Coluna de largura
+   fixa para conteúdo de tamanho variável nunca ia sobreviver ao multicanal.
+
+   O canal desceu para o bloco de identidade, junto do período e da data de
+   criação: é metadado da campanha, não uma medida. Isso tira a largura
+   variável da grade, e as duas colunas de número passam a alinhar de uma
+   linha para a outra — que é o que a lista serve para comparar.
+
+   HIERARQUIA: período identifica, faturamento é o resultado, ticket é o
+   detalhe. Antes os dois números tinham o mesmo peso e disputavam o olho. */
 function cardCampanha(s, c){
   const ativa = campanhaAtiva(c);
   return `<div class="cpc ${ativa?'ativa':''}">
-    <div class="cpc-datas">
-      <div class="cpc-per">${c.ini} &nbsp;-&nbsp; ${c.fim}
+    <div class="cpc-ident">
+      <div class="cpc-per">${c.ini} – ${c.fim}
         ${ativa?`<span class="cpc-tag">Em andamento</span>`:''}</div>
-      <div class="cpc-criada">${I.cal} Criada em: ${c.criadaEm}</div>
+      <div class="cpc-meta">
+        <span class="cpc-canais">${pillsCanais(c)}</span>
+        <span class="cpc-criada">criada em ${c.criadaEm}</span>
+      </div>
     </div>
-    <div class="cpc-col cpc-canal">${pillsCanais(c)}</div>
-    <div class="cpc-col"><span class="vdado" title="Faturamento da campanha">${I.moeda} ${brl(c.faturamento)}</span></div>
-    <div class="cpc-col"><span class="vdado" title="Ticket médio da campanha: faturamento dividido pelo número de compras">${I.etiqueta} ${brl(ticketCamp(c))}</span></div>
+    <div class="cpc-num cpc-fat">
+      <span class="cpc-rot">Faturamento</span>
+      <b title="Faturamento da campanha">${brl(c.faturamento)}</b>
+    </div>
+    <div class="cpc-num">
+      <span class="cpc-rot">Ticket médio</span>
+      <b title="Faturamento dividido pelo número de compras">${brl(ticketCamp(c))}</b>
+    </div>
     <button class="btn-res" data-act="verResultados" data-v="${s.id}|${c.id}"
       aria-label="Ver resultados da campanha de ${c.ini} a ${c.fim}"
       title="Ver resultados da campanha">${I.fwd}</button>
