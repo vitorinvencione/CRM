@@ -91,7 +91,13 @@ input,select{font-family:inherit;font-size:14px}
 .topbar{height:56px;background:#fff;border-bottom:1px solid var(--border)}
 .shell{display:flex;min-height:calc(100vh - 56px)}
 .sidebar{width:88px;background:#fff;border-right:1px solid var(--border);flex:0 0 88px}
-.main{flex:1;padding:34px 44px 0;display:flex;flex-direction:column}
+/* min-width:0 É O QUE SEGURA A PÁGINA INTEIRA. Flex item nasce com
+   min-width:auto, então .main crescia até a largura mínima do conteúdo mais
+   largo que ele contém — a tabela de perfil, que pede 1.416px. O resultado
+   era a página toda rolando na horizontal em qualquer tela menor que isso,
+   mesmo com a tabela tendo o próprio overflow. Sem isto, nenhum breakpoint
+   abaixo adianta. */
+.main{flex:1;min-width:0;padding:34px 44px 0;display:flex;flex-direction:column}
 .geral+.footer,.footer{margin-top:auto;padding:26px 0 22px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-4)}
 .footer strong{color:var(--ink-3)}
 .brand{font-weight:800;letter-spacing:.02em;color:var(--ink);font-size:13px}
@@ -729,7 +735,7 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Seis cartões de número. Grade fixa para os rótulos de duas linhas não
    empurrarem o valor para baixo e desalinharem a fileira. */
-.gcards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:var(--bloco)}
+.gcards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:var(--bloco)}
 .gcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;
   box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;gap:12px}
 .gcard-top{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.3}
@@ -810,6 +816,7 @@ tbody tr.sel{background:#F3F8FF}
 .p-abandonador{background:#E0134E}
 
 .gdupla{display:grid;grid-template-columns:1fr 1fr;gap:var(--bloco);margin-bottom:var(--bloco)}
+.gdupla>.gpanel{min-width:0}
 .gdupla>.gpanel{margin-bottom:0}
 
 /* Gráfico de colunas em CSS: eixo à esquerda, plot em flex, cada barra com
@@ -977,6 +984,7 @@ tbody tr.sel{background:#F3F8FF}
    dois textos finais alinham em vez de flutuarem em alturas diferentes. */
 .bloco-par{display:grid;grid-template-columns:1fr 1fr;gap:var(--res-bloco);
   align-items:stretch}
+.bloco-par>.bloco{min-width:0}
 .bloco-par>.bloco{display:flex;flex-direction:column;margin-bottom:0}
 .bloco-par>.bloco>.bloco-nota{margin-top:auto;padding-top:var(--res-item)}
 .bloco-par{margin-bottom:var(--res-bloco)}
@@ -1300,12 +1308,12 @@ tbody tr.sel{background:#F3F8FF}
 .gtab tr:last-child td{border-bottom:0}
 
 @media(max-width:1180px){
-  .gcards{grid-template-columns:repeat(3,1fr)}
+  .gcards{grid-template-columns:repeat(3,minmax(0,1fr))}
   .gdupla{grid-template-columns:1fr}
   .gp-lin{grid-template-columns:80px 1fr 1fr;gap:10px}
 }
 @media(max-width:700px){
-  .gcards{grid-template-columns:repeat(2,1fr)}
+  .gcards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gp-lin{grid-template-columns:1fr;gap:4px}
   .gp-rot{text-align:left;font-weight:600}
 }
@@ -1338,7 +1346,7 @@ tbody tr.sel{background:#F3F8FF}
 .res-parcial b{font-weight:700}
 
 /* Três heróis, todos com o mesmo peso. O valor é o maior texto da tela. */
-.herois{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--res-item);
+.herois{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--res-item);
   margin-bottom:var(--res-tier)}
 .hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;
   box-shadow:var(--shadow);display:flex;flex-direction:column}
@@ -1740,6 +1748,103 @@ tbody tr.sel{background:#F3F8FF}
 .mini{display:flex;gap:8px}
 .mini button{flex:1;border:1px solid var(--border-strong);border-radius:7px;height:34px;font-size:12px;font-weight:600;color:var(--ink-2);background:#fff}
 .mini button:hover{border-color:var(--primary);color:var(--primary)}
+
+/* =========================================================================
+   RESPONSIVO — TRÊS DEGRAUS
+
+   Os breakpoints que existiam cuidavam de grades individuais (heróis, cards,
+   comparativos) e nenhum cuidava da CASCA: o rail lateral era 88px fixos, o
+   conteúdo tinha 44px de respiro de cada lado e o painel de estimativa do
+   wizard era uma coluna travada em 306px. Num celular de 390px isso consumia
+   mais de metade da largura antes de qualquer conteúdo aparecer.
+
+   Cada degrau é nomeado pelo que muda, não pelo aparelho:
+
+   1100px — a tela perde a segunda coluna. Pares de blocos empilham.
+    900px — some a coluna lateral. O wizard deixa de ser duas colunas e o
+            painel de estimativa vira um bloco no fim do fluxo.
+    620px — vira uma coluna só. O rail do ERP sai, o respiro encolhe, as
+            abas rolam na horizontal e tudo que ainda tinha duas colunas
+            passa a ter uma.
+
+   O rail lateral some sem perda: ele é um <div> vazio que simula o chrome do
+   ERP hospedeiro, não navegação. ========================================= */
+
+@media(max-width:1100px){
+  .main{padding:28px 28px 0}
+  .sidebar{width:56px;flex:0 0 56px}
+}
+
+@media(max-width:900px){
+  .wizbody{flex-direction:column;min-height:0}
+  .aside{flex:1 1 auto;position:static;width:100%}
+  .wizhead{flex-direction:column;gap:18px}
+  .stepper{border-left:0;padding-left:0;width:100%}
+  .wizhead .title{max-width:none}
+  .gdupla{grid-template-columns:1fr}
+  .gdupla>.gpanel{margin-bottom:var(--bloco)}
+  .gdupla>.gpanel:last-child{margin-bottom:0}
+  .ad-cards{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:620px){
+  /* O rail é decorativo: sai e devolve 56px de conteúdo. */
+  .sidebar{display:none}
+  .main{padding:20px 16px 0}
+  .topbar{height:48px}
+  .shell{min-height:calc(100vh - 48px)}
+
+  /* As abas passam a rolar em vez de quebrar em duas linhas: quebrar faz o
+     conteúdo pular de posição quando se troca de aba. */
+  .tabs{gap:18px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap;flex-shrink:0}
+
+  .herois{grid-template-columns:1fr}
+  .ad-cards{grid-template-columns:1fr}
+  .inv-mestres{grid-template-columns:1fr}
+  .im:nth-child(3){grid-column:auto}
+  .im{padding-left:0;border-left:0;padding-top:12px;border-top:1px solid var(--border)}
+  .im:first-child{padding-top:0;border-top:0}
+  .fun-fecho{grid-template-columns:1fr}
+  .fun-fecho div:first-child{margin-left:0}
+
+  /* Título e controle na mesma linha não cabem: o controle desce e ganha a
+     largura toda, que é o alvo de toque confortável. */
+  .fc-topo,.inv-topo,.gpanel-top{flex-direction:column;align-items:stretch;gap:12px}
+  .fc-ord-grupo,.cmp-ops{width:100%}
+  .fc-ord,.cmp-op{flex:1;text-align:center}
+  .gtoggle{align-self:flex-start}
+  .fc-limpa{margin-left:0}
+
+  .sc-topo{padding:18px 16px 16px}
+  .gpanel{padding:16px 14px}
+  .bloco{padding:16px 14px}
+  .modal{padding:20px 18px;border-radius:12px}
+  .ms-corpo{padding:16px 18px 4px}
+  .ms-head{padding:18px 18px 14px}
+  .ms-acoes{padding:14px 18px}
+  .overlay{padding:10px;align-items:flex-start}
+  .modal-salvar{max-height:94vh}
+
+  .funil-camp .fun-num{font-size:22px}
+  .fun-faixa.d3 .fun-num{font-size:19px}
+  .fun-rot{max-width:86%}
+  .hero-val{font-size:24px}
+
+  /* O popover de datas não pode ser mais largo que a tela. */
+  .dp{max-width:calc(100vw - 32px)}
+  .dp-meses{grid-template-columns:repeat(3,1fr)}
+}
+
+/* Tabela de perfil: continua rolando na horizontal por decisão, e abaixo de
+   620px o aviso de que ela rola precisa estar visível — a sombra lateral
+   sozinha some num dedo apoiado na tela. */
+@media(max-width:620px){
+  .rv-wrap{margin-inline:-14px;padding-inline:14px}
+}
+
 </style>
 </head>
 <body>
