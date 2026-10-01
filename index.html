@@ -1207,73 +1207,83 @@ tbody tr.sel{background:#F3F8FF}
 /* table-layout FIXO: a largura vem do colgroup, não do conteúdo. É o que
    garante que "Atual" do Fiel caia sob "Atual" do Novos.
 
-   AS LARGURAS SÃO MEDIDAS DO CONTEÚDO, não chutadas. O maior valor de cada
-   coluna é "R$ 3.560" (8 caracteres, ~46px a 11,5px) — antes a coluna tinha
-   68px com 20px de respiro, sobravam 48px e o número saía cortado. Agora
-   cada coluna tem folga sobre o pior caso real, medido nos nove conjuntos. */
-.rvtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
-  font-size:12.5px;min-width:1252px}
-.rv-c-ind{width:160px}
-.rv-c-ant{width:58px}
-.rv-c-at{width:68px}
-.rv-c-var{width:56px}
+   RESPIRO POR POSIÇÃO NO GRUPO, não padding uniforme. A trinca Antes |
+   Atual | Variação é uma unidade; o que separa um perfil do outro é o vão
+   ao redor dela, não só a régua. Antes todas as células tinham 8px de cada
+   lado: a variação terminava a 8px da régua e o "Antes" do perfil seguinte
+   começava a 8px dela — 16px entre dois grupos contra 16px dentro do mesmo
+   grupo. Sem diferença, o olho não via onde o Fiel acabava.
 
-/* ESPECIFICIDADE: ".rvtab th" (0-0-1-1) vencia ".rv-canto" e ".rv-ind"
-   (0-0-1-0), e a coluna do indicador ficava alinhada à direita, colada nos
-   números. Os seletores abaixo carregam o elemento junto para empatar o peso
-   e vencer pela ordem. */
+   Agora: 8px entre células da mesma trinca, 18px nas bordas do grupo. */
+.rvtab{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;
+  font-size:12.5px;min-width:1416px}
+/* Larguras medidas pelo pior caso real mais o respiro do grupo: "R$ 3.560"
+   pede ~44px, mais 16px de vão do grupo à esquerda e 8px à direita. Com 62px
+   ele encostava no valor de Atual. */
+.rv-c-ind{width:168px}
+.rv-c-ant{width:68px}
+.rv-c-at{width:72px}
+.rv-c-var{width:68px}
 .rvtab th{font-weight:600;color:var(--ink-3);font-size:11px;padding:0;
   border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
-.rvtab th.rv-canto,.rvtab th.rv-ind{text-align:left;white-space:normal}
 
-/* A coluna do indicador fica presa: rolando até o Abandonador sem ela, o
-   associado perde de vista qual linha está lendo. */
+/* ESPECIFICIDADE: ".rvtab th" (0-0-1-1) vencia ".rv-canto" e ".rv-ind"
+   (0-0-1-0). Os seletores abaixo carregam o elemento junto para empatar o
+   peso e vencer pela ordem. */
+.rvtab th.rv-canto,.rvtab th.rv-ind{text-align:left;white-space:normal}
 .rvtab th.rv-canto,.rvtab th.rv-ind{position:sticky;left:0;z-index:2;background:#fff}
-.rvtab th.rv-canto{background:var(--rv-cab);color:var(--ink-2);font-size:12px;
-  padding:14px 14px 10px;vertical-align:bottom}
+/* O canto assenta na MESMA linha de base dos nomes de perfil: vertical-align
+   bottom nos dois e o mesmo padding inferior. Antes o rótulo ficava colado no
+   topo enquanto os nomes flutuavam embaixo. */
+.rvtab th.rv-canto{background:var(--rv-cab);color:var(--ink-3);font-size:11px;
+  font-weight:600;letter-spacing:.02em;padding:16px 18px 10px;vertical-align:bottom}
 .rv-canto-b{padding:0;border-bottom:1px solid var(--border)}
 .rvtab thead tr:first-child th{border-bottom:0}
-/* A borda da coluna presa é sombra, não border: border em célula sticky
-   pisca na rolagem em alguns navegadores. */
 .rvtab th.rv-canto,.rvtab th.rv-ind{box-shadow:1px 0 0 var(--border)}
 
-/* Cabeçalho de perfil: o nome respira acima da trinca que ele cobre. */
-.rv-pcab{background:var(--rv-cab);padding:14px 8px 9px;border-bottom:0}
-.rv-pnome{display:flex;align-items:center;justify-content:center;gap:7px;
-  font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap}
-.rvtab thead tr:nth-child(2) th{padding:0 8px 8px;font-size:10.5px;
-  font-weight:500;color:var(--ink-4);background:var(--rv-cab)}
+/* Cabeçalho de perfil: é a âncora da coluna que se compara, então leva o
+   peso cheio e o ponto da cor um pouco maior que o resto da tela. */
+.rv-pcab{background:var(--rv-cab);padding:16px 12px 10px;border-bottom:0;
+  vertical-align:bottom}
+.rv-pnome{display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;
+  letter-spacing:-.01em}
+/* Antes / Atual / Variação: é a legenda que dá sentido à trinca. Estava a
+   10,5px em ink-4, quase invisível; subiu de peso sem subir de corpo. */
+.rvtab thead tr:nth-child(2) th{padding:0 8px 9px;font-size:10px;font-weight:600;
+  letter-spacing:.03em;color:var(--ink-4);background:var(--rv-cab)}
 
-/* A régua entre perfis é o que separa uma trinca da outra. Mais forte que a
-   linha entre linhas, porque é a divisão que importa para comparar. */
-.rvtab .sep{border-left:1px solid #D7E2EE}
+/* A régua entre perfis, com o vão de respiro dos dois lados dela. */
+.rvtab .sep{border-left:1px solid #D7E2EE;padding-left:16px!important}
+.rvtab .rv-sin{padding-right:16px!important}
+/* Faixa alternada por GRUPO, não por linha: o que se compara aqui é coluna
+   contra coluna, então é o grupo que precisa se destacar do vizinho. */
+.rvtab .g-par{background:#FBFCFE}
 
-/* Linha do indicador: rótulo e unidade, altura reservada para as cinco
-   fecharem iguais mesmo com unidades de comprimentos diferentes. */
-.rvtab th.rv-ind{padding:12px 14px;border-bottom:1px solid #EDF2F7}
+/* Linha do indicador: é o eixo da linha, e a unidade reserva altura fixa
+   para as cinco fecharem iguais mesmo com textos de tamanhos diferentes. */
+.rvtab th.rv-ind{padding:15px 18px;border-bottom:1px solid #EDF2F7}
 .rv-ind-rot{display:block;font-size:13px;font-weight:700;color:var(--ink);
-  line-height:1.3}
-.rv-ind-un{display:block;min-height:2.6em;margin-top:2px;font-size:10.5px;
-  color:var(--ink-4);line-height:1.3}
+  line-height:1.3;letter-spacing:-.01em}
+.rv-ind-un{display:block;min-height:2.5em;margin-top:3px;font-size:10.5px;
+  color:var(--ink-4);line-height:1.25}
 
 /* HIERARQUIA DENTRO DA TRINCA. Comparar de um perfil para outro é percorrer
    a linha lendo só "Atual". Então Atual é o único em corpo cheio, Antes
-   recua para cinza claro e a variação fica menor que os dois. Sem isso os
-   três pesam igual e a linha vira dezoito números sem ordem de leitura. */
-.rvtab td{padding:12px 8px;text-align:right;border-bottom:1px solid #EDF2F7;
+   recua para cinza claro e a variação fica entre os dois. */
+.rvtab td{padding:15px 8px;text-align:right;border-bottom:1px solid #EDF2F7;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.rv-num{color:var(--ink-4);font-size:11px}
-.rv-num.forte{color:var(--ink);font-weight:700;font-size:13px}
+.rv-num{color:var(--ink-4);font-size:11px;font-weight:400}
+.rv-num.forte{color:var(--ink);font-weight:700;font-size:13.5px;
+  letter-spacing:-.01em}
 .rvtab tbody tr:last-child td,.rvtab tbody tr:last-child th.rv-ind{border-bottom:0}
 /* Realce da linha inteira no hover: com dezoito colunas, é o que impede o
    olho de pular de linha no meio da comparação. */
-.rvtab tbody tr:hover td{background:#F7FAFD}
-.rvtab tbody tr:hover th.rv-ind{background:#F7FAFD}
-.rv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rvtab tbody tr:hover td{background:#F4F8FD}
+.rvtab tbody tr:hover td.g-par{background:#F1F6FC}
+.rvtab tbody tr:hover th.rv-ind{background:#F4F8FD}
+.rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .p-novos{background:#7C89A0}
-/* respiro entre o valor e a seta: sem ele "R$ 1.508" e "↓ 57,6%" encostam e
-   viram uma string só */
-.rv-sin{padding-left:6px!important}
 .rv-var{font-weight:700;font-size:11.5px}
 .rv-var.bom{color:var(--green)}
 .rv-var.ruim{color:var(--danger)}
@@ -3447,22 +3457,26 @@ function blocoRfv(base, contexto){
      · a coluna do indicador é presa na rolagem. Com 1.540px de tabela, sem
        isso o associado rola até o Abandonador e não sabe mais qual linha
        está lendo. */
-  const cabPerfis = B.map(x=>`<th colspan="3" class="rv-pcab">
+  /* g-par marca os grupos de índice ímpar (2º, 4º, 6º perfil). A faixa é
+     por GRUPO e não por linha porque o que se compara aqui é coluna contra
+     coluna — é o perfil que precisa se destacar do vizinho. */
+  const gp = i => i % 2 ? ' g-par' : '';
+  const cabPerfis = B.map((x,i)=>`<th colspan="3" class="rv-pcab${gp(i)}">
       <span class="rv-pnome"><i class="rv-dot ${x[11]}"></i>${esc(x[0])}</span>
     </th>`).join('');
 
-  const subCab = B.map(()=>
-    `<th class="sep">Antes</th><th>Atual</th><th>Variação</th>`).join('');
+  const subCab = B.map((x,i)=>
+    `<th class="sep${gp(i)}">Antes</th><th class="${gp(i).trim()}">Atual</th><th class="${gp(i).trim()}">Variação</th>`).join('');
 
   const corpo = GRUPOS_RFV.map(g=>`<tr>
       <th scope="row" class="rv-ind">
         <span class="rv-ind-rot">${esc(g.rot)}</span>
         <span class="rv-ind-un">${esc(g.un)}</span>
       </th>
-      ${B.map(x=>
-        `<td class="rv-num sep">${g.fmtC(x[g.i])}</td>
-          <td class="rv-num forte">${g.fmtC(x[g.i+1])}</td>
-          <td class="rv-sin">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`
+      ${B.map((x,i)=>
+        `<td class="rv-num sep${gp(i)}">${g.fmtC(x[g.i])}</td>
+          <td class="rv-num forte${gp(i)}">${g.fmtC(x[g.i+1])}</td>
+          <td class="rv-sin${gp(i)}">${sinalRfv(g, x[0], x[g.i], x[g.i+1])}</td>`
       ).join('')}
     </tr>`).join('');
 
