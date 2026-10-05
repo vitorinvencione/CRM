@@ -1390,9 +1390,10 @@ tbody tr.sel{background:#F3F8FF}
 
 /* Barra horizontal, escala única: comparar entre campanhas é o ponto. */
 
-/* Onde a venda aconteceu: uma barra repartida em duas, e as duas somam o
-   faturamento inteiro. O percentual fica dentro da fatia quando cabe; o
-   valor em reais fica embaixo, junto do nome. */
+/* Onde a venda aconteceu — BARRA PARADA, NÃO REMOVIDA.
+   A barra repartida (.cv-barra / .cv-seg) fica aqui esperando a segunda
+   origem: quando o ERP devolver a venda online apartada, voltar a usá-la é
+   trocar a marcação do bloco, sem reescrever estilo. Hoje nada a aciona. */
 .cv-barra{display:flex;height:40px;border-radius:10px;overflow:hidden;margin-bottom:16px}
 .cv-seg{display:flex;align-items:center;justify-content:center;font-size:13.5px;
   font-weight:700;color:#fff;min-width:4px;transition:width .3s ease;
@@ -1401,6 +1402,10 @@ tbody tr.sel{background:#F3F8FF}
 .cv-seg.online{background:#6F86A8}
 @media(prefers-reduced-motion:reduce){.cv-seg{transition:none}}
 .cv-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* Uma origem só: valor à esquerda e o aviso da lacuna à direita, na mesma
+   linha de base. Sem grid de duas colunas iguais, que deixaria metade vazia. */
+.cv-uni{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cv-falta{margin:0;font-size:12px;color:var(--ink-4);line-height:1.45}
 .cv-col span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3);
   margin-bottom:4px}
 .cv-col b{display:block;font-size:16px;font-weight:700;color:var(--ink);
@@ -5003,24 +5008,20 @@ function cardFaturamento(s, c, periodo){
    de 49% dá 9 pontos percentuais, mas "9 pontos" é vocabulário de analista.
    Para quem lê no balcão, o número que significa alguma coisa é o relativo:
    58 ÷ 49 = 1,18, ou seja, 18% acima da média. */
-/* Onde a venda aconteceu: balcão ou delivery.
-
-   As duas somam o faturamento inteiro da campanha, então o gráfico é uma
-   barra única repartida — não dois números soltos que o leitor teria que
-   somar para descobrir que fecham 100%.
-
-   BARRA E NÃO ROSCA. Duas fatias cabem numa rosca, e a regra de gráfico
-   diria que sim. Mas esta tela é toda de barra — funil, comparativo,
-   faturamento por campanha — e uma rosca seria a única coisa redonda da
-   página. Consistência aqui vale mais que variedade.
+/* MODELO DA VENDA ONLINE — PARADO, AGUARDANDO DADO.
+   Nada na tela chama fatiaOnline hoje: o bloco "Onde a venda aconteceu" mostra
+   só o balcão, por decisão do Vitor, até o ERP devolver a venda online
+   apartada. O modelo fica porque a lacuna é de dado, não de raciocínio, e
+   porque descartá-lo custaria remontar tudo isto depois.
 
    A PROPORÇÃO SAI DO PÚBLICO, NÃO DE UM NÚMERO SOLTO. Público mais velho
-   compra mais no balcão; campanha por WhatsApp empurra mais para o
-   delivery do que uma ligação. As duas coisas entram na conta, e é por
-   isso que Hipertensão fica mais presencial que Mãe. */
-/* Quanto cada canal puxa a venda para o online. Mídia paga (Meta, Google,
-   TikTok) leva mais gente ao delivery que uma ligação, que é o canal mais
-   ligado ao balcão. */
+   compra mais no balcão; campanha por WhatsApp empurra mais para o delivery do
+   que uma ligação. As duas coisas entram na conta, e é por isso que
+   Hipertensão fica mais presencial que Mãe.
+
+   CANAL_VENDA: quanto cada canal puxa a venda para o online. Mídia paga (Meta,
+   Google, TikTok) leva mais gente ao delivery que uma ligação, que é o canal
+   mais ligado ao balcão. */
 const CANAL_VENDA = {whatsapp:1.25, email:1.10, meta:1.35, google:1.30,
                      tiktok:1.40, sms:1.00, ligacao:0.80};
 
@@ -5038,40 +5039,42 @@ function fatiaOnline(s, c){
   return Math.min(.45, Math.max(.08, pct));
 }
 
+/* UMA ORIGEM SÓ, POR ORA. Decisão do Vitor: entra apenas a venda no balcão da
+   loja, e as outras origens chegam conforme o dado ficar disponível.
+
+   POR QUE NÃO MOSTRAR "100%". Com uma origem só, a barra repartida vira uma
+   barra cheia, e barra cheia não é gráfico: é um retângulo. Pior, "100% no
+   balcão" AFIRMA que medimos que nada saiu pela internet — e o que acontece é
+   que ainda não sabemos. São frases diferentes, e a segunda é a que o dono da
+   farmácia usaria para decidir não investir em delivery. Então o bloco diz o
+   valor que mediu e diz, com letra, que é a única origem separada hoje.
+
+   EM COMPRAS, NÃO EM REAIS. Com uma origem só, o faturamento do balcão É o
+   faturamento da campanha — o mesmo número do cartão mestre, quatro linhas
+   acima. Reimprimi-lo não informa nada e a guarda de densidade do teste 11
+   reprova, com razão. Compras é número que a tela ainda não mostra em lugar
+   nenhum, responde a mesma pergunta ("onde a venda aconteceu") e não repete
+   ninguém. */
 function blocoCanais(s, c){
   if(!c.faturamento) return '';
-  const online = Math.round(c.faturamento * fatiaOnline(s, c));
-  const pdv    = c.faturamento - online;
-  const pctOn  = online / c.faturamento * 100;
-  const pctPdv = 100 - pctOn;   // as duas somam 100 por construção, não por arredondamento
 
   return `<div class="bloco">
     <h4 class="bloco-tit">Onde a venda aconteceu
-      ${tipTexto(`Divide o faturamento da campanha entre a venda no balcão da loja e a venda
-      online com entrega. As duas somam o faturamento inteiro: ${brl(c.faturamento)}.`)}</h4>
+      ${tipTexto(`Hoje o sistema separa só a venda registrada no balcão da loja. Venda online
+      com entrega ainda não chega separada, então o bloco mostra uma origem só — não que as
+      outras sejam zero.`)}</h4>
 
-    <div class="cv-barra" role="img"
-      aria-label="Balcão ${nf1.format(pctPdv)}%, online ${nf1.format(pctOn)}%">
-      <span class="cv-seg pdv" style="width:${pctPdv.toFixed(1)}%"
-        title="Balcão: ${brl(pdv)}">${pctPdv >= 14 ? nf1.format(pctPdv)+'%' : ''}</span>
-      <span class="cv-seg online" style="width:${pctOn.toFixed(1)}%"
-        title="Online: ${brl(online)}">${pctOn >= 14 ? nf1.format(pctOn)+'%' : ''}</span>
-    </div>
-
-    <div class="cv-duo">
+    <div class="cv-uni">
       <div class="cv-col">
         <span><i class="cv-pt pdv"></i>Balcão da loja</span>
-        <b>${brl(pdv)}</b>
+        <b>${nf.format(c.compras)} compras</b>
       </div>
-      <div class="cv-col">
-        <span><i class="cv-pt online"></i>Online com entrega</span>
-        <b>${brl(online)}</b>
-      </div>
+      <p class="cv-falta">Única origem que o sistema separa hoje</p>
     </div>
 
-    <p class="bloco-nota">Os dois valores somam ${brl(c.faturamento)}, que é o faturamento desta
-    campanha. O canal da mensagem não obriga o canal da compra: quem recebe no WhatsApp pode
-    aparecer na loja.</p>
+    <p class="bloco-nota">Venda online com entrega entra aqui quando o ERP passar a devolvê-la
+    apartada do balcão. Até então, este valor não quer dizer que ninguém comprou pela internet
+    — quer dizer que a compra pela internet ainda não é medida.</p>
   </div>`;
 }
 
