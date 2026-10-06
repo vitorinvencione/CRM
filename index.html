@@ -235,74 +235,72 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 
    A ordem dentro do card segue a leitura dele: que tipo de sugestão é,
    qual produto, quanto custa, por quê, e o código para digitar no ERP. */
-.fp-sug{background:#FBFCFE;padding:10px 12px;margin-bottom:var(--fp-item)}
-.fp-sug-l1{display:flex;align-items:center;gap:8px;margin-bottom:6px;min-height:22px}
-/* ETIQUETA INTEIRA COLORIDA, NÃO UM PONTO DE 6px.
+/* A COR PEGA O CABEÇALHO INTEIRO, NÃO UMA PILL.
 
-   Era um ponto de 6 pixels ao lado de texto cinza. Para reconhecer o tipo o
-   balconista tinha de mirar o ponto e depois ler a palavra — duas fixações,
-   com fila no balcão. Agora a cor é a própria etiqueta: fundo tingido, texto
-   na cor forte, e o olho separa os quatro blocos antes de ler qualquer coisa.
+   A etiqueta em pill já era melhor que o ponto de 6px, mas ainda era um
+   objeto pequeno dentro de um card branco: o balconista continuava tendo de
+   procurar onde a cor estava. Agora a faixa colorida É o topo do card, de
+   borda a borda, e o tipo da sugestão sobe para 13px em caixa alta com
+   espacejamento — dá para ler de pé, a meio metro, antes de focar.
 
-   A PALAVRA FICA. A cor acelera quem já conhece; a palavra é o que serve para
-   quem está no primeiro dia e para quem não distingue as cores. Nenhuma
-   informação depende só do tom.
+   FAIXA, E NÃO O CARD INTEIRO. Quatro cards saturados empilhados competem
+   entre si, e aí nada se destaca. Pior: o preço com desconto, que é o
+   argumento de venda, perderia a briga por atenção contra o próprio fundo.
+   A faixa identifica o tipo; o corpo fica calmo para o preço poder gritar.
+   Cor forte em dois lugares do mesmo card é uma a mais. */
+.fp-sug{padding:0;overflow:hidden;border-color:var(--sg-borda);margin-bottom:var(--fp-item)}
+.fp-sug-cab{background:var(--sg-fundo);color:var(--sg-cor);
+  border-bottom:1px solid var(--sg-borda);
+  padding:8px 14px;font-size:13px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em}
+.fp-sug-corpo{padding:12px 14px 13px}
 
-   Os quatro tons são de famílias distintas — verde, roxo, azul e âmbar — e não
-   quatro passos de uma escala só: em escala, dois vizinhos se confundem na
-   impressão em preto e branco e sob a luz do balcão. */
-.fp-sug-tag{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:11.5px;
-  font-weight:700;letter-spacing:.01em;color:var(--sg-cor);
-  background:var(--sg-fundo);border:1px solid var(--sg-borda);
-  padding:3px 9px;border-radius:999px}
-.sg-cliente {--sg-cor:#0E7A48;--sg-fundo:#E8F6EE;--sg-borda:#BFE6D2}
-.sg-junto   {--sg-cor:#5B3FC4;--sg-fundo:#F0ECFE;--sg-borda:#D9CEFA}
-.sg-parecido{--sg-cor:#1F6E8C;--sg-fundo:#E7F3F8;--sg-borda:#C2DFEC}
-.sg-cesta   {--sg-cor:#8A5E00;--sg-fundo:#FDF3DC;--sg-borda:#F0DCA8}
-/* Impressão: fundo tingido some em impressora monocromática, então a etiqueta
-   sobrevive pela borda e pelo peso, nunca só pelo preenchimento. */
-@media print{.fp-sug-tag{background:none;border-color:#888;color:#000}}
-.fp-sug-l2{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
-.fp-sug-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}
-.fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.fp-sug-motivo{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);line-height:1.35}
+/* Uma cor por modelo, em quatro famílias de matiz distintas — verde, roxo,
+   azul e âmbar. Não quatro passos de uma escala só: em escala, dois vizinhos
+   se confundem sob a luz do balcão e somem na impressão em preto e branco. */
+.sg-cliente {--sg-cor:#0E7A48;--sg-fundo:#E3F4EB;--sg-borda:#B5E2CB}
+.sg-junto   {--sg-cor:#5B3FC4;--sg-fundo:#EDE8FE;--sg-borda:#D2C5F9}
+.sg-parecido{--sg-cor:#1F6E8C;--sg-fundo:#E1F0F7;--sg-borda:#B8DAE9}
+.sg-cesta   {--sg-cor:#8A5E00;--sg-fundo:#FCEFD3;--sg-borda:#EFD79C}
+/* A PALAVRA NUNCA SAI. A cor acelera quem já conhece; o texto atende quem
+   está no primeiro dia e quem não distingue os tons. Impressora
+   monocromática come o fundo, então a faixa sobrevive pela borda e pelo
+   peso da tipografia. */
+@media print{
+  .fp-sug-cab{background:none;color:#000;border-bottom-color:#888}
+  .fp-sug{border-color:#888}
+}
+
+/* O nome do produto é o que o balconista fala em voz alta: vem antes do
+   preço e em corpo de leitura, não de etiqueta. */
+.fp-sug-nome{font-size:15px;font-weight:700;color:var(--ink);line-height:1.3;
+  margin-bottom:7px}
+
+.fp-preco{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.fp-preco b{font-size:17px;font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+/* Com promoção o preço novo cresce e fica verde: é o número que fecha a
+   venda. O preço cheio riscado vai junto porque desconto sem referência não
+   é desconto — "R$ 29,90" sozinho não diz se está barato. */
+.fp-preco.tem-off b{font-size:20px;font-weight:800;color:#0E7A48}
+.fp-preco s{font-size:13px;color:var(--ink-4);text-decoration-thickness:1.5px;
+  font-variant-numeric:tabular-nums}
+.fp-off{font-size:11.5px;font-weight:800;color:#fff;background:#D6392B;
+  padding:3px 8px;border-radius:999px;letter-spacing:.02em;white-space:nowrap}
+/* Em reais, logo abaixo: "19% off" é abstrato na hora de convencer, "economia
+   de R$ 7,00" é o que a pessoa compara com o que tem na carteira. */
+.fp-economia{flex-basis:100%;font-size:12px;font-weight:600;color:#0E7A48}
+
+.fp-sug-motivo{margin:0 0 9px;font-size:12px;color:var(--ink-3);line-height:1.35}
 .fp-sug .fp-ean{width:100%;justify-content:space-between}
 /* Linha sem texto de apoio: o EAN herda a linha inteira. */
 .fp-prod-pe.so-ean{justify-content:flex-end}
 .fp-prod-pe.so-ean .fp-ean{width:100%;justify-content:space-between}
 
-/* O nome do bloco abre a explicação.
-
-   Vira botão de verdade — com foco, aria-expanded e alvo de toque —
-   porque é o que responde "de onde veio isso?" na hora em que a dúvida
-   nasce. As duas notas de rodapé que existiam antes diziam a mesma coisa
-   e ninguém lia: informação embaixo da lista é informação perdida.
-
-   O parágrafo também fecha ao clique, por conveniência de mouse, mas não
-   é focável: quem usa teclado abre e fecha pelo próprio botão. */
-.fp-sug-tag{position:relative;padding:2px 0;border-radius:6px;transition:.12s}
-.fp-sug-tag svg{width:12px;height:12px;opacity:.55;transition:transform .18s cubic-bezier(.2,0,0,1)}
-.fp-sug-tag:hover{color:var(--primary)}
-.fp-sug-tag:hover svg{opacity:1}
-.fp-sug-tag:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
-/* alvo de toque maior que a caixa, sem inflar a linha */
-.fp-sug-tag::after{content:'';position:absolute;inset:-9px -6px}
-.fp-sug.explicando .fp-sug-tag{color:var(--primary)}
-.fp-sug.explicando .fp-sug-tag svg{transform:rotate(180deg);opacity:1}
-.fp-sug-exp{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--border);
-  font-size:11.5px;line-height:1.55;color:var(--ink-3);cursor:pointer;
-  animation:fpTroca .18s cubic-bezier(.2,0,0,1) both}
-.fp-sug-exp:hover{color:var(--ink-2)}
-@media(prefers-reduced-motion:reduce){.fp-sug-exp{animation:none}}
-
-/* A explicação entra, e é o único movimento que sobrou aqui.
-
-   O carrossel de sugestões saiu — com ele foram a animação de troca e o giro
-   do ícone. O que resta se move porque o balconista mandou: ele clicou no
-   nome do bloco para perguntar de onde veio a sugestão, e a resposta desce
-   em 180ms com a curva padrão, entrada de 5px com opacidade. Nunca só
-   opacidade, senão não se lê como algo que chegou. */
-@keyframes fpTroca{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* Nenhum movimento sobrou na sugestão, e é de propósito.
+   O carrossel saiu numa passada, a explicação na seguinte: eram os dois
+   únicos lugares que animavam aqui. Ficou uma tela que se lê parada, que é
+   o que uma filipeta de balcão com fila precisa ser. */
 
 @media(max-width:380px){
   .fp-sec{flex-wrap:wrap}
@@ -2148,7 +2146,6 @@ function estadoInicial(){
     motorCpf:'',
     motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
-    motorExplica:null,      // bloco com a explicação aberta
     dnaAba:'Anticoncepcionais',  // DNA selecionado na aba DNA
     preModo:'anterior',     // régua do comparativo: 'anterior' ou 'ano'
     fcOrdem:'data',         // ordem do resultado por canal: 'data' ou 'desempenho'
@@ -2676,11 +2673,16 @@ const MOTOR_CLIENTE = {
     ['Fralda G 40un',                       '24/07/2026'],
     ['Shampoo Anticaspa',                   '02/07/2026']
   ],
+  /* [nome, vezes, dna, receita]. O DNA e a receita entraram quando a seção
+     deixou de ser histórico e virou recomendação: ver o filtro em
+     recomendaCliente(), logo abaixo. */
   maisComprados: [
-    ['Ogestan Gold Caps X 30',        3],
-    ['Nistatina + Óxido de Zinco Pom', 3],
-    ['Ninho Leite Pó Integral 380g',   3],
-    ['Lenço Umedecido 96un',           2]
+    ['Ogestan Gold Caps X 30',         3, 'Anticoncepcionais', true],
+    ['Nistatina + Óxido de Zinco Pom', 3, 'Mãe'],
+    ['Ninho Leite Pó Integral 380g',   3, 'Mãe'],
+    ['Lenço Umedecido 96un',           2, 'Mãe'],
+    ['Shampoo Anticaspa',              2, 'Beleza'],
+    ['Fralda G 40un',                  2, 'Mãe']
   ]
 };
 /* Código de barras determinístico a partir do nome: não é EAN de verdade e
@@ -2850,49 +2852,37 @@ const MOTOR_MODELOS = [
 ];
 const MOTOR_ROT = MOTOR_MODELOS.reduce((a,m)=>(a[m.id]=m.rot, a), {});
 
-/* O que cada bloco responde quando o balconista clica no nome.
 
-   Tiramos as duas notas de rodapé que ficavam soltas embaixo da lista.
-   O conteúdo delas não se perdeu: a regra de receita e o aviso de que a
-   venda é um exemplo viraram parte da explicação do bloco a que cada uma
-   pertence. Informação de rodapé ninguém lê; informação atrás de um
-   clique aparece na hora em que a dúvida nasce. */
-const MOTOR_EXPLICA = {
-  cliente: () => `Vem do que ela já comprou nesta rede e do padrão de clientes
-    parecidos. O intervalo entre as compras dela é o que diz quando está na hora
-    de repor. Medicamento que exige receita nunca aparece aqui, mesmo quando é o
-    que ela mais compra.`,
-  junto: () => `Produtos que costumam sair junto com o ${MOTOR_ANCORA.curto}, o
-    último item que ela levou. Sai do padrão de compra da rede inteira, não de uma
-    regra escrita à mão.`,
-  parecido: () => `Produtos com a mesma finalidade do ${MOTOR_ANCORA.curto}. Serve
-    para quando o que ela procura está em falta. Medicamento não entra: trocar um
-    medicamento por outro é decisão do farmacêutico, não do balcão.`,
-  cesta: () => `Cruza o que já está na venda com o histórico dela. Neste protótipo
-    a venda é um exemplo: ${MOTOR_CESTA.join(' e ')}.`
-};
 
 /* sinal: só no modelo "Costuma comprar", único que olha o histórico dela.
    dias/ciclo alimentam a frase; os outros modelos têm frase fixa. */
+/* valor = PRECO DE VENDA, nao mais o incremento de faturamento.
+   "+ R$ 79,90" dizia ao balconista quanto a venda cresceria se ela levasse —
+   informacao de gestor, nao de balcao. Quem esta atendendo precisa do preco
+   para falar em voz alta, e do desconto, que e o unico argumento que faz a
+   pessoa decidir na hora.
+
+   de = preco cheio, so quando ha promocao. A ausencia de `de` significa preco
+   normal, e o card nao inventa economia onde nao ha. */
 const MOTOR_CAND = [
   // Costuma comprar — histórico dela + clientes de perfil parecido
   {nome:'Fralda G 40un',                modelo:'cliente', dna:'Mãe',    valor:79.90, sinal:'repor', dias:28, ciclo:25},
-  {nome:'Pomada para Assadura 45g',     modelo:'cliente', dna:'Mãe',    valor:34.90, sinal:'parou', dias:55},
+  {nome:'Pomada para Assadura 45g',     modelo:'cliente', dna:'Mãe',    valor:34.90, de:41.90, sinal:'parou', dias:55},
   {nome:'Lenço Umedecido 96un',         modelo:'cliente', dna:'Mãe',    valor:16.90, sinal:'repor', dias:41, ciclo:35},
-  {nome:'Condicionador 300ml',          modelo:'cliente', dna:'Beleza', valor:32.00, sinal:'parou', dias:71},
+  {nome:'Condicionador 300ml',          modelo:'cliente', dna:'Beleza', valor:32.00, de:39.90, sinal:'parou', dias:71},
   {nome:'Ninho Leite Pó Integral 380g', modelo:'cliente', dna:'Mãe',    valor:38.50, sinal:'parou', dias:126},
   // Pode levar junto — regra de associação a partir da âncora
   {nome:'Buba Lavador Nasal Seringa',   modelo:'junto',   dna:'Mãe',    valor:24.90},
-  {nome:'Aspirador Nasal Infantil',     modelo:'junto',   dna:'Mãe',    valor:39.90},
+  {nome:'Aspirador Nasal Infantil',     modelo:'junto',   dna:'Mãe',    valor:39.90, de:49.90},
   {nome:'Simeticona Gotas 15ml',        modelo:'junto',   dna:'Mãe',    valor:16.50},
   {nome:'Lenço de Papel 50un',          modelo:'junto',   dna:'Mãe',    valor:12.90},
   // Se não tiver — substitutos da âncora. Só não-medicamento.
-  {nome:'Rinosoro Jet Spray 50ml',      modelo:'parecido', dna:'Mãe',   valor:26.90},
+  {nome:'Rinosoro Jet Spray 50ml',      modelo:'parecido', dna:'Mãe',   valor:26.90, de:32.90},
   {nome:'Maresis Solução Nasal 100ml',  modelo:'parecido', dna:'Mãe',   valor:32.50},
   {nome:'Neosoro Sol Nasal 30ml',       modelo:'parecido', dna:'Mãe',   valor:19.90},
   // Oportunidade cesta — cruza a venda atual com o histórico
   {nome:'Paracetamol 750mg',            modelo:'cesta',   dna:'Mãe',    valor:10.90},
-  {nome:'Termômetro Digital',           modelo:'cesta',   dna:'Mãe',    valor:29.90},
+  {nome:'Termômetro Digital',           modelo:'cesta',   dna:'Mãe',    valor:29.90, de:36.90},
   {nome:'Talco Antisséptico 100g',      modelo:'cesta',   dna:'Mãe',    valor:18.50},
   // Fora: exige receita / DNA sensível
   {nome:'Ogestan Gold Caps X 30',       modelo:'cliente', dna:'Anticoncepcionais', valor:42.00, sinal:'repor', dias:33, ciclo:30, receita:true},
@@ -2979,26 +2969,38 @@ function motivoSugestao(c){
   return `combina com o que já está na venda`;
 }
 
+/* Percentual de desconto arredondado para baixo: prometer 19% quando são 19,8%
+   é melhor que prometer 20% e o cupom sair com menos. */
+const pctOff = c => c.de ? Math.floor((c.de - c.valor) / c.de * 100) : 0;
+
+/* O PREÇO SOZINHO NÃO É ARGUMENTO — O DESCONTO É.
+   "R$ 29,90" não dá ao balconista nada para dizer; "de R$ 36,90 por R$ 29,90,
+   19% off" dá. Por isso os dois casos não têm o mesmo peso na tela: com
+   promoção o bloco inteiro acende e a economia vira a informação mais forte
+   do card; sem promoção o preço fica em corpo normal, informativo, porque
+   gritar um preço cheio não convence ninguém e só gasta a atenção que o
+   próximo card vai precisar. */
+function precoSugestao(c){
+  if(!c.de) return `<div class="fp-preco"><b>${brl(c.valor)}</b></div>`;
+  return `<div class="fp-preco tem-off">
+    <b>${brl(c.valor)}</b>
+    <s>${brl(c.de)}</s>
+    <span class="fp-off">${pctOff(c)}% off</span>
+    <span class="fp-economia">economia de ${brl(c.de - c.valor)}</span>
+  </div>`;
+}
+
 function cardModelo(b){
   const c = itemDoBloco(b);
-  const aberto = S.motorExplica === b.id;
-  return `<div class="fp-prod fp-sug${aberto?' explicando':''}">
-    <div class="fp-sug-l1">
-      <button class="fp-sug-tag sg-${b.id}" data-act="motorExplica" data-v="${b.id}"
-        data-k="explica-${b.id}" aria-expanded="${aberto}" aria-controls="exp-${b.id}"
-        title="${aberto?'Fechar':'Ver de onde vem esta sugestão'}">${esc(b.rot)}${I.chev}</button>
-    </div>
-    <div class="fp-sug-troca">
-      <div class="fp-sug-l2">
-        <span class="fp-sug-nome">${esc(c.nome)}</span>
-        <span class="fp-sug-valor">+ ${brl(c.valor)}</span>
-      </div>
+  return `<div class="fp-prod fp-sug sg-${b.id}">
+    <div class="fp-sug-cab">${esc(b.rot)}</div>
+    <div class="fp-sug-corpo">
+      <div class="fp-sug-nome">${esc(c.nome)}</div>
+      ${precoSugestao(c)}
       <p class="fp-sug-motivo">${esc(motivoSugestao(c))}</p>
       <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(c.nome)}"
         title="Copiar código">EAN: ${eanFake(c.nome)} ${I.copy}</button>
     </div>
-    ${aberto ? `<p class="fp-sug-exp" id="exp-${b.id}" data-act="motorExplica" data-v="${b.id}"
-      title="Fechar">${MOTOR_EXPLICA[b.id]()}</p>` : ''}
   </div>`;
 }
 
@@ -3006,6 +3008,28 @@ function blocoSugestoesMotor(){
   const blocos = BLOCOS();
   return `<h3 class="fp-sec">${I.spark} Sugestões <i>${blocos.length} formas de sugerir</i></h3>
   ${blocos.map(cardModelo).join('')}`;
+}
+
+/* ESTA LISTA ERA HISTÓRICO E VIROU RECOMENDAÇÃO — E O FILTRO FOI JUNTO.
+
+   Enquanto se chamava "Itens mais comprados", era um relato: isto é o que ela
+   leva. Relato não precisa de trava, porque não propõe nada.
+
+   Com o título "Talvez você goste" o mesmo conteúdo passou a PROPOR, e aí ele
+   cai sob as mesmas regras do motor de sugestões — que existiam e esta lista
+   não cumpria. O primeiro item dela era Ogestan Gold Caps, anticoncepcional:
+   a tela estava mandando o balconista oferecer anticoncepcional em voz alta,
+   no balcão, para uma cliente que não pediu. O motor bloqueia isso desde
+   sempre; a lista passava por fora porque ninguém imaginou que um título
+   mudaria a natureza do conteúdo. Muda.
+
+   Duas travas, as mesmas de pilhaModelo(): nada que exija receita e nada de
+   DNA sensível. */
+function recomendaCliente(){
+  return MOTOR_CLIENTE.maisComprados
+    .filter(([, , dna, receita]) => !receita && !DNA_SENSIVEL.includes(dna))
+    .slice(0, 4)
+    .map(([n]) => n);
 }
 
 function motorPerfil(){
@@ -3036,7 +3060,7 @@ function motorPerfil(){
   ${c.historico.map(([n,d]) => linhaProduto(n, I.cal, d)).join('')}
 
   <h3 class="fp-sec">${I.caixa} Talvez você goste</h3>
-  ${c.maisComprados.map(([n]) => linhaProduto(n, I.carrinho, '')).join('')}`;
+  ${recomendaCliente().map(n => linhaProduto(n, I.carrinho, '')).join('')}`;
 }
 
 function telaBranco(){
@@ -6385,15 +6409,17 @@ function handle(act, v, el, isInput){
       clearTimeout(S.motorTimer);
       // motorVistos sobrevive de propósito: é o que faz a próxima consulta
       // abrir com outro argumento em vez de repetir o mesmo produto
-      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorExplica = null;
+      S.motorFase = 'cpf'; S.motorCpf = '';
       log('motor-nova-consulta'); render(); return;
 
-    case 'motorExplica':
-      // um por vez: a filipeta tem 420px e quatro explicações abertas
-      // empurrariam o histórico de compras para fora da tela
-      S.motorExplica = S.motorExplica===v ? null : v;
-      log('motor-explica', S.motorExplica ? 'abriu '+v : 'fechou');
-      render(); return;
+    /* A EXPLICACAO DE ONDE VEM A SUGESTAO SAIU.
+       Decisao do Vitor: a filipeta e de leitura imediata; abrir um paragrafo
+       no meio do atendimento e o oposto disso. Saiu o texto, o chevron e o
+       estado. Fica registrado o que se perdeu junto: era o unico lugar da
+       tela que dizia que medicamento com receita nunca entra na sugestao. A
+       regra continua valendo no codigo (candidato com receita:true e
+       filtrado); o que nao existe mais e onde le-la. */
+
 
     /* O BOTAO DE TROCAR SUGESTAO SAIU.
        Decisao do Vitor: a filipeta e de leitura rapida, o balconista nao
