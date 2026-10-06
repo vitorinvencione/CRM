@@ -193,6 +193,8 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
   font-variant-numeric:tabular-nums}
 .fp-dado{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-bottom:7px}
 .fp-dado svg{color:var(--ink-4);flex-shrink:0}
+/* Tabular para o miolo visível não dançar de um cliente para outro. */
+.fp-cpf{font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .fp-copia{display:inline-flex;color:var(--ink-4);padding:2px;border-radius:5px;transition:.12s}
 .fp-copia:hover{color:var(--primary);background:var(--primary-soft)}
 /* Rótulo em cima, pills embaixo: com "Preferências:" na mesma linha as
@@ -226,44 +228,49 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 
 /* Sugestões dentro da filipeta.
 
-   Quatro blocos fixos, um por modelo, e o card tem sempre a mesma altura
-   com ou sem carrossel. Altura estável importa aqui: se o bloco crescer
-   conforme o conteúdo, o histórico de compras desce e sobe a cada troca
-   e o balconista perde o lugar. A única coisa que muda a altura é a
+   Quatro blocos fixos, um por modelo, cada um com uma sugestão só. Sem
+   carrossel: a filipeta é de leitura imediata e o balconista não navega no
+   meio do atendimento. A única coisa que muda a altura do card é a
    explicação, que ele abriu de propósito.
 
    A ordem dentro do card segue a leitura dele: que tipo de sugestão é,
    qual produto, quanto custa, por quê, e o código para digitar no ERP. */
 .fp-sug{background:#FBFCFE;padding:10px 12px;margin-bottom:var(--fp-item)}
 .fp-sug-l1{display:flex;align-items:center;gap:8px;margin-bottom:6px;min-height:22px}
+/* ETIQUETA INTEIRA COLORIDA, NÃO UM PONTO DE 6px.
+
+   Era um ponto de 6 pixels ao lado de texto cinza. Para reconhecer o tipo o
+   balconista tinha de mirar o ponto e depois ler a palavra — duas fixações,
+   com fila no balcão. Agora a cor é a própria etiqueta: fundo tingido, texto
+   na cor forte, e o olho separa os quatro blocos antes de ler qualquer coisa.
+
+   A PALAVRA FICA. A cor acelera quem já conhece; a palavra é o que serve para
+   quem está no primeiro dia e para quem não distingue as cores. Nenhuma
+   informação depende só do tom.
+
+   Os quatro tons são de famílias distintas — verde, roxo, azul e âmbar — e não
+   quatro passos de uma escala só: em escala, dois vizinhos se confundem na
+   impressão em preto e branco e sob a luz do balcão. */
 .fp-sug-tag{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:11.5px;
-  font-weight:700;color:var(--ink-2)}
-/* Ponto colorido E palavra: o tipo do sinal nunca depende só da cor. */
-.fp-sug-tag::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
-/* Uma cor por modelo. O ponto acompanha a palavra, nunca substitui: o
-   balconista precisa poder dizer em voz alta de onde veio a sugestão. */
-.sg-cliente::before{background:var(--green)}
-.sg-junto::before{background:#7C5CF0}
-.sg-parecido::before{background:#2C8FB0}
-.sg-cesta::before{background:#C98A00}
+  font-weight:700;letter-spacing:.01em;color:var(--sg-cor);
+  background:var(--sg-fundo);border:1px solid var(--sg-borda);
+  padding:3px 9px;border-radius:999px}
+.sg-cliente {--sg-cor:#0E7A48;--sg-fundo:#E8F6EE;--sg-borda:#BFE6D2}
+.sg-junto   {--sg-cor:#5B3FC4;--sg-fundo:#F0ECFE;--sg-borda:#D9CEFA}
+.sg-parecido{--sg-cor:#1F6E8C;--sg-fundo:#E7F3F8;--sg-borda:#C2DFEC}
+.sg-cesta   {--sg-cor:#8A5E00;--sg-fundo:#FDF3DC;--sg-borda:#F0DCA8}
+/* Impressão: fundo tingido some em impressora monocromática, então a etiqueta
+   sobrevive pela borda e pelo peso, nunca só pelo preenchimento. */
+@media print{.fp-sug-tag{background:none;border-color:#888;color:#000}}
 .fp-sug-l2{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
 .fp-sug-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}
 .fp-sug-valor{flex-shrink:0;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .fp-sug-motivo{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);line-height:1.35}
 .fp-sug .fp-ean{width:100%;justify-content:space-between}
+/* Linha sem texto de apoio: o EAN herda a linha inteira. */
+.fp-prod-pe.so-ean{justify-content:flex-end}
+.fp-prod-pe.so-ean .fp-ean{width:100%;justify-content:space-between}
 
-/* Trocar sugestão. Fica no canto do card, longe do botão de copiar EAN,
-   que é a ação que o balconista mais usa — errar o alvo e trocar o
-   produto quando queria o código seria o pior engano possível aqui.
-   O contador responde a única pergunta que importa: quantas faltam. */
-.fp-troca{display:inline-flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0;
-  height:24px;padding:0 8px;border-radius:999px;border:1px solid var(--border);
-  background:#fff;font-size:11px;font-weight:600;color:var(--ink-3);cursor:pointer;
-  transition:.12s;position:relative}
-/* alvo de toque de 40px sem inflar a linha: a área invisível passa da caixa */
-.fp-troca::after{content:'';position:absolute;inset:-8px -6px}
-.fp-troca svg{width:13px;height:13px;flex-shrink:0}
-.fp-troca:hover{border-color:#BFD9F5;background:var(--primary-soft);color:var(--primary)}
 /* O nome do bloco abre a explicação.
 
    Vira botão de verdade — com foco, aria-expanded e alvo de toque —
@@ -288,34 +295,14 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
 .fp-sug-exp:hover{color:var(--ink-2)}
 @media(prefers-reduced-motion:reduce){.fp-sug-exp{animation:none}}
 
-/* A TROCA.
+/* A explicação entra, e é o único movimento que sobrou aqui.
 
-   Só o que mudou se move. A tag e o DNA ficam parados de propósito: eles
-   não trocaram, e animá-los diria que trocaram. Quem se move é o bloco
-   do produto — nome, valor, motivo e código.
-
-   180ms com a curva padrão do Material, sem overshoot: é ferramenta de
-   balcão com fila, não vitrine. Rápido o bastante para não atrasar o
-   atendimento, longo o bastante para o olho registrar que a linha é a
-   mesma e o produto é outro.
-
-   Duas camadas, não três. Primária: o produto entra de baixo, 5px, com
-   opacidade — nunca só opacidade, senão a troca não se lê como
-   substituição. Secundária: o ícone do botão gira meia volta, para a
-   confirmação nascer no lugar onde o dedo tocou. Camada ambiente seria
-   excesso num movimento de 180ms. */
+   O carrossel de sugestões saiu — com ele foram a animação de troca e o giro
+   do ícone. O que resta se move porque o balconista mandou: ele clicou no
+   nome do bloco para perguntar de onde veio a sugestão, e a resposta desce
+   em 180ms com a curva padrão, entrada de 5px com opacidade. Nunca só
+   opacidade, senão não se lê como algo que chegou. */
 @keyframes fpTroca{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-@keyframes fpGira{from{transform:rotate(-180deg)}to{transform:none}}
-.fp-sug.trocou .fp-sug-troca{animation:fpTroca .18s cubic-bezier(.2,0,0,1) both}
-.fp-troca.trocou svg{animation:fpGira .26s cubic-bezier(.2,0,0,1) both}
-/* Sem movimento: a troca ainda precisa ser percebida, então sobra o
-   fade, que é o mínimo para não parecer que nada aconteceu. */
-@media(prefers-reduced-motion:reduce){
-  .fp-sug.trocou .fp-sug-troca{animation:none;opacity:1}
-  .fp-troca.trocou svg{animation:none}
-}
-.fp-troca:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-.fp-troca span{font-variant-numeric:tabular-nums}
 
 @media(max-width:380px){
   .fp-sec{flex-wrap:wrap}
@@ -2159,8 +2146,6 @@ function estadoInicial(){
     voltaDoBranco:'geral',    // para onde o botão de voltar devolve
     motorFase:'cpf',          // cpf | carregando | perfil
     motorCpf:'',
-    motorSug:{},            // índice atual de cada linha de sugestão
-    motorTrocou:null,       // bloco que acabou de trocar, para a animação
     motorVistos:[],         // o que já foi oferecido e não levado, para não repetir
     motorPilhas:null,       // ordem congelada das pilhas nesta consulta
     motorExplica:null,      // bloco com a explicação aberta
@@ -2714,7 +2699,27 @@ function diasAniver(nasc){
   if(alvo < meiaNoite(HOJE)) alvo = new Date(HOJE.getFullYear()+1, m-1, d);
   return Math.round((alvo - meiaNoite(HOJE))/DIA);
 }
+/* OCULTA ≠ MASCARA. Esta função esconde dígitos; mascaraCpf() logo abaixo
+   apenas FORMATA, põe os pontos. Nomes parecidos para coisas opostas, então
+   fica dito: quem quiser esconder chama ocultaCpf.
+
+   Esconde as pontas e mostra o miolo, que é o padrão mais comum em sistema
+   brasileiro. Os seis do meio bastam para o balconista confirmar que puxou a
+   pessoa certa; o começo e o fim, que são o que se usa para identificar
+   alguém fora daqui, não vão para o papel.
+
+   A FILIPETA É IMPRESSA. A máscara vale contra o papel esquecido no balcão e
+   contra quem olha por cima do ombro — não contra o próprio balconista, que
+   precisa do número inteiro para pôr o CPF na nota. Por isso o botão de
+   copiar leva o valor real: ver é uma coisa, usar no ERP é outra. */
+function ocultaCpf(cpf){
+  const d = String(cpf||'').replace(/\D/g,'');
+  if(d.length !== 11) return cpf || '';
+  return '***.' + d.slice(3,6) + '.' + d.slice(6,9) + '-**';
+}
+
 const soDigitos = t => String(t||'').replace(/\D/g,'').slice(0,11);
+/* Só formata: põe ponto e traço enquanto se digita. Não esconde nada. */
 function mascaraCpf(t){
   const d = soDigitos(t);
   if(d.length <= 3) return d;
@@ -2771,10 +2776,12 @@ function motorCarregando(){
   </div>`;
 }
 
+/* Sem texto, o ícone sozinho sobra: vira um símbolo solto do lado do EAN, sem
+   nada para qualificar. A linha fica só com o nome e o código. */
 const linhaProduto = (nome, ic, txt) => `<div class="fp-prod">
   <div class="fp-prod-nome">${esc(nome)}</div>
-  <div class="fp-prod-pe">
-    <span class="fp-prod-meta">${ic} ${esc(txt)}</span>
+  <div class="fp-prod-pe${txt ? '' : ' so-ean'}">
+    ${txt ? `<span class="fp-prod-meta">${ic} ${esc(txt)}</span>` : ''}
     <button class="fp-ean" data-act="motorCopiar" data-v="${eanFake(nome)}"
       title="Copiar código">EAN: ${eanFake(nome)} ${I.copy}</button>
   </div>
@@ -2950,7 +2957,9 @@ const BLOCOS = () => MOTOR_MODELOS
   })
   .filter(m => m.itens.length);          // modelo sem candidato não aparece
 
-const itemDoBloco = b => b.itens[(S.motorSug[b.id]||0) % b.itens.length];
+/* Sem carrossel, cada bloco mostra o primeiro da pilha — o melhor
+   candidato segundo o ranqueamento. */
+const itemDoBloco = b => b.itens[0];
 const sugestoesMotor = () => BLOCOS().map(itemDoBloco);
 
 /* Registra o que já foi para a tela. Chamado quando a ficha abre e a
@@ -2971,19 +2980,13 @@ function motivoSugestao(c){
 }
 
 function cardModelo(b){
-  const itens = b.itens, i = (S.motorSug[b.id]||0) % itens.length, c = itens[i];
-  const trocou = S.motorTrocou === b.id;
-  const troca = itens.length > 1 ? `<button class="fp-troca${trocou?' trocou':''}" data-act="motorTroca"
-      data-k="troca-${b.id}" data-v="${b.id}"
-      aria-label="Ver outra sugestão de ${esc(b.rot.toLowerCase())}, mostrando ${i+1} de ${itens.length}"
-      title="Ver outra sugestão de ${esc(b.rot.toLowerCase())}">${I.refresh}<span>${i+1}/${itens.length}</span></button>` : '';
+  const c = itemDoBloco(b);
   const aberto = S.motorExplica === b.id;
-  return `<div class="fp-prod fp-sug${trocou?' trocou':''}${aberto?' explicando':''}">
+  return `<div class="fp-prod fp-sug${aberto?' explicando':''}">
     <div class="fp-sug-l1">
       <button class="fp-sug-tag sg-${b.id}" data-act="motorExplica" data-v="${b.id}"
         data-k="explica-${b.id}" aria-expanded="${aberto}" aria-controls="exp-${b.id}"
         title="${aberto?'Fechar':'Ver de onde vem esta sugestão'}">${esc(b.rot)}${I.chev}</button>
-      ${troca}
     </div>
     <div class="fp-sug-troca">
       <div class="fp-sug-l2">
@@ -3016,9 +3019,11 @@ function motorPerfil(){
       <h2>${esc(c.nome)}</h2>
       <div class="fp-ticket"><span>${I.alta} Ticket médio</span><b>${brl(c.ticket)}</b></div>
     </div>
-    <div class="fp-dado">${I.bolo} ${c.nascimento} · aniversário daqui a ${dias} dias</div>
-    <div class="fp-dado">${I.card} ${c.cpf}
-      <button class="fp-copia" data-act="motorCopiar" data-v="${c.cpf}" title="Copiar CPF">${I.copy}</button></div>
+    <div class="fp-dado">${I.bolo} ${c.nascimento.slice(0,5)} · aniversário daqui a ${dias} dias</div>
+    <div class="fp-dado">${I.card} <span class="fp-cpf">${ocultaCpf(c.cpf)}</span>
+      <button class="fp-copia" data-act="motorCpfCopiar" data-v="${c.cpf}"
+        title="Copiar o CPF completo para lançar na nota"
+        aria-label="Copiar o CPF completo de ${esc(c.nome)}">${I.copy}</button></div>
     <div class="fp-pref">
       <span class="fp-pref-rot">Preferências</span>
       <div class="fp-pills">
@@ -3027,11 +3032,11 @@ function motorPerfil(){
 
   ${blocoSugestoesMotor()}
 
-  <h3 class="fp-sec">${I.relogio} Histórico de compras <i>últimos 120 dias</i></h3>
+  <h3 class="fp-sec">${I.relogio} Últimos itens consultados</h3>
   ${c.historico.map(([n,d]) => linhaProduto(n, I.cal, d)).join('')}
 
-  <h3 class="fp-sec">${I.caixa} Itens mais comprados</h3>
-  ${c.maisComprados.map(([n,q]) => linhaProduto(n, I.carrinho, `Comprou ${q} vezes`)).join('')}`;
+  <h3 class="fp-sec">${I.caixa} Talvez você goste</h3>
+  ${c.maisComprados.map(([n]) => linhaProduto(n, I.carrinho, '')).join('')}`;
 }
 
 function telaBranco(){
@@ -6293,7 +6298,6 @@ function render(){
     const r = rolagem[n.dataset.scroll];
     if(r){ n.scrollTop = r[0]; n.scrollLeft = r[1]; }
   });
-  S.motorTrocou = null;   // a animação de troca roda uma vez, não a cada render
 
   if(key){ const n = root.querySelector('[data-k="'+key+'"]'); if(n){ n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} } }
 }
@@ -6350,7 +6354,7 @@ function handle(act, v, el, isInput){
     case 'irBranco':
       // guarda de onde veio: voltar tem que devolver para a tela certa
       S.voltaDoBranco = S.screen; S.screen = 'branco';
-      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {};
+      S.motorFase = 'cpf'; S.motorCpf = '';
       log('abriu-pagina-branca', 'de ' + S.voltaDoBranco); window.scrollTo(0,0); render(); return;
 
     case 'voltarDoBranco':
@@ -6360,7 +6364,7 @@ function handle(act, v, el, isInput){
     case 'voltarCrm':
       // sempre para a Visão geral: é a porta de entrada do painel, e quem
       // estava no balcão não tem contexto de lista ou de campanha para retomar
-      S.screen = 'geral'; S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {};
+      S.screen = 'geral'; S.motorFase = 'cpf'; S.motorCpf = '';
       log('motor-voltou-ao-crm'); window.scrollTo(0,0); render(); return;
 
     case 'motorCpf':
@@ -6381,7 +6385,7 @@ function handle(act, v, el, isInput){
       clearTimeout(S.motorTimer);
       // motorVistos sobrevive de propósito: é o que faz a próxima consulta
       // abrir com outro argumento em vez de repetir o mesmo produto
-      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorSug = {}; S.motorExplica = null;
+      S.motorFase = 'cpf'; S.motorCpf = ''; S.motorExplica = null;
       log('motor-nova-consulta'); render(); return;
 
     case 'motorExplica':
@@ -6391,19 +6395,24 @@ function handle(act, v, el, isInput){
       log('motor-explica', S.motorExplica ? 'abriu '+v : 'fechou');
       render(); return;
 
-    case 'motorTroca': {
-      // dá a volta no fim: com 4 itens, voltar uma custa 3 cliques, e
-      // um alvo de toque só numa linha de 420px vale mais que dois
-      const bloco = BLOCOS().find(b=>b.id===v);
-      if(!bloco) return;
-      S.motorSug[v] = ((S.motorSug[v]||0) + 1) % bloco.itens.length;
-      S.motorTrocou = v;
-      marcarVistos();                 // o que aparece agora também não se repete
-      log('motor-troca-sugestao', v+' → '+bloco.itens[S.motorSug[v]].nome);
-      render(); return; }
+    /* O BOTAO DE TROCAR SUGESTAO SAIU.
+       Decisao do Vitor: a filipeta e de leitura rapida, o balconista nao
+       navega. O carrossel pedia um clique e uma segunda olhada no meio do
+       atendimento, com fila. A pilha de candidatos continua: ela e que decide
+       qual item sobe para cada bloco — o que saiu foi o controle, nao o
+       ranqueamento. */
+
 
     case 'motorCopiar':
       toast('Código copiado: ' + v); log('motor-copiou', v); return;
+
+    /* O CPF sai mascarado da tela, então o aviso NÃO pode trazê-lo de volta:
+       um toast com o número inteiro desfaria a máscara no mesmo segundo, e
+       ainda por cima no meio da tela, onde é mais visível que o campo. O
+       registro também guarda só a versão oculta. */
+    case 'motorCpfCopiar':
+      toast('CPF completo copiado. Cole na nota do ERP.');
+      log('motor-copiou-cpf', ocultaCpf(v)); return;
 
     case 'irAba': {
       const destino = {'Visão geral':'geral','DNA':'dna','Sugestões':'sugestoes','Segmentação':'list'}[v];
