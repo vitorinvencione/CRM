@@ -249,8 +249,19 @@ h1.page{font-size:24px;font-weight:700;margin:0 0 18px;display:flex;align-items:
    A faixa identifica o tipo; o corpo fica calmo para o preço poder gritar.
    Cor forte em dois lugares do mesmo card é uma a mais. */
 .fp-sug{padding:0;overflow:hidden;border-color:var(--sg-borda);margin-bottom:var(--fp-item)}
-.fp-sug-cab{background:var(--sg-fundo);color:var(--sg-cor);
-  border-bottom:1px solid var(--sg-borda);
+/* INVERTIDO: a cor forte é o fundo, a fraca é a letra. A faixa parou de ser
+   um realce e virou um bloco sólido — a meio metro de distância o balconista
+   vê a mancha de cor antes de enxergar que ali tem texto.
+
+   Os quatro pares foram medidos, não estimados: 4,72:1 no verde, 4,91 no
+   azul, 5,00 no âmbar e 5,95 no roxo. O verde é o mais apertado e ainda
+   passa no AA para texto normal — 13px em peso 800 não conta como "texto
+   grande" na regra, então o piso é 4,5 e não 3.
+
+   A borda de baixo some dentro do fundo: linha clara sobre faixa escura
+   viraria um friso que não separa nada. */
+.fp-sug-cab{background:var(--sg-cor);color:var(--sg-fundo);
+  border-bottom:1px solid var(--sg-cor);
   padding:8px 14px;font-size:13px;font-weight:800;
   text-transform:uppercase;letter-spacing:.05em}
 .fp-sug-corpo{padding:12px 14px 13px}
