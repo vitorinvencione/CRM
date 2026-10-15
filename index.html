@@ -1502,39 +1502,59 @@ tbody tr.sel{background:#F3F8FF}
 /* Funil empilhado: cabeçalho, barra, apoio. Mesma anatomia do grupo de
    colunas do comparativo, para os dois gráficos lado a lado não parecerem
    de produtos diferentes. */
-/* As faixas encostam para formar uma silhueta contínua. O texto mora dentro
-   porque a largura deixou de ser medida — foi a troca que a decisão permitiu.
+/* ---------- Funil de impactados: duas colunas proporcionais ----------
 
-   A FORMA VIVE NUM PSEUDO-ELEMENTO, não no próprio bloco. clip-path recorta
-   todos os descendentes, inclusive os posicionados de forma absoluta: com o
-   recorte na faixa, a bolha do tooltip ficava presa dentro do trapézio e
-   aparecia como uma tarja cortada. Com o trapézio no ::before, o conteúdo e
-   a bolha ficam livres. */
-.funil-camp{display:flex;flex-direction:column;margin:4px 0 2px}
-.fun-faixa{position:relative;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:1px;padding:16px 12px;text-align:center;min-width:0}
-.fun-faixa::before{content:'';position:absolute;inset:0;clip-path:var(--clip);
-  transition:filter .12s ease}
-/* Só o CONTEÚDO sobe acima da forma. Antes isto era ".fun-faixa>*", que
-   pegava a bolha junto e trocava o position:absolute dela por relative — o
-   tooltip virava texto solto no meio do gráfico. */
-.fun-num,.fun-rot,.fun-sub{position:relative;z-index:1}
-.fun-num{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.01em;
+   Régua de percentual à esquerda e duas colunas à direita. Cada coluna é um
+   trilho de altura fixa; dentro dele a barra sólida cresce de baixo para cima
+   na fração real do público.
+
+   O TRILHO É DESENHADO, NÃO É VAZIO. Degradê fraco até o topo mostra o que
+   falta para o público inteiro — numa conversão de 8%, uma barra sozinha no
+   branco não diz 8% de quê. As linhas de grade saem do próprio trilho, em
+   paradas fixas de 25%, então casam com os rótulos do eixo sem nada para
+   manter em sincronia depois.
+
+   A ETIQUETA FLUTUA ACIMA DA BARRA, e é isso que deixa a altura voltar a ser
+   proporcional de verdade. A versão anterior usava largura fixa porque com 8%
+   a faixa virava um fio de 40px com texto dentro: honesta e ilegível. Com o
+   número fora do preenchimento, barra fina deixa de ser problema. */
+/* O respiro no topo é estrutural, não estético: a etiqueta da coluna cheia
+   fica ACIMA da barra, e a barra de 100% encosta no limite do trilho. Sem os
+   30px reservados aqui, ela sobe para cima do título do bloco. */
+.fnb{display:flex;gap:12px;margin:6px 0 4px;padding-top:30px}
+.fnb-eixo{display:flex;flex-direction:column;justify-content:space-between;
+  height:230px;flex-shrink:0}
+.fnb-eixo span{font-size:11px;color:var(--ink-4);line-height:1;
   font-variant-numeric:tabular-nums}
-/* max-width força a quebra antes de a forma cortar: o rótulo mais longo é
-   "Tiveram ticket médio acima da média" e ele precisa caber na parte estreita. */
-.fun-rot{font-size:12.5px;line-height:1.3;max-width:74%}
-.fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{max-width:84%}
-.fun-sub{font-size:11.5px;line-height:1.3;opacity:.72}
-.fun-faixa.d1::before{background:var(--g-ref)}
-.fun-faixa.d1 .fun-num{color:var(--ink)}
-.fun-faixa.d1 .fun-rot,.fun-faixa.d1 .fun-sub{color:var(--ink-2)}
-.fun-faixa.d2::before{background:var(--g-atual-h)}
-.fun-faixa.d2 .fun-num,.fun-faixa.d2 .fun-rot{color:#fff}
-.fun-faixa.d3{padding:13px 12px}
-.fun-faixa.d3::before{background:var(--g-sub)}
-.fun-faixa.d3 .fun-num{font-size:22px;color:var(--ink)}
-.fun-faixa.d3 .fun-rot{color:var(--ink-2)}
+.fnb-cols{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fnb-col{min-width:0;display:flex;flex-direction:column}
+.fnb-trilho{position:relative;height:230px;border-radius:8px;
+  background:
+    linear-gradient(to bottom, rgba(124,92,240,.15), rgba(124,92,240,.01)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(25% - 1px),
+      rgba(15,40,70,.07) calc(25% - 1px) 25%)}
+.fnb-fill{position:absolute;left:0;right:0;bottom:0;border-radius:6px;
+  transition:height .32s cubic-bezier(.2,0,0,1)}
+.fnb-fill.d1{background:var(--g-ref)}
+.fnb-fill.d2{background:var(--g-atual-h)}
+@media(prefers-reduced-motion:reduce){.fnb-fill{transition:none}}
+
+/* A etiqueta se apoia no topo da barra e sobe para fora dela. Caixa branca
+   com sombra porque ela cruza a fronteira entre o preenchido e o vazio: sem
+   a caixa, metade do texto cairia sobre a cor e metade sobre o degradê. */
+.fnb-tag{position:absolute;bottom:100%;left:50%;transform:translate(-50%,6px);
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:5px 10px;box-shadow:0 2px 8px rgba(15,40,70,.1);white-space:nowrap}
+.fnb-tag b{font-size:15px;font-weight:700;color:var(--ink);line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.fnb-tag i{font-size:11.5px;font-style:normal;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;letter-spacing:.04em}
+
+.fnb-pe{display:flex;align-items:baseline;gap:7px;margin-top:9px;
+  font-size:13px;font-weight:600;color:var(--ink-2);line-height:1.25}
+.fnb-ord{font-size:13px;font-weight:700;color:var(--ink-4)}
+
 /* ---------- Tooltip ----------
    Bloco base, usado pela tela inteira. Já foi apagado por engano numa fatia
    de CSS vizinha; sem ele toda bolha da aplicação vira texto solto no meio
@@ -1567,47 +1587,20 @@ tbody tr.sel{background:#F3F8FF}
 .bl-pe{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.14);
   font-size:11px;color:rgba(255,255,255,.6)}
 .ttip:hover .bubble,
-.fun-faixa.com-tip:hover .bubble{opacity:1}
+.fnb-col.com-tip:hover .bubble{opacity:1}
 
-.fun-faixa.com-tip{cursor:help}
-.fun-faixa.com-tip .bubble{bottom:calc(100% - 12px);z-index:50}
-.fun-faixa.com-tip:hover::before,.fun-faixa.com-tip:focus-visible::before{filter:brightness(1.07)}
-.fun-faixa.com-tip:focus-visible{outline:none}
-.fun-faixa.com-tip:focus-visible::before{outline:2px solid var(--primary);outline-offset:-3px}
-.fun-faixa.com-tip:focus-visible .bubble{opacity:1}
-/* A bolha da primeira faixa aponta para baixo: ela é o topo do bloco e não
-   há espaço acima dela dentro do cartão. */
-.fun-faixa.d1 .bubble{top:calc(100% - 10px);bottom:auto}
-
-/* Fecho: as três taxas em corpo grande. É aqui que a quantidade vive, já que
-   a forma deixou de medir. */
-.fun-fecho{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
-  margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
-.fun-fecho div{display:flex;flex-direction:column;gap:1px;min-width:0;
-  padding:7px 10px;border-radius:8px;transition:background .12s ease}
-.fun-fecho div:first-child{margin-left:-10px}
-.fun-fecho span{font-size:11.5px;color:var(--ink-3)}
-.fun-fecho b{font-size:20px;font-weight:700;color:var(--ink);line-height:1.2;
-  font-variant-numeric:tabular-nums;transition:color .12s ease}
-.fun-fecho i{font-size:11.5px;font-style:normal;color:var(--ink-4)}
-@media(max-width:720px){.fun-fecho{grid-template-columns:1fr 1fr}}
-@media(prefers-reduced-motion:reduce){
-  .fun-fecho div,.fun-fecho b{transition:none}}
-
-/* HOVER NA FAIXA ACENDE O NÚMERO QUE ELA EXPLICA, no rodapé.
-   A conversão é a passagem da primeira para a segunda faixa, então as duas
-   acendem o mesmo número; a terceira acende os dois que falam dela. */
-.funil-camp:has(.fun-faixa.d1:is(:hover,:focus-visible)) + .fun-fecho .ff-conv,
-.funil-camp:has(.fun-faixa.d2:is(:hover,:focus-visible)) + .fun-fecho .ff-conv,
-.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-acima,
-.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-normal{
-  background:#EAF3FE}
-.funil-camp:has(.fun-faixa.d1:is(:hover,:focus-visible)) + .fun-fecho .ff-conv b,
-.funil-camp:has(.fun-faixa.d2:is(:hover,:focus-visible)) + .fun-fecho .ff-conv b,
-.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-acima b,
-.funil-camp:has(.fun-faixa.d3:is(:hover,:focus-visible)) + .fun-fecho .ff-normal b{
-  color:var(--primary)}
-@media(prefers-reduced-motion:reduce){.fun-faixa::before{transition:none}}
+/* O FECHO DE TRÊS TAXAS SAIU junto com a terceira faixa. "Conversão" repetia
+   em corpo grande o que a etiqueta da segunda coluna já diz em percentual, e
+   as outras duas eram sobre ticket — que deixou de ser assunto deste bloco. */
+.fnb-col.com-tip{cursor:help}
+/* A bolha abre para BAIXO, a partir do topo do trilho: a coluna cheia encosta
+   no alto do cartão e não há espaço acima dela. */
+.fnb-col.com-tip .bubble{top:8px;bottom:auto;z-index:50}
+.fnb-col.com-tip:is(:hover,:focus-visible) .fnb-fill{filter:brightness(1.07)}
+.fnb-col.com-tip:focus-visible{outline:none}
+.fnb-col.com-tip:focus-visible .fnb-trilho{outline:2px solid var(--primary);
+  outline-offset:2px}
+.fnb-col.com-tip:focus-visible .bubble{opacity:1}
 
 /* ---------- RECUPERADO DO GIT (commit ee39c3b) ----------
    Quarenta e três seletores desapareceram numa fatia de CSS que cortou
@@ -1808,8 +1801,6 @@ tbody tr.sel{background:#F3F8FF}
   .im:nth-child(3){grid-column:auto}
   .im{padding-left:0;border-left:0;padding-top:12px;border-top:1px solid var(--border)}
   .im:first-child{padding-top:0;border-top:0}
-  .fun-fecho{grid-template-columns:1fr}
-  .fun-fecho div:first-child{margin-left:0}
 
   /* Título e controle na mesma linha não cabem: o controle desce e ganha a
      largura toda, que é o alvo de toque confortável. */
@@ -1829,9 +1820,9 @@ tbody tr.sel{background:#F3F8FF}
   .overlay{padding:10px;align-items:flex-start}
   .modal-salvar{max-height:94vh}
 
-  .funil-camp .fun-num{font-size:22px}
-  .fun-faixa.d3 .fun-num{font-size:19px}
-  .fun-rot{max-width:86%}
+  .fnb-eixo,.fnb-trilho{height:180px}
+  .fnb-tag{padding:4px 8px}
+  .fnb-tag b{font-size:13.5px}
   .hero-val{font-size:24px}
 
   /* O popover de datas não pode ser mais largo que a tela. */
@@ -4567,6 +4558,23 @@ const campanhaAtiva = c => brDate(c.ini) <= HOJE && brDate(c.fim) >= HOJE;
 
    O campo guardado foi removido do dado. Denominador declarado: COMPRA, não
    cliente e não visita — as três dão números diferentes e a tela diz qual usa. */
+/* "COMPRAS" VIROU "UNIDADES VENDIDAS" — E ISSO É UM RÓTULO PROVISÓRIO.
+
+   Decisão do Vitor, tomada com a ressalva na mesa. O número por trás continua
+   sendo CONTAGEM DE TRANSAÇÃO: c.compras. Uma venda que levou três itens
+   conta 1 aqui, não 3. Enquanto o ERP não devolver quantidade de item — a
+   pendência aberta desde o levantamento —, "unidades vendidas" é o nome que
+   a tela usa, não o que o dado mede.
+
+   O QUE ISSO CONTAMINA, para quem for mexer depois:
+   · ticket médio = faturamento ÷ este número. Com o rótulo novo ele se lê
+     como preço médio por unidade, e NÃO é: continua sendo valor por venda.
+   · a invariante clientesComp <= este número só faz sentido para transação
+     (não dá para ter mais clientes do que vendas). Para unidade de verdade
+     ela seria trivial e não protegeria nada.
+   · a razão deste número / clientesComp é lida como "compras por cliente".
+
+   Quando a quantidade de item chegar, são DOIS campos, não um renomeado. */
 function ticketCamp(c){
   return c && c.compras ? c.faturamento / c.compras : 0;
 }
@@ -4688,7 +4696,7 @@ function cardCampanha(s, c){
     </div>
     <div class="cpc-num">
       <span class="cpc-rot">Ticket médio</span>
-      <b title="Faturamento dividido pelo número de compras">${brl(ticketCamp(c))}</b>
+      <b title="Faturamento dividido pelo número de unidades vendidas">${brl(ticketCamp(c))}</b>
     </div>
     <button class="btn-res" data-act="verResultados" data-v="${s.id}|${c.id}"
       aria-label="Ver resultados da campanha de ${c.ini} a ${c.fim}"
@@ -4782,7 +4790,7 @@ function veredito(s, c){
   const fase = faseCampanha(c);
   if(fase==='futura')
     return `Esta campanha começa em <b>${c.ini}</b>. Os resultados aparecem aqui a partir dessa data.`;
-  return `Ainda não há compra registrada neste público desde o início da campanha. ${
+  return `Ainda não há venda registrada neste público desde o início da campanha. ${
     fase==='andamento' ? 'A campanha segue no ar até '+c.fim+'.' : ''}`;
 }
 
@@ -4938,7 +4946,7 @@ function blocoAntesDurante(s, c){
     <div class="cmpv">
       ${grupoComp('Faturamento', pre.faturamento, c.faturamento, vCurto)}
       ${grupoComp('Clientes que compraram', pre.clientesComp, c.clientesComp, n=>nf.format(n))}
-      ${grupoComp('Compras', pre.compras, c.compras, n=>nf.format(n))}
+      ${grupoComp('Unidades vendidas', pre.compras, c.compras, n=>nf.format(n))}
     </div>
     <div class="cmpv-legenda">
       <span><i class="cmpv-pt antes"></i>${rotAntes}</span>
@@ -4950,7 +4958,7 @@ function blocoAntesDurante(s, c){
       : `São ${dias} dias contra ${dias} dias, colados no início da campanha. <b>Isto tira o
          crescimento do caminho, não a sazonalidade</b>: se a campanha caiu numa alta natural do
          ano, o ganho aparece inflado.`} As colunas só se comparam dentro de cada grupo: reais,
-    clientes e compras não cabem na mesma escala.</p>
+    clientes e unidades vendidas não cabem na mesma escala.</p>
   </div>`;
 }
 
@@ -5107,7 +5115,7 @@ function blocoCanais(s, c){
     <div class="cv-uni">
       <div class="cv-col">
         <span><i class="cv-pt pdv"></i>Balcão da loja</span>
-        <b>${nf.format(c.compras)} compras</b>
+        <b>${nf.format(c.compras)} unidades</b>
       </div>
       <p class="cv-falta">Única origem que o sistema separa hoje</p>
     </div>
@@ -5230,108 +5238,72 @@ function blocoDnaVendas(s, c){
   </div>`;
 }
 
-/* ---------- Funil: do público até a compra de qualidade ----------
-   ATENÇÃO À ESTRUTURA. Funil só não mente quando cada degrau é subconjunto
-   estrito do de cima. "Gastou acima do normal" e "voltou uma segunda vez" são
-   dois subconjuntos IRMÃOS de "comprou": dá para voltar a comprar gastando
-   pouco, e dá para gastar muito numa compra só. Empilhar os quatro em fila
-   sugeriria que o quarto está dentro do terceiro, o que é falso e faria o
-   associado ler o número final como "só 69 chegaram até o fim".
+/* ---------- Funil de impactados: duas colunas proporcionais ----------
 
-   Por isso o desenho é uma bifurcação, não uma fila: dois degraus em cadeia e,
-   a partir de "compraram", dois ramos lado a lado com recuo. */
+   A TERCEIRA FAIXA SAIU. "Tiveram ticket médio acima da média" nunca foi um
+   degrau do funil: é um subconjunto IRMÃO de "comprou", não um filho. Dava
+   para gastar muito numa compra só e dava para voltar gastando pouco — a fila
+   sugeria que o terceiro estava dentro do segundo, o que é falso. Decisão do
+   Vitor tirar; o desenho agradece, porque com dois níveis a pergunta do bloco
+   volta a ser uma só: de quem recebeu, quantos compraram.
+
+   VOLTOU A SER PROPORCIONAL, E DESTA VEZ SEM MENTIR NEM FICAR ILEGÍVEL.
+   A versão de larguras fixas existia porque com 8% de conversão a barra virava
+   um fio de 40px: honesta e impossível de ler. A referência resolve isso de
+   outro jeito — a altura é proporcional de verdade, mas o número não mora
+   dentro da barra, mora numa etiqueta flutuante acima dela. Barra fina deixa
+   de ser problema porque ela não carrega mais texto nenhum.
+
+   O FANTASMA É PARTE DA MEDIDA. A coluna inteira fica desenhada em degradê
+   fraco até o topo, e só a parte preenchida é sólida. Sem ele, uma barra de
+   8% num espaço vazio não diz 8% de quê; com ele, o que falta para 100% é
+   visível, que é justamente a leitura de uma campanha com conversão baixa. */
 function funilCampanha(s, c){
   const total = s.clientes || 0;
   if(!total || !c.clientesComp) return '';
-  const pct  = n => total ? n/total*100 : 0;
-  const dosQ = n => c.clientesComp ? Math.round(n/c.clientesComp*100) : 0;
+  const pct = n => total ? n/total*100 : 0;
 
-  const acima   = c.clientesAcima || 0;
-  const pctAcima = dosQ(acima);
-
-  /* O mix vem por subcategoria e em valor, não em quantidade de itens.
-     Então o tooltip fala em "mais venderam", que é o que o dado sustenta,
-     e não em "mais compradas", que sugeriria contagem de unidades.
-
-     E AS FATIAS TÊM QUE FECHAR 100%: todas as categorias juntas são a
-     venda inteira, então uma lista que soma 82% faz o leitor procurar os
-     18% que faltam. Duas coisas garantem isso — o que não cabe na lista
-     vira "Outras categorias", e o arredondamento usa maior resto, que
-     devolve a sobra de décimo para a maior fatia em vez de deixar
-     99,9%. */
-  /* As taxas que saíram dos vãos voltam aqui: ficam a um passar de mouse da
-     faixa a que pertencem, sem ocupar espaço permanente nem repetir o que o
-     fecho já diz em corpo grande. */
   const tipCompraram = (c.mix || []).length
     ? tipBarra('Categorias', fatias(c.mix, c.faturamento, 5),
                'do faturamento desta campanha',
                `<b>${nf1.format(pct(c.clientesComp))}%</b> dos ${nf.format(total)} que receberam`)
     : bolhaTexto(`${nf.format(c.clientesComp)} compraram — ${nf1.format(pct(c.clientesComp))}% dos
         ${nf.format(total)} que receberam a campanha.`);
-  const base = s.pctAcimaHist || 0;
-  const dif  = pctAcima - base;
 
-  /* A barra desenha SEMPRE a mesma fração que o rótulo declara.
-     Antes o ramo dizia "46% de quem comprou" e desenhava 4% — porque a barra
-     usava o público como base e o texto usava quem comprou. Barra que contradiz
-     o próprio rótulo é pior que não ter barra. Agora a base vai junto: cadeia
-     mede sobre o público, ramo mede sobre quem comprou, e cada um declara. */
-  /* O AFUNILAMENTO É SINALIZAÇÃO, NÃO MEDIDA.
-
-     Decisão do Vitor, e ela resolve um impasse real. Com 8% de conversão, a
-     largura proporcional fazia a segunda faixa virar um fio de 40px — honesto
-     e ilegível. Agora as três larguras são fixas (100 / 74 / 52) e servem só
-     para dizer "isto vem abaixo daquilo".
-
-     A contrapartida é explícita: como a forma não mede nada, quem mede é o
-     texto. O número mora dentro da faixa e as três taxas ficam no fecho, em
-     corpo grande. Nenhum número depende da largura para ser lido — que era
-     exatamente o problema da versão proporcional.
-
-     As faixas encostam sem nada entre elas. As taxas de passagem que ficavam
-     nos vãos ("8,2% compraram", "49% de quem comprou") diziam exatamente o
-     que o fecho já diz, e o vão quebrava a silhueta no meio — que é o único
-     trabalho que a forma ainda tem. */
-  const pctAt = pct(c.clientesComp);
-  /* As larguras têm piso pelo TEXTO, não pelo dado: o rótulo mais longo é
-     "Tiveram ticket médio acima da média" e ele precisa caber na parte mais
-     estreita da última faixa, senão o clip-path corta a frase. */
-  const W = [100, 80, 62];
-  const faixa = (i, cls, rot, n, sub, bolha) => {
-    const wt = W[i], wb = W[i+1] !== undefined ? W[i+1] : W[i] - 8;
-    const c1 = (100-wt)/2, c2 = (100+wt)/2, c3 = (100+wb)/2, c4 = (100-wb)/2;
-    return `<div class="fun-faixa ${cls}${bolha?' com-tip':''}"${
-      bolha ? ` tabindex="0" role="button" aria-label="${esc(rot)}: ${nf.format(n)}"` : ''}
-      style="--clip:polygon(${c1}% 0,${c2}% 0,${c3}% 100%,${c4}% 100%)">
-      <b class="fun-num">${nf.format(n)}</b>
-      <span class="fun-rot">${rot}</span>
-      ${sub ? `<span class="fun-sub">${sub}</span>` : ''}
-      ${bolha||''}
+  /* Piso de 1,2% na altura desenhada: abaixo disso a barra some e o leitor não
+     distingue "pouquíssimo" de "zero", que são conclusões diferentes. O número
+     na etiqueta continua o real — quem mede é o texto, não o pixel. */
+  const coluna = (i, cls, rot, n, bolha) => {
+    const p = pct(n);
+    return `<div class="fnb-col${bolha?' com-tip':''}"${
+      bolha ? ` tabindex="0" role="button" aria-label="${esc(rot)}: ${nf.format(n)}, ${nf1.format(p)}% do público"` : ''}>
+      <div class="fnb-trilho">
+        <div class="fnb-fill ${cls}" style="height:${Math.max(1.2, p).toFixed(2)}%">
+          <span class="fnb-tag"><b>${nf1.format(p)}%</b><i>${nf.format(n)}</i></span>
+        </div>
+        ${bolha||''}
+      </div>
+      <div class="fnb-pe"><span class="fnb-ord">${i}</span>${rot}</div>
     </div>`;
   };
+
   return `<div class="bloco">
     <h4 class="bloco-tit">Funil de impactados</h4>
-    <div class="funil-camp">
-      ${faixa(0, 'd1', 'Público-alvo', total, 'receberam a campanha',
-        bolhaTexto(`Todo o público da segmentação recebeu a campanha. É a base de onde saem as
-          taxas do rodapé.`))}
-      ${faixa(1, 'd2', 'Compraram', c.clientesComp, '', tipCompraram)}
-      ${faixa(2, 'd3', 'Tiveram ticket médio acima da média', acima, '',
-        bolhaTexto(`${nf.format(acima)} gastaram mais de ${brl(s.ticketHist||0)} por compra —
-          ${pctAcima}% de quem comprou. Num período normal deste mesmo público são ${base}%.`))}
+    <div class="fnb">
+      <div class="fnb-eixo" aria-hidden="true">
+        <span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span>
+      </div>
+      <div class="fnb-cols">
+        ${coluna(1, 'd1', 'Público-alvo', total,
+          bolhaTexto(`Todo o público da segmentação recebeu a campanha. É a base de 100%
+            contra a qual a segunda coluna é medida.`))}
+        ${coluna(2, 'd2', 'Compraram', c.clientesComp, tipCompraram)}
+      </div>
     </div>
 
-    <div class="fun-fecho">
-      <div class="ff-conv"><span>Conversão</span><b>${nf1.format(pctAt)}%</b><i>do público-alvo</i></div>
-      <div class="ff-acima"><span>Ticket acima da média</span><b>${pctAcima}%</b><i>de quem comprou</i></div>
-      <div class="ff-normal"><span>Num período normal</span><b>${base}%</b><i>deste mesmo público</i></div>
-    </div>
-
-    <p class="bloco-nota">A última etapa muda de base: ela mede sobre quem comprou, não sobre o
-    público inteiro. “Acima da média” é gastar mais de ${brl(s.ticketHist||0)} por compra, que é o
-    que este público costuma gastar fora de campanha. <b>Ela importa tanto quanto o ticket médio lá
-    em cima</b>: a média sobe se poucos clientes gastarem muito, e só a contagem mostra se o aumento
-    se espalhou.</p>
+    <p class="bloco-nota">As duas colunas medem a mesma base: o público-alvo é 100% e a segunda é a
+    fatia dele que comprou no período da campanha. A parte clara de cada coluna é o que falta para
+    o público inteiro.</p>
   </div>`;
 }
 
@@ -5464,7 +5436,7 @@ function telaResultados(){
   const parcial = (fase==='andamento' || fase==='apurando')
     ? `<div class="res-parcial">${I.alert}
         <div><b>Números parciais.</b> ${fase==='andamento'
-          ? `A campanha vai até ${c.fim} e as compras continuam entrando.`
+          ? `A campanha vai até ${c.fim} e as vendas continuam entrando.`
           : `A campanha terminou em ${c.fim}, mas ainda contamos as compras até ${fmtD(addDias(brDate(c.fim),JANELA_RABO).getTime())}.`}</div>
       </div>` : '';
 
@@ -5534,7 +5506,7 @@ function telaResultados(){
   const herois = `<div class="herois">
     ${heroi('Faturamento da campanha', I.moeda, brl(c.faturamento), perCamp, {
       tip: tipTexto(`Soma do que o público impactado comprou entre ${c.ini} e ${c.fim}, em
-        ${nf.format(c.compras)} compras. A comparação é com o mesmo período do ano anterior,
+        ${nf.format(c.compras)} unidades vendidas. A comparação é com o mesmo período do ano anterior,
         que neutraliza a época do ano.`),
       txt: `Mesmo período de ${brDate(c.ini).getFullYear()-1}: <b>${brl(anoAnt.faturamento)}</b>`,
       selo: selo(delta(c.faturamento, anoAnt.faturamento), '')})}
@@ -5551,8 +5523,8 @@ function telaResultados(){
          PÚBLICO vale mais que o cliente médio — outra pergunta, e uma que a
          campanha não controla. Um público de medicação contínua fica verde
          contra a rede mesmo numa campanha fraca. */
-      tip: tipTexto(`Faturamento dividido pelo número de compras — não por cliente e não por
-        visita, que dariam números diferentes. A comparação é com o ticket médio de toda a
+      tip: tipTexto(`Faturamento dividido pelo número de unidades vendidas — não por cliente e
+        não por visita, que dariam números diferentes. A comparação é com o ticket médio de toda a
         rede no período (${brl(ticketGeral())}), não com o histórico deste público
         ${s.ticketHist ? `(${brl(s.ticketHist)})` : ''}.`),
       txt: `Ticket médio da loja: <b>${brl(ticketGeral())}</b>`,
